@@ -35,17 +35,21 @@ CREATE TABLE IF NOT EXISTS products (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Seed Beauty Products Collection
+-- Seed 12 Luxury Beauty Products Collection
 INSERT INTO products (id, name, description, price, stock, category, image_url)
 VALUES 
-(1, 'Rose Radiance Glow Serum', 'Sérum facial iluminador enriquecido con extracto de rosas silvestres, ácido hialurónico puro y vitamina E para una piel fresca y luminosa.', 489.00, 24, 'Skincare', 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80'),
-(2, 'Velvet Matte Lipstick Rose Chic', 'Labial mate de larga duración (16 hrs) con infusión de aceite de jojoba y manteca de karité para labios suaves sin sensación de resequedad.', 265.00, 40, 'Maquillaje', 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80'),
-(3, 'Hydra-Boost Floral Facial Mist', 'Bruma hidratante revitalizante con agua de azahar y aloe vera. Fija el maquillaje y refresca la piel en cualquier momento del día.', 299.00, 18, 'Skincare', 'https://images.unsplash.com/photo-1608248597359-bb4f59c869fb?auto=format&fit=crop&w=600&q=80'),
-(4, 'L’Élixir Fleur Eau de Parfum', 'Fragancia sofisticada con notas de salida de peonía rosada, jazmín blanco y un fondo sensual de vainilla y ámbar amaderado.', 890.00, 12, 'Fragancias', 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80'),
-(5, 'Silk Touch Bronzing & Highlight Palette', 'Paleta dúo iluminador y bronceador con micropigmentos perla que aportan una calidez natural y un acabado satinado profesional.', 430.00, 22, 'Maquillaje', 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80'),
-(6, 'Botanical Repair Hair Mask', 'Tratamiento capilar intensivo con aceite de argán marroquí y keratina vegetal que restaura las puntas abiertas y aporta brillo sedoso.', 345.00, 15, 'Cuidado Capilar', 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80'),
-(7, 'Purifying Gentle Cleansing Foam', 'Espuma limpiadora facial con té verde y centella asiática que elimina impurezas respetando la barrera cutánea sin irritar.', 310.00, 30, 'Skincare', 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80'),
-(8, 'Lash Infinite Volumizing Mascara', 'Máscara para pestañas a prueba de agua con cepillo de cerdas en reloj de arena para un volumen dramático y definición extrema.', 240.00, 35, 'Maquillaje', 'https://images.unsplash.com/photo-1631730486784-5456119f69ae?auto=format&fit=crop&w=600&q=80')
+(1, 'L’Élixir Doré Glow Face Oil', 'Aceite facial nutritivo infundido con escualano vegetal, rosa mosqueta y microdestellos dorados para un resplandor sedoso.', 640.00, 24, 'Skincare', 'https://images.unsplash.com/photo-1608248597359-bb4f59c869fb?auto=format&fit=crop&w=600&q=80'),
+(2, 'Champagne Silk Hydrating Cream', 'Crema hidratante ultra ligera con extracto de perla blanca, ceramidas y ácido hialurónico que nutre en profundidad.', 520.00, 32, 'Skincare', 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80'),
+(3, 'Velvet Nude Matte Lipstick', 'Labial mate aterciopelado en tono cálido con infusión de aceite de jojoba y vitamina E. Acabado confortable por 16 horas.', 290.00, 45, 'Maquillaje', 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80'),
+(4, 'Subtle Glow Liquid Illuminator', 'Iluminador fluido tono champán perlado que funde con la piel dejando un acabado luminoso natural y sofisticado.', 380.00, 18, 'Maquillaje', 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80'),
+(5, 'Rose & Amber Gold Eau de Parfum', 'Aroma cautivador con notas de vainilla dorada, orquídea blanca, rosa de Damasco y un cálido fondo de sándalo y ámbar.', 980.00, 15, 'Fragancias', 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80'),
+(6, 'Botanical Gold Repair Hair Serum', 'Sérum capilar reparador con aceite de argán marroquí y keratina bioactiva que sella puntas y aporta brillo satinado.', 450.00, 20, 'Cuidado Capilar', 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80'),
+(7, 'Pearl Radiance Gentle Cleanser', 'Gel limpiador espumoso con polvo de perla natural y té blanco que purifica la tez respetando la barrera cutánea.', 320.00, 35, 'Skincare', 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80'),
+(8, 'Warm Taupe Eyeshadow Palette', 'Colección de 9 sombras en tonos neutros cálidos, topo ahumado y destellos dorados con textura ultra difuminable.', 560.00, 28, 'Maquillaje', 'https://images.unsplash.com/photo-1522337094846-8a818192de1f?auto=format&fit=crop&w=600&q=80'),
+(9, 'Golden Orchid Luxury Body Mist', 'Bruma corporal perfumada con néctar de orquídea dorada y jazmín para una sensación fresca y envolvente durante el día.', 410.00, 22, 'Fragancias', 'https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=600&q=80'),
+(10, 'Hydra-Plump Lip Treatment Balm', 'Tratamiento labial reconstituyente enriquecido con péptidos voluminizadores, manteca de mango y cera vegetal.', 220.00, 50, 'Maquillaje', 'https://images.unsplash.com/photo-1631730486784-5456119f69ae?auto=format&fit=crop&w=600&q=80'),
+(11, 'Nourishing Cashmere Hair Mask', 'Tratamiento acondicionador profundo formulado con proteínas de cachemira y manteca de murumuru para cabello suave y disciplinado.', 490.00, 16, 'Cuidado Capilar', 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80'),
+(12, 'Pure Gold Eye Contour Cream', 'Crema para el contorno de ojos con cafeína pura y péptidos tensores que atenúan ojeras y líneas de expresión.', 590.00, 25, 'Skincare', 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80')
 ON DUPLICATE KEY UPDATE 
     name=VALUES(name), 
     description=VALUES(description), 

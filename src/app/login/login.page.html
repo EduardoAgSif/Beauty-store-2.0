@@ -11,6 +11,10 @@
         </div>
 
         <div class="panel-content" *ngIf="isSignUpMode">
+          <div class="auth-brand-badge">
+            <ion-icon name="sparkles"></ion-icon>
+            <span>Glow<strong>Beauty</strong></span>
+          </div>
           <h1 class="panel-title">¡Bienvenido de nuevo!</h1>
           <p class="panel-subtitle">Para mantenerte conectado con nosotros, inicia sesión con tus datos personales</p>
           <button type="button" class="pill-btn pill-btn-action" (click)="toggleMode(false)">
@@ -19,8 +23,12 @@
         </div>
 
         <div class="panel-content" *ngIf="!isSignUpMode">
-          <h1 class="panel-title">¡Hola, Amigo!</h1>
-          <p class="panel-subtitle">Ingresa tus datos personales y comienza esta experiencia con nosotros</p>
+          <div class="auth-brand-badge">
+            <ion-icon name="sparkles"></ion-icon>
+            <span>Glow<strong>Beauty</strong></span>
+          </div>
+          <h1 class="panel-title">¡Hola, Bella!</h1>
+          <p class="panel-subtitle">Ingresa a tu cuenta y descubre nuestra exclusiva colección de cosméticos y cuidado personal</p>
           <button type="button" class="pill-btn pill-btn-action" (click)="toggleMode(true)">
             REGISTRARSE
           </button>

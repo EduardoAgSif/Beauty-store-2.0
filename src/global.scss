@@ -1,12 +1,6 @@
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
 /* Core CSS required for Ionic components to work properly */
@@ -25,15 +19,6 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
 
 /* Global Font & Reset */
@@ -44,8 +29,8 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #faf7f8;
-  color: #2b2b36;
+  background-color: #faf8f5;
+  color: #2e2926;
 }
 
 /* Responsive Desktop & Mobile Container */
@@ -62,9 +47,9 @@ body {
   }
 }
 
-/* CodePen Gradient Button Utilities */
+/* Subtle Gold Gradient Button Utilities */
 .btn-codepen-primary {
-  background: linear-gradient(135deg, #fb2175 0%, #ea4c89 100%);
+  background: linear-gradient(135deg, #c5a880 0%, #a68353 100%);
   color: #ffffff;
   border: none;
   border-radius: 25px;
@@ -72,7 +57,7 @@ body {
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(251, 33, 117, 0.35);
+  box-shadow: 0 4px 15px rgba(197, 168, 128, 0.35);
   transition: all 0.3s ease-in-out;
   display: inline-flex;
   align-items: center;
@@ -80,8 +65,8 @@ body {
   gap: 8px;
 
   &:hover {
-    background: linear-gradient(135deg, #e41c68 0%, #d83b77 100%);
-    box-shadow: 0 6px 20px rgba(251, 33, 117, 0.45);
+    background: linear-gradient(135deg, #d4b892 0%, #b89260 100%);
+    box-shadow: 0 6px 20px rgba(197, 168, 128, 0.45);
     transform: translateY(-2px);
   }
 
@@ -90,18 +75,18 @@ body {
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Luxury Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f8eef2;
+  background: #f5ebdc;
 }
 ::-webkit-scrollbar-thumb {
-  background: #ea89ad;
+  background: #c5a880;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #fb2175;
+  background: #a68353;
 }

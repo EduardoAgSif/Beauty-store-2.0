@@ -30,18 +30,27 @@ export class Tab1Page implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Carga instantánea de los 12 productos sin demoras de spinner
+    this.products = this.productService.getFallbackProducts();
+    this.applyFilters();
+    this.isLoading = false;
+
     this.loadProducts();
   }
 
   async loadProducts() {
-    this.isLoading = true;
     try {
-      this.products = await this.productService.getProducts();
-      this.applyFilters();
+      const serverProducts = await this.productService.getProducts();
+      if (serverProducts && serverProducts.length > 0) {
+        this.products = serverProducts;
+        this.applyFilters();
+      }
     } catch (e) {
-      console.error('Error fetching products:', e);
-      this.products = this.productService.getFallbackProducts();
-      this.applyFilters();
+      console.warn('Using local luxury catalog:', e);
+      if (this.products.length === 0) {
+        this.products = this.productService.getFallbackProducts();
+        this.applyFilters();
+      }
     } finally {
       this.isLoading = false;
     }

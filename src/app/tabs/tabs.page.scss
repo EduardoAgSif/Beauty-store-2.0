@@ -1,12 +1,12 @@
-// Desktop Navigation Bar
+// Desktop Navigation Bar - Soft Champagne, Pearl White & Subtle Gold
 .desktop-navbar {
   display: none;
   background: #ffffff;
-  box-shadow: 0 4px 20px rgba(146, 161, 176, 0.15);
+  box-shadow: 0 4px 20px rgba(138, 127, 118, 0.08);
   position: sticky;
   top: 0;
   z-index: 999;
-  border-bottom: 1px solid #f8e1eb;
+  border-bottom: 1px solid #ede4d8;
 
   @media (min-width: 768px) {
     display: block;
@@ -16,7 +16,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 70px;
+    height: 72px;
   }
 
   .brand-logo {
@@ -28,17 +28,17 @@
 
     .logo-icon {
       font-size: 1.8rem;
-      color: #fb2175;
+      color: #c5a880;
     }
 
     .logo-text {
       font-size: 1.6rem;
       font-weight: 800;
-      color: #232333;
+      color: #2e2926;
       letter-spacing: -0.5px;
 
       span {
-        color: #fb2175;
+        color: #c5a880;
       }
     }
   }
@@ -53,8 +53,8 @@
       align-items: center;
       gap: 6px;
       text-decoration: none;
-      color: #4a4a58;
-      font-size: 1rem;
+      color: #6b635b;
+      font-size: 0.98rem;
       font-weight: 500;
       position: relative;
       padding: 8px 4px;
@@ -65,11 +65,11 @@
       }
 
       &:hover {
-        color: #fb2175;
+        color: #c5a880;
       }
 
       &.active-link {
-        color: #fb2175;
+        color: #c5a880;
         font-weight: 600;
 
         &::after {
@@ -78,8 +78,8 @@
           bottom: 0;
           left: 0;
           width: 100%;
-          height: 3px;
-          background: #fb2175;
+          height: 2.5px;
+          background: #c5a880;
           border-radius: 2px;
         }
       }
@@ -89,7 +89,7 @@
       position: relative;
 
       .desktop-cart-badge {
-        background: #fb2175;
+        background: #c5a880;
         color: #ffffff;
         font-size: 0.72rem;
         font-weight: 700;
@@ -108,13 +108,13 @@
 // Mobile Tab Bar
 .mobile-tab-bar {
   --background: #ffffff;
-  --border: 1px solid #fce8f0;
-  box-shadow: 0 -4px 16px rgba(251, 33, 117, 0.06);
-  height: 60px;
+  --border: 1px solid #ede4d8;
+  box-shadow: 0 -4px 16px rgba(138, 127, 118, 0.06);
+  height: 62px;
 
   ion-tab-button {
-    --color: #8f92a1;
-    --color-selected: #fb2175;
+    --color: #9c9187;
+    --color-selected: #c5a880;
     font-weight: 500;
     transition: all 0.2s ease;
 
@@ -150,7 +150,8 @@
       font-size: 0.68rem;
       padding: 2px 6px;
       border-radius: 10px;
-      --background: #fb2175;
+      --background: #c5a880;
+      color: #ffffff;
       font-weight: 700;
       animation: pulse 1.5s infinite;
     }
