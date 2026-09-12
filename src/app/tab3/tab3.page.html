@@ -1,17 +1,119 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="mobile-only-header">
   <ion-toolbar>
-    <ion-title>
-      Tab 3
-    </ion-title>
+    <ion-title>Mi Perfil</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="profile-content">
+  <div class="ecom-container profile-wrapper">
+    <!-- User Card -->
+    <div class="user-card-header">
+      <div class="avatar-ring">
+        <div class="avatar-inner">
+          <ion-icon name="person"></ion-icon>
+        </div>
+      </div>
+      <div class="user-header-info">
+        <span class="member-badge">✨ Miembro Glow VIP</span>
+        <h2>{{ user?.name || 'Cliente Glow' }}</h2>
+        <p class="user-email">{{ user?.email || 'cliente@glowbeauty.com' }}</p>
+      </div>
+    </div>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+    <!-- Quick Stats -->
+    <div class="profile-stats-grid">
+      <div class="stat-card">
+        <span class="stat-num">3</span>
+        <span class="stat-label">Pedidos</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">8</span>
+        <span class="stat-label">Favoritos</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">1</span>
+        <span class="stat-label">Cupones</span>
+      </div>
+    </div>
+
+    <!-- Account Options Section -->
+    <div class="account-menu-card">
+      <div class="menu-section-header">Mi Cuenta & Pedidos</div>
+
+      <div class="menu-item" routerLink="/tabs/tab2">
+        <div class="menu-icon-box">
+          <ion-icon name="bag-check-outline"></ion-icon>
+        </div>
+        <div class="menu-item-text">
+          <h4>Bolsa de Compras Activa</h4>
+          <p>Revisa o completa tus pedidos pendientes</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+
+      <div class="menu-item">
+        <div class="menu-icon-box">
+          <ion-icon name="location-outline"></ion-icon>
+        </div>
+        <div class="menu-item-text">
+          <h4>Direcciones de Envío</h4>
+          <p>Gestiona tus domicilios guardados</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+
+      <div class="menu-item">
+        <div class="menu-icon-box">
+          <ion-icon name="card-outline"></ion-icon>
+        </div>
+        <div class="menu-item-text">
+          <h4>Métodos de Pago</h4>
+          <p>Tarjetas bancarias y facturación</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+
+      <div class="menu-item">
+        <div class="menu-icon-box">
+          <ion-icon name="pricetag-outline"></ion-icon>
+        </div>
+        <div class="menu-item-text">
+          <h4>Mis Cupones de Descuento</h4>
+          <p>Código activo: <strong>GLOW10</strong> (10% OFF)</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Support and Logout -->
+    <div class="account-menu-card">
+      <div class="menu-section-header">Preferencias & Soporte</div>
+
+      <div class="menu-item">
+        <div class="menu-icon-box">
+          <ion-icon name="help-buoy-outline"></ion-icon>
+        </div>
+        <div class="menu-item-text">
+          <h4>Centro de Ayuda & Preguntas</h4>
+          <p>Envíos, cambios y garantías</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+
+      <div class="menu-item logout-item" (click)="logout()">
+        <div class="menu-icon-box logout-icon">
+          <ion-icon name="log-out-outline"></ion-icon>
+        </div>
+        <div class="menu-item-text">
+          <h4 class="logout-text">Cerrar Sesión</h4>
+          <p>Finalizar sesión en este dispositivo</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+    </div>
+
+    <div class="app-version-footer">
+      <p>GlowBeauty v1.0 • Hecho con Ionic & Angular</p>
+    </div>
+  </div>
 </ion-content>

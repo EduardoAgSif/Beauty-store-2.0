@@ -1,32 +1,248 @@
-<ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title>Inicio - Panel Principal</ion-title>
+<ion-header [translucent]="true" class="mobile-only-header">
+  <ion-toolbar>
+    <ion-title>
+      <div class="header-logo">
+        <ion-icon name="sparkles" class="logo-sparkle"></ion-icon>
+        <span>Glow<strong>Beauty</strong></span>
+      </div>
+    </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="logout()">
-        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      <ion-button routerLink="/tabs/tab2">
+        <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="dashboard-content">
-  <div class="dashboard-wrapper">
-    <div class="welcome-card">
-      <div class="user-avatar">
-        <ion-icon name="person-circle-outline"></ion-icon>
-      </div>
-      <h2>¡Hola, {{ user?.name || 'Usuario' }}!</h2>
-      <p class="user-email">{{ user?.email || 'Sesión Iniciada' }}</p>
+<ion-content [fullscreen]="true" class="storefront-content">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="crescent">
+    </ion-refresher-content>
+  </ion-refresher>
 
-      <div class="status-badge">
-        <span class="dot"></span> Acceso concedido
+  <!-- Hero Banner (CodePen Inspired) -->
+  <section class="hero-section">
+    <div class="ecom-container hero-container">
+      <div class="hero-text-content">
+        <span class="hero-tag">✨ Colección Exclusiva 2026</span>
+        <h1 class="hero-title">Resalta el Brillo Natural de tu Piel</h1>
+        <p class="hero-subtitle">
+          Cosméticos botánicos, fórmulas clínicamente probadas y el cuidado sofisticado que mereces.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-codepen-primary" (click)="scrollToProducts()">
+            <ion-icon name="bag-handle-outline"></ion-icon>
+            Explorar Tienda
+          </button>
+        </div>
+      </div>
+      <div class="hero-image-wrapper">
+        <img
+          src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80"
+          alt="Glow Beauty Hero"
+          class="hero-banner-img"
+        />
+      </div>
+    </div>
+  </section>
+
+  <div class="ecom-container">
+    <!-- Highlighted Categories (CodePen 3-Card layout adapted for Beauty) -->
+    <section class="category-cards-section">
+      <div class="category-card" (click)="selectCategory('Skincare')">
+        <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=500&q=80" alt="Skincare" />
+        <div class="card-overlay">
+          <h3>Cuidado Facial</h3>
+          <p>Sérums & Hidratantes</p>
+          <span class="explore-btn">Ver Colección →</span>
+        </div>
       </div>
 
-      <div class="dashboard-actions">
-        <button class="logout-btn" (click)="logout()">
-          <ion-icon name="log-out-outline"></ion-icon> Cerrar Sesión
-        </button>
+      <div class="category-card" (click)="selectCategory('Maquillaje')">
+        <img src="https://images.unsplash.com/photo-1522337094846-8a818192de1f?auto=format&fit=crop&w=500&q=80" alt="Maquillaje" />
+        <div class="card-overlay">
+          <h3>Maquillaje</h3>
+          <p>Labiales & Sombras</p>
+          <span class="explore-btn">Ver Colección →</span>
+        </div>
+      </div>
+
+      <div class="category-card" (click)="selectCategory('Fragancias')">
+        <img src="https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=500&q=80" alt="Fragancias" />
+        <div class="card-overlay">
+          <h3>Fragancias</h3>
+          <p>Esencias de Lujo</p>
+          <span class="explore-btn">Ver Colección →</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Catalog Section Anchor -->
+    <div id="catalog-section" class="catalog-header">
+      <div class="section-title-wrap">
+        <h2 class="section-title">Nuestros Productos Destacados</h2>
+        <p class="section-subtitle">Selección especial formulada con ingredientes de alta pureza</p>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="controls-bar">
+        <div class="search-box">
+          <ion-icon name="search-outline"></ion-icon>
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()"
+            placeholder="Buscar por producto o beneficio..."
+          />
+          <button *ngIf="searchTerm" (click)="searchTerm = ''; onSearchChange()" class="clear-btn">
+            <ion-icon name="close-circle"></ion-icon>
+          </button>
+        </div>
+
+        <div class="category-chips-scroll">
+          <button
+            *ngFor="let cat of categories"
+            class="filter-chip"
+            [class.active]="activeCategory === cat"
+            (click)="selectCategory(cat)"
+          >
+            {{ cat }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p>Cargando los mejores productos de belleza...</p>
+    </div>
+
+    <!-- Empty Filter Result -->
+    <div *ngIf="!isLoading && filteredProducts.length === 0" class="empty-state">
+      <ion-icon name="sparkles-outline"></ion-icon>
+      <h3>No encontramos resultados</h3>
+      <p>Intenta con otra palabra clave o selecciona otra categoría.</p>
+      <button class="btn-codepen-primary" (click)="searchTerm = ''; selectCategory('Todos')">
+        Ver Todo el Catálogo
+      </button>
+    </div>
+
+    <!-- Products Responsive Grid -->
+    <div *ngIf="!isLoading && filteredProducts.length > 0" class="products-grid">
+      <div
+        *ngFor="let prod of filteredProducts"
+        class="product-card"
+        (click)="openQuickView(prod)"
+      >
+        <div class="card-media">
+          <img [src]="prod.image_url" [alt]="prod.name" loading="lazy" />
+          <span class="category-badge">{{ prod.category }}</span>
+          <div class="stock-tag" [class.low-stock]="prod.stock < 15">
+            {{ prod.stock > 0 ? 'Stock: ' + prod.stock : 'Agotado' }}
+          </div>
+        </div>
+
+        <div class="card-info">
+          <div class="rating-row">
+            <div class="stars">
+              <ion-icon name="star"></ion-icon>
+              <span>{{ prod.rating || 4.8 }}</span>
+            </div>
+            <span class="reviews">({{ prod.reviews_count || 32 }} reseñas)</span>
+          </div>
+
+          <h3 class="product-name">{{ prod.name }}</h3>
+          <p class="product-desc">{{ prod.description }}</p>
+
+          <div class="card-bottom">
+            <div class="price-wrap">
+              <span class="price-currency">$</span>
+              <span class="price-amount">{{ prod.price | number:'1.2-2' }}</span>
+            </div>
+
+            <button
+              class="add-cart-btn"
+              (click)="addToCart(prod, $event)"
+              [disabled]="prod.stock <= 0"
+            >
+              <ion-icon name="cart-outline"></ion-icon>
+              <span>Añadir</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Quick View Modal -->
+  <ion-modal [isOpen]="isQuickViewOpen" (didDismiss)="closeQuickView()" class="quick-view-modal">
+    <ng-template>
+      <div class="modal-wrapper" *ngIf="selectedProduct">
+        <button class="close-modal-btn" (click)="closeQuickView()">
+          <ion-icon name="close"></ion-icon>
+        </button>
+
+        <div class="modal-grid">
+          <div class="modal-image-wrap">
+            <img [src]="selectedProduct.image_url" [alt]="selectedProduct.name" />
+          </div>
+
+          <div class="modal-details">
+            <span class="modal-category">{{ selectedProduct.category }}</span>
+            <h2>{{ selectedProduct.name }}</h2>
+
+            <div class="modal-rating">
+              <ion-icon name="star"></ion-icon>
+              <ion-icon name="star"></ion-icon>
+              <ion-icon name="star"></ion-icon>
+              <ion-icon name="star"></ion-icon>
+              <ion-icon name="star-half"></ion-icon>
+              <span class="rating-text">{{ selectedProduct.rating }} ({{ selectedProduct.reviews_count }} opiniones)</span>
+            </div>
+
+            <div class="modal-price">
+              ${{ selectedProduct.price | number:'1.2-2' }} MXN
+            </div>
+
+            <p class="modal-description">
+              {{ selectedProduct.description }}
+            </p>
+
+            <div class="beauty-benefits">
+              <div class="benefit-item">
+                <ion-icon name="leaf-outline"></ion-icon>
+                <span>Fórmula 100% Vegana</span>
+              </div>
+              <div class="benefit-item">
+                <ion-icon name="shield-checkmark-outline"></ion-icon>
+                <span>Dermatológicamente Testado</span>
+              </div>
+            </div>
+
+            <div class="quantity-selector-row">
+              <span class="qty-label">Cantidad:</span>
+              <div class="stepper">
+                <button (click)="decrementModalQty()" [disabled]="modalQuantity <= 1">
+                  <ion-icon name="remove-outline"></ion-icon>
+                </button>
+                <span class="qty-num">{{ modalQuantity }}</span>
+                <button (click)="incrementModalQty()" [disabled]="modalQuantity >= selectedProduct.stock">
+                  <ion-icon name="add-outline"></ion-icon>
+                </button>
+              </div>
+            </div>
+
+            <button
+              class="btn-codepen-primary modal-buy-btn"
+              (click)="addToCart(selectedProduct, $event, modalQuantity)"
+            >
+              <ion-icon name="bag-add-outline"></ion-icon>
+              Añadir {{ modalQuantity }} al Carrito • ${{ (selectedProduct.price * modalQuantity) | number:'1.2-2' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>

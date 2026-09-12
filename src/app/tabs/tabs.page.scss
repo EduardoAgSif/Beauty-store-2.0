@@ -1,1 +1,164 @@
+// Desktop Navigation Bar
+.desktop-navbar {
+  display: none;
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(146, 161, 176, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  border-bottom: 1px solid #f8e1eb;
 
+  @media (min-width: 768px) {
+    display: block;
+  }
+
+  .desktop-nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+  }
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+
+    .logo-icon {
+      font-size: 1.8rem;
+      color: #fb2175;
+    }
+
+    .logo-text {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #232333;
+      letter-spacing: -0.5px;
+
+      span {
+        color: #fb2175;
+      }
+    }
+  }
+
+  .desktop-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: #4a4a58;
+      font-size: 1rem;
+      font-weight: 500;
+      position: relative;
+      padding: 8px 4px;
+      transition: color 0.25s ease;
+
+      ion-icon {
+        font-size: 1.25rem;
+      }
+
+      &:hover {
+        color: #fb2175;
+      }
+
+      &.active-link {
+        color: #fb2175;
+        font-weight: 600;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 3px;
+          background: #fb2175;
+          border-radius: 2px;
+        }
+      }
+    }
+
+    .cart-link {
+      position: relative;
+
+      .desktop-cart-badge {
+        background: #fb2175;
+        color: #ffffff;
+        font-size: 0.72rem;
+        font-weight: 700;
+        min-width: 20px;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+        border-radius: 10px;
+        padding: 0 5px;
+        margin-left: 4px;
+      }
+    }
+  }
+}
+
+// Mobile Tab Bar
+.mobile-tab-bar {
+  --background: #ffffff;
+  --border: 1px solid #fce8f0;
+  box-shadow: 0 -4px 16px rgba(251, 33, 117, 0.06);
+  height: 60px;
+
+  ion-tab-button {
+    --color: #8f92a1;
+    --color-selected: #fb2175;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &.tab-selected {
+      font-weight: 600;
+
+      ion-icon {
+        transform: scale(1.1);
+      }
+    }
+
+    ion-icon {
+      font-size: 1.45rem;
+      transition: transform 0.2s ease;
+    }
+
+    ion-label {
+      font-size: 0.78rem;
+      margin-top: 2px;
+    }
+  }
+
+  .cart-icon-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    .tab-badge {
+      position: absolute;
+      top: -6px;
+      right: -12px;
+      font-size: 0.68rem;
+      padding: 2px 6px;
+      border-radius: 10px;
+      --background: #fb2175;
+      font-weight: 700;
+      animation: pulse 1.5s infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}

@@ -1,2 +1,47 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+// CodePen Theme Variables - Beauty & Cosmetics E-Commerce Palette
+:root {
+  --ion-font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /** Primary - CodePen Vibrant Rose / Fuchsia **/
+  --ion-color-primary: #fb2175;
+  --ion-color-primary-rgb: 251, 33, 117;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #dd1d67;
+  --ion-color-primary-tint: #fb3783;
+
+  /** Secondary - Rose Blossom **/
+  --ion-color-secondary: #ea4c89;
+  --ion-color-secondary-rgb: 234, 76, 137;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #ce4379;
+  --ion-color-secondary-tint: #ec5e95;
+
+  /** Tertiary - Soft Mauve / Champagne **/
+  --ion-color-tertiary: #dd85ab;
+  --ion-color-tertiary-rgb: 221, 133, 171;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #c27596;
+  --ion-color-tertiary-tint: #e091b3;
+
+  /** Success **/
+  --ion-color-success: #2dd55b;
+  --ion-color-success-rgb: 45, 213, 91;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+
+  /** Dark & Light Tones **/
+  --ion-color-dark: #1e1e24;
+  --ion-color-medium: #8a8d9a;
+  --ion-color-light: #fdf2f6;
+
+  /** Custom CodePen Beauty Variables **/
+  --glow-gradient: linear-gradient(135deg, #fb2175 0%, #ea4c89 100%);
+  --glow-gradient-hover: linear-gradient(135deg, #e41c68 0%, #d83b77 100%);
+  --glow-card-shadow: 0 10px 25px rgba(251, 33, 117, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
+  --glow-card-hover-shadow: 0 16px 35px rgba(251, 33, 117, 0.16), 0 6px 14px rgba(0, 0, 0, 0.08);
+  --glow-soft-bg: #fff5f8;
+  --glow-border: #fce4ed;
+}

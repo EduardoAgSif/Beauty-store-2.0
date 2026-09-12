@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CartService } from '../services/cart.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tabs',
@@ -6,8 +9,19 @@ import { Component } from '@angular/core';
   styleUrls: ['tabs.page.scss'],
   standalone: false,
 })
-export class TabsPage {
+export class TabsPage implements OnInit {
+  cartCount$: Observable<number>;
 
-  constructor() {}
+  constructor(
+    private cartService: CartService,
+    private router: Router
+  ) {
+    this.cartCount$ = this.cartService.count$;
+  }
 
+  ngOnInit() {}
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
+  }
 }
