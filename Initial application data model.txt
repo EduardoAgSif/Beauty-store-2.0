@@ -1,0 +1,191 @@
+================================================================================
+                    INITIAL APPLICATION DATA MODEL
+                         BeautyStore 2.0
+================================================================================
+
+Project:     BeautyStore 2.0 — Luxury Beauty E-Commerce Mobile App
+Tech Stack:  Ionic 9 + Angular 22 (Frontend) | PHP REST API (Backend) | MySQL (DB)
+Date:        September 2026
+Course:      Programación de Móviles II
+
+================================================================================
+  1. ENTITIES OVERVIEW
+================================================================================
+
+The application data model consists of three core entities:
+
+  ┌──────────┐         ┌──────────────┐         ┌──────────────┐
+  │  User    │         │   Product    │         │  CartItem    │
+  │ (MySQL)  │         │   (MySQL)    │         │ (Client-side)│
+  └──────────┘         └──────────────┘         └──────────────┘
+
+  - User:     Represents registered customers who authenticate into the app.
+  - Product:  Represents the beauty products available in the catalog.
+  - CartItem: Represents a product added to the shopping cart with a quantity
+              (managed in-memory on the frontend, no database persistence).
+
+================================================================================
+  2. ENTITY: User
+================================================================================
+
+  Source:  backend/schema.sql → table `users`
+  Purpose: Stores registered user accounts for authentication.
+
+  ┌─────────────┬────────────────┬──────────────────────────────────────────┐
+  │ Field       │ Type           │ Description                              │
+  ├─────────────┼────────────────┼──────────────────────────────────────────┤
+  │ id          │ INT (PK, AI)   │ Unique identifier, auto-increment        │
+  │ name        │ VARCHAR(100)   │ Full name of the user                    │
+  │ email       │ VARCHAR(150)   │ Email address (unique, used for login)   │
+  │ password    │ VARCHAR(255)   │ Hashed password (bcrypt)                 │
+  │ created_at  │ TIMESTAMP      │ Account creation date (auto-generated)   │
+  └─────────────┴────────────────┴──────────────────────────────────────────┘
+
+  Constraints:
+    - PRIMARY KEY on `id`
+    - UNIQUE on `email`
+    - NOT NULL on `name`, `email`, `password`
+
+================================================================================
+  3. ENTITY: Product
+================================================================================
+
+  Source:  backend/schema.sql → table `products`
+           src/app/models/product.model.ts → TypeScript interface
+  Purpose: Represents a luxury beauty product in the catalog.
+
+  Database Table (MySQL):
+  ┌─────────────┬────────────────┬──────────────────────────────────────────┐
+  │ Field       │ Type           │ Description                              │
+  ├─────────────┼────────────────┼──────────────────────────────────────────┤
+  │ id          │ INT (PK, AI)   │ Unique identifier, auto-increment        │
+  │ name        │ VARCHAR(150)   │ Product name                             │
+  │ description │ TEXT           │ Detailed product description             │
+  │ price       │ DECIMAL(10,2)  │ Price in MXN                             │
+  │ stock       │ INT            │ Available inventory (default: 0)         │
+  │ category    │ VARCHAR(50)    │ Product category (default: 'Skincare')   │
+  │ image_url   │ TEXT           │ URL to the product image                 │
+  │ created_at  │ TIMESTAMP      │ Creation date (auto-generated)           │
+  └─────────────┴────────────────┴──────────────────────────────────────────┘
+
+  TypeScript Interface (Frontend):
+  ┌─────────────────┬──────────┬──────────────────────────────────────────┐
+  │ Property        │ Type     │ Description                              │
+  ├─────────────────┼──────────┼──────────────────────────────────────────┤
+  │ id              │ number   │ Unique identifier                        │
+  │ name            │ string   │ Product name                             │
+  │ description     │ string   │ Product description                      │
+  │ price           │ number   │ Product price                            │
+  │ stock           │ number   │ Available stock                          │
+  │ category?       │ string   │ Product category (optional)              │
+  │ image_url?      │ string   │ Product image URL (optional)             │
+  │ rating?         │ number   │ Average rating (optional, future use)    │
+  │ reviews_count?  │ number   │ Number of reviews (optional, future use) │
+  │ is_featured?    │ boolean  │ Featured flag (optional, future use)     │
+  └─────────────────┴──────────┴──────────────────────────────────────────┘
+
+  Categories used in seed data:
+    - Skincare
+    - Maquillaje
+    - Fragancias
+    - Cuidado Capilar
+
+  Constraints:
+    - PRIMARY KEY on `id`
+    - NOT NULL on `name`, `price`
+
+================================================================================
+  4. ENTITY: CartItem
+================================================================================
+
+  Source:  src/app/models/cart-item.model.ts → TypeScript interface
+  Purpose: Represents a product added to the user's shopping cart.
+  Storage: In-memory only (client-side, no database persistence).
+
+  ┌─────────────┬──────────┬──────────────────────────────────────────────┐
+  │ Property    │ Type     │ Description                                  │
+  ├─────────────┼──────────┼──────────────────────────────────────────────┤
+  │ product     │ Product  │ Reference to the associated Product object   │
+  │ quantity    │ number   │ Number of units of this product in the cart  │
+  └─────────────┴──────────┴──────────────────────────────────────────────┘
+
+================================================================================
+  5. ENTITY RELATIONSHIPS
+================================================================================
+
+  User ─── (authenticates) ──→ App
+    • A user registers and logs in to access the application.
+    • No direct foreign key relationship to Product or CartItem in the DB.
+
+  Product ←── (referenced by) ── CartItem
+    • Each CartItem contains a reference to one Product.
+    • A Product can appear in zero or many CartItems.
+    • Relationship type: Many-to-One (CartItem → Product).
+
+  Relationship Diagram:
+
+    ┌──────────┐                ┌──────────────┐
+    │  User    │                │   Product    │
+    │──────────│                │──────────────│
+    │ id (PK)  │                │ id (PK)      │
+    │ name     │                │ name         │
+    │ email    │                │ description  │
+    │ password │                │ price        │
+    │ created  │                │ stock        │
+    │          │                │ category     │
+    │          │                │ image_url    │
+    │          │                │ created_at   │
+    └──────────┘                └──────┬───────┘
+                                      │ 1
+                                      │
+                                      │ *
+                                ┌─────┴────────┐
+                                │  CartItem    │
+                                │──────────────│
+                                │ product (FK) │
+                                │ quantity     │
+                                └──────────────┘
+
+    Legend: 1 = one side | * = many side | PK = Primary Key | FK = Foreign Key
+
+================================================================================
+  6. SEED DATA
+================================================================================
+
+  Users (1 test user):
+    - Eduardo Aguilar | test@gmail.com | admin1234
+
+  Products (12 luxury beauty products):
+    ID  Name                                Category          Price (MXN)
+    --  ----                                --------          -----------
+     1  L'Élixir Doré Glow Face Oil        Skincare             640.00
+     2  Champagne Silk Hydrating Cream      Skincare             520.00
+     3  Velvet Nude Matte Lipstick          Maquillaje           290.00
+     4  Subtle Glow Liquid Illuminator      Maquillaje           380.00
+     5  Rose & Amber Gold Eau de Parfum     Fragancias           980.00
+     6  Botanical Gold Repair Hair Serum    Cuidado Capilar      450.00
+     7  Pearl Radiance Gentle Cleanser      Skincare             320.00
+     8  Warm Taupe Eyeshadow Palette        Maquillaje           560.00
+     9  Golden Orchid Luxury Body Mist      Fragancias           410.00
+    10  Hydra-Plump Lip Treatment Balm      Maquillaje           220.00
+    11  Nourishing Cashmere Hair Mask       Cuidado Capilar      490.00
+    12  Pure Gold Eye Contour Cream         Skincare             590.00
+
+================================================================================
+  7. NOTES
+================================================================================
+
+  • The CartItem entity is managed entirely on the client side (Angular service)
+    and is not persisted in the database. Cart data is lost when the app is
+    closed or the user logs out.
+
+  • The TypeScript Product interface includes optional fields (rating,
+    reviews_count, is_featured) that are reserved for future implementation
+    and do not currently exist in the MySQL schema.
+
+  • User passwords are hashed using bcrypt (PHP password_hash) before storage.
+
+  • The database engine is InnoDB with utf8mb4 character set for full Unicode
+    support (including emojis and special characters in product descriptions).
+
+================================================================================
