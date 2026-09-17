@@ -1,4 +1,4 @@
-# 💄 BeautyStore 2.0
+#  BeautyStore 2.0
 
 A luxury beauty e-commerce mobile application built with **Ionic + Angular** and a **PHP** REST API backend. Browse a curated catalog of premium skincare, makeup, fragrances and hair care products.
 
@@ -16,7 +16,7 @@ A luxury beauty e-commerce mobile application built with **Ionic + Angular** and
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 | Layer        | Technology                          |
 | ------------ | ----------------------------------- |
@@ -28,7 +28,7 @@ A luxury beauty e-commerce mobile application built with **Ionic + Angular** and
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 BeautyStore_2.0/
@@ -57,7 +57,7 @@ BeautyStore_2.0/
 
 ---
 
-## ✅ Prerequisites
+##  Prerequisites
 
 - **Node.js** (v18+) & **npm**
 - **Ionic CLI** — `npm install -g @ionic/cli`
@@ -66,7 +66,7 @@ BeautyStore_2.0/
 
 ---
 
-## 🗄 Backend Setup
+##  Backend Setup
 
 1. **Start XAMPP** — make sure **Apache** and **MySQL** are running.
 
@@ -88,7 +88,7 @@ BeautyStore_2.0/
 
 ---
 
-## 🚀 Frontend Setup
+##  Frontend Setup
 
 1. **Navigate to the project folder:**
 
@@ -112,7 +112,7 @@ BeautyStore_2.0/
 
 ---
 
-## 📱 Running on Android
+##  Running on Android
 
 ```bash
 # Build the web assets
@@ -129,7 +129,7 @@ Then build and run from Android Studio on an emulator or physical device.
 
 ---
 
-## 🔑 Test Credentials
+##  Test Credentials
 
 | Field      | Value              |
 | ---------- | ------------------ |
@@ -138,7 +138,7 @@ Then build and run from Android Studio on an emulator or physical device.
 
 ---
 
-## 📜 Available Scripts
+##  Available Scripts
 
 | Command              | Description                                |
 | -------------------- | ------------------------------------------ |
