@@ -1,30 +1,30 @@
-// Luxury Beauty Theme Variables - Soft Champagne, Pearl White, Warm Beige, Soft Taupe & Subtle Gold
+// Luxury Beauty Theme Variables - Warm Beige, Soft Cream, Sand, Soft Taupe & Muted Sandstone
 :root {
   --ion-font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  /** Primary - Subtle Elegant Gold **/
-  --ion-color-primary: #c5a880;
-  --ion-color-primary-rgb: 197, 168, 128;
+  /** Primary - Warm Sophisticated Beige **/
+  --ion-color-primary: #be9b7b;
+  --ion-color-primary-rgb: 190, 155, 123;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #ad9470;
-  --ion-color-primary-tint: #cbb18d;
+  --ion-color-primary-shade: #a7876b;
+  --ion-color-primary-tint: #c5a588;
 
-  /** Secondary - Warm Beige **/
-  --ion-color-secondary: #e8dcce;
-  --ion-color-secondary-rgb: 232, 220, 206;
+  /** Secondary - Soft Warm Beige **/
+  --ion-color-secondary: #eddccb;
+  --ion-color-secondary-rgb: 237, 220, 203;
   --ion-color-secondary-contrast: #2e2926;
   --ion-color-secondary-contrast-rgb: 46, 41, 38;
-  --ion-color-secondary-shade: #ccc2b5;
-  --ion-color-secondary-tint: #eae0d3;
+  --ion-color-secondary-shade: #d1c2b3;
+  --ion-color-secondary-tint: #efe0d0;
 
-  /** Tertiary - Soft Champagne **/
-  --ion-color-tertiary: #f5ebdc;
-  --ion-color-tertiary-rgb: 245, 235, 220;
+  /** Tertiary - Cream Beige **/
+  --ion-color-tertiary: #f6eee3;
+  --ion-color-tertiary-rgb: 246, 238, 227;
   --ion-color-tertiary-contrast: #2e2926;
   --ion-color-tertiary-contrast-rgb: 46, 41, 38;
-  --ion-color-tertiary-shade: #d8cfc2;
-  --ion-color-tertiary-tint: #f6edd0;
+  --ion-color-tertiary-shade: #d8d1c7;
+  --ion-color-tertiary-tint: #f7f0e6;
 
   /** Success **/
   --ion-color-success: #438a5e;
@@ -34,25 +34,33 @@
 
   /** Dark & Taupe Tones **/
   --ion-color-dark: #2e2926;
-  --ion-color-medium: #8a7f76;
-  --ion-color-light: #faf8f5;
+  --ion-color-medium: #85796f;
+  --ion-color-light: #faf6f0;
 
-  /** Custom Palette Tokens **/
-  --palette-gold: #c5a880;
-  --palette-gold-dark: #a68353;
-  --palette-gold-light: #dfcaa8;
-  --palette-champagne: #f5ebdc;
-  --palette-pearl: #faf8f5;
-  --palette-beige: #e8dcce;
-  --palette-taupe: #8a7f76;
+  /** Custom Beige Palette Tokens **/
+  --palette-beige-primary: #be9b7b;
+  --palette-beige-dark: #9e7d5e;
+  --palette-beige-light: #e5d4c2;
+  --palette-beige-soft: #f2e7db;
+  --palette-cream: #faf6f0;
+  --palette-sand: #e8ded2;
+  --palette-taupe: #85796f;
   --palette-charcoal: #2e2926;
 
+  // Backwards compatibility aliases
+  --palette-gold: #be9b7b;
+  --palette-gold-dark: #9e7d5e;
+  --palette-gold-light: #e5d4c2;
+  --palette-champagne: #f6eee3;
+  --palette-pearl: #faf6f0;
+  --palette-beige: #eddccb;
+
   /** Gradients & Shadows **/
-  --glow-gradient: linear-gradient(135deg, #c5a880 0%, #a68353 100%);
-  --glow-gradient-hover: linear-gradient(135deg, #d4b892 0%, #b89260 100%);
-  --glow-soft-gradient: linear-gradient(135deg, #faf8f5 0%, #f5ebdc 50%, #e8dcce 100%);
-  --glow-card-shadow: 0 10px 25px rgba(138, 127, 118, 0.08), 0 4px 10px rgba(0, 0, 0, 0.03);
-  --glow-card-hover-shadow: 0 16px 35px rgba(197, 168, 128, 0.22), 0 6px 14px rgba(0, 0, 0, 0.05);
-  --glow-soft-bg: #faf8f5;
-  --glow-border: #ede4d8;
+  --glow-gradient: linear-gradient(135deg, #be9b7b 0%, #9e7d5e 100%);
+  --glow-gradient-hover: linear-gradient(135deg, #caa98b 0%, #ab8969 100%);
+  --glow-soft-gradient: linear-gradient(135deg, #faf6f0 0%, #f6eee3 50%, #eddccb 100%);
+  --glow-card-shadow: 0 10px 25px rgba(133, 121, 111, 0.08), 0 4px 10px rgba(0, 0, 0, 0.03);
+  --glow-card-hover-shadow: 0 16px 35px rgba(190, 155, 123, 0.22), 0 6px 14px rgba(0, 0, 0, 0.05);
+  --glow-soft-bg: #faf6f0;
+  --glow-border: #e8ded2;
 }

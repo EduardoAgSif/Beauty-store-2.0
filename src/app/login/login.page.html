@@ -15,10 +15,10 @@
             <ion-icon name="sparkles"></ion-icon>
             <span>Glow<strong>Beauty</strong></span>
           </div>
-          <h1 class="panel-title">¡Bienvenido de nuevo!</h1>
-          <p class="panel-subtitle">Para mantenerte conectado con nosotros, inicia sesión con tus datos personales</p>
+          <h1 class="panel-title">Welcome Back!</h1>
+          <p class="panel-subtitle">To stay connected with our luxury collection, please sign in with your account</p>
           <button type="button" class="pill-btn pill-btn-action" (click)="toggleMode(false)">
-            INICIAR SESIÓN
+            SIGN IN
           </button>
         </div>
 
@@ -27,10 +27,10 @@
             <ion-icon name="sparkles"></ion-icon>
             <span>Glow<strong>Beauty</strong></span>
           </div>
-          <h1 class="panel-title">¡Hola, Bella!</h1>
-          <p class="panel-subtitle">Ingresa a tu cuenta y descubre nuestra exclusiva colección de cosméticos y cuidado personal</p>
+          <h1 class="panel-title">Hello, Gorgeous!</h1>
+          <p class="panel-subtitle">Access your account and discover our curated luxury skincare, fragrances, and makeup</p>
           <button type="button" class="pill-btn pill-btn-action" (click)="toggleMode(true)">
-            REGISTRARSE
+            SIGN UP
           </button>
         </div>
       </div>
@@ -48,7 +48,7 @@
 
         <!-- Create Account View -->
         <div class="form-container" *ngIf="isSignUpMode">
-          <h1 class="form-title">Crear Cuenta</h1>
+          <h1 class="form-title">Create Account</h1>
           
           <div class="social-container">
             <a href="javascript:void(0)" class="social-icon">
@@ -62,31 +62,31 @@
             </a>
           </div>
 
-          <span class="form-divider">o usa tu correo para registrarte</span>
+          <span class="form-divider">or use your email for registration</span>
 
           <form (submit)="onSignUp(); $event.preventDefault()" class="auth-form">
             <div class="input-field">
-              <input type="text" placeholder="Nombre completo" [(ngModel)]="signUpData.name" name="name" required [disabled]="isLoading" />
+              <input type="text" placeholder="Full name" [(ngModel)]="signUpData.name" name="name" required [disabled]="isLoading" />
             </div>
 
             <div class="input-field">
-              <input type="email" placeholder="Correo electrónico" [(ngModel)]="signUpData.email" name="email" required [disabled]="isLoading" />
+              <input type="email" placeholder="Email address" [(ngModel)]="signUpData.email" name="email" required [disabled]="isLoading" />
             </div>
 
             <div class="input-field">
-              <input type="password" placeholder="Contraseña" [(ngModel)]="signUpData.password" name="password" required [disabled]="isLoading" />
+              <input type="password" placeholder="Password" [(ngModel)]="signUpData.password" name="password" required [disabled]="isLoading" />
             </div>
 
             <button type="submit" class="pill-btn pill-btn-primary" [disabled]="isLoading">
               <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
-              <span *ngIf="!isLoading">REGISTRARSE</span>
+              <span *ngIf="!isLoading">CREATE ACCOUNT</span>
             </button>
           </form>
         </div>
 
         <!-- Sign In View -->
         <div class="form-container" *ngIf="!isSignUpMode">
-          <h1 class="form-title">Iniciar Sesión</h1>
+          <h1 class="form-title">Sign In</h1>
           
           <div class="social-container">
             <a href="javascript:void(0)" class="social-icon">
@@ -100,22 +100,22 @@
             </a>
           </div>
 
-          <span class="form-divider">o usa tu cuenta registrada</span>
+          <span class="form-divider">or use your email account</span>
 
           <form (submit)="onSignIn(); $event.preventDefault()" class="auth-form">
             <div class="input-field">
-              <input type="email" placeholder="Correo electrónico" [(ngModel)]="signInData.email" name="signInEmail" required [disabled]="isLoading" />
+              <input type="email" placeholder="Email address" [(ngModel)]="signInData.email" name="signInEmail" required [disabled]="isLoading" />
             </div>
 
             <div class="input-field">
-              <input type="password" placeholder="Contraseña" [(ngModel)]="signInData.password" name="signInPassword" required [disabled]="isLoading" />
+              <input type="password" placeholder="Password" [(ngModel)]="signInData.password" name="signInPassword" required [disabled]="isLoading" />
             </div>
 
-            <a href="javascript:void(0)" class="forgot-link">¿Olvidaste tu contraseña?</a>
+            <a href="javascript:void(0)" class="forgot-link">Forgot password?</a>
 
             <button type="submit" class="pill-btn pill-btn-primary" [disabled]="isLoading">
               <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
-              <span *ngIf="!isLoading">INICIAR SESIÓN</span>
+              <span *ngIf="!isLoading">SIGN IN</span>
             </button>
           </form>
         </div>

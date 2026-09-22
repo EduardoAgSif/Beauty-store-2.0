@@ -6,11 +6,6 @@
         <span>Glow<strong>Beauty</strong></span>
       </div>
     </ion-title>
-    <ion-buttons slot="end">
-      <ion-button routerLink="/tabs/tab2">
-        <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -20,59 +15,163 @@
     </ion-refresher-content>
   </ion-refresher>
 
-  <!-- Hero Banner (CodePen Inspired) -->
+  <!-- Hero Banner with Large Interactive Carousel -->
   <section class="hero-section">
     <div class="ecom-container hero-container">
       <div class="hero-text-content">
-        <span class="hero-tag">✨ Colección Exclusiva 2026</span>
-        <h1 class="hero-title">Resalta el Brillo Natural de tu Piel</h1>
+        <span class="hero-tag">✨ Exclusive Beige Collection 2026</span>
+        <h1 class="hero-title">Enhance Your Natural Beauty</h1>
         <p class="hero-subtitle">
-          Cosméticos botánicos, fórmulas clínicamente probadas y el cuidado sofisticado que mereces.
+          Botanical cosmetics, clinically proven formulas, and sophisticated warm beige skincare that your skin deserves.
         </p>
         <div class="hero-actions">
           <button class="btn-codepen-primary" (click)="scrollToProducts()">
             <ion-icon name="bag-handle-outline"></ion-icon>
-            Explorar Tienda
+            Explore Catalog
+          </button>
+          <button class="btn-outline-beige" (click)="scrollToBestSellers()">
+            <ion-icon name="star-outline"></ion-icon>
+            Best Sellers
           </button>
         </div>
       </div>
-      <div class="hero-image-wrapper">
-        <img
-          src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80"
-          alt="Glow Beauty Hero"
-          class="hero-banner-img"
-        />
+
+      <!-- Large Interactive Product Carousel -->
+      <div
+        class="hero-carousel-wrapper"
+        (mouseenter)="stopAutoSlide()"
+        (mouseleave)="startAutoSlide()"
+      >
+        <div class="carousel-track">
+          <div
+            *ngFor="let slide of heroSlides; let i = index"
+            class="carousel-slide"
+            [class.active]="i === currentSlide"
+            (click)="onSlideClick(slide)"
+          >
+            <img [src]="slide.imageUrl" [alt]="slide.title" class="slide-image" />
+            <div class="slide-badge-overlay">
+              <span class="slide-tag">{{ slide.tag }}</span>
+              <div class="slide-info-pill">
+                <h4>{{ slide.title }}</h4>
+                <p>{{ slide.subtitle }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carousel Navigation Arrows -->
+        <button
+          class="carousel-arrow prev"
+          (click)="prevSlide(); $event.stopPropagation()"
+          aria-label="Previous Slide"
+        >
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </button>
+        <button
+          class="carousel-arrow next"
+          (click)="nextSlide(); $event.stopPropagation()"
+          aria-label="Next Slide"
+        >
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+
+        <!-- Carousel Dot Indicators -->
+        <div class="carousel-dots">
+          <button
+            *ngFor="let slide of heroSlides; let idx = index"
+            class="dot"
+            [class.active]="idx === currentSlide"
+            (click)="goToSlide(idx); $event.stopPropagation()"
+            [attr.aria-label]="'Slide ' + (idx + 1)"
+          ></button>
+        </div>
       </div>
     </div>
   </section>
 
   <div class="ecom-container">
-    <!-- Highlighted Categories (CodePen 3-Card layout adapted for Beauty) -->
+    <!-- Dedicated Hero Spotlight: Best Sellers Section -->
+    <section id="bestsellers-section" class="bestsellers-section" *ngIf="bestSellers.length > 0">
+      <div class="section-title-wrap">
+        <div class="bestseller-title-badge">
+          <ion-icon name="sparkles"></ion-icon>
+          <span>Top Featured</span>
+        </div>
+        <h2 class="section-title">Our Best Sellers</h2>
+        <p class="section-subtitle">The undisputed community favorites with our highest customer ratings</p>
+      </div>
+
+      <div class="bestsellers-grid">
+        <div
+          *ngFor="let item of bestSellers; let rank = index"
+          class="bestseller-card"
+          (click)="openQuickView(item)"
+        >
+          <div class="bestseller-rank-badge">
+            <ion-icon name="star"></ion-icon>
+            <span>#{{ rank + 1 }} Top</span>
+          </div>
+
+          <div class="bestseller-media">
+            <img [src]="item.image_url" [alt]="item.name" loading="lazy" />
+          </div>
+
+          <div class="bestseller-body">
+            <span class="bestseller-category">{{ item.category }}</span>
+            <h3 class="bestseller-name">{{ item.name }}</h3>
+
+            <div class="rating-row">
+              <div class="stars">
+                <ion-icon name="star"></ion-icon>
+                <span>{{ item.rating || 4.9 }}</span>
+              </div>
+              <span class="reviews">({{ item.reviews_count || 120 }} reviews)</span>
+            </div>
+
+            <div class="bestseller-footer">
+              <span class="bestseller-price">${{ item.price | number:'1.2-2' }}</span>
+              <button
+                class="bestseller-add-btn"
+                (click)="addToCart(item, $event)"
+                [disabled]="item.stock <= 0"
+                title="Add to Shopping Bag"
+              >
+                <ion-icon name="cart-outline"></ion-icon>
+                <span>Add</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Highlighted Categories -->
     <section class="category-cards-section">
       <div class="category-card" (click)="selectCategory('Skincare')">
         <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=500&q=80" alt="Skincare" />
         <div class="card-overlay">
-          <h3>Cuidado Facial</h3>
-          <p>Sérums & Hidratantes</p>
-          <span class="explore-btn">Ver Colección →</span>
+          <h3>Skincare</h3>
+          <p>Serums & Deep Hydration</p>
+          <span class="explore-btn">Explore Collection →</span>
         </div>
       </div>
 
-      <div class="category-card" (click)="selectCategory('Maquillaje')">
-        <img src="https://images.unsplash.com/photo-1522337094846-8a818192de1f?auto=format&fit=crop&w=500&q=80" alt="Maquillaje" />
+      <div class="category-card" (click)="selectCategory('Makeup')">
+        <img src="https://images.unsplash.com/photo-1522337094846-8a818192de1f?auto=format&fit=crop&w=500&q=80" alt="Makeup" />
         <div class="card-overlay">
-          <h3>Maquillaje</h3>
-          <p>Labiales & Sombras</p>
-          <span class="explore-btn">Ver Colección →</span>
+          <h3>Makeup</h3>
+          <p>Lipsticks & Warm Palettes</p>
+          <span class="explore-btn">Explore Collection →</span>
         </div>
       </div>
 
-      <div class="category-card" (click)="selectCategory('Fragancias')">
-        <img src="https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=500&q=80" alt="Fragancias" />
+      <div class="category-card" (click)="selectCategory('Fragrances')">
+        <img src="https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=500&q=80" alt="Fragrances" />
         <div class="card-overlay">
-          <h3>Fragancias</h3>
-          <p>Esencias de Lujo</p>
-          <span class="explore-btn">Ver Colección →</span>
+          <h3>Fragrances</h3>
+          <p>Fine Perfumes & Vanilla</p>
+          <span class="explore-btn">Explore Collection →</span>
         </div>
       </div>
     </section>
@@ -80,8 +179,8 @@
     <!-- Catalog Section Anchor -->
     <div id="catalog-section" class="catalog-header">
       <div class="section-title-wrap">
-        <h2 class="section-title">Nuestros Productos Destacados</h2>
-        <p class="section-subtitle">Selección especial formulada con ingredientes de alta pureza</p>
+        <h2 class="section-title">Complete Luxury Catalog</h2>
+        <p class="section-subtitle">Artisanal formulations crafted with ultra-pure botanical ingredients</p>
       </div>
 
       <!-- Search & Filters -->
@@ -92,7 +191,7 @@
             type="text"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearchChange()"
-            placeholder="Buscar por producto o beneficio..."
+            placeholder="Search by product or benefit..."
           />
           <button *ngIf="searchTerm" (click)="searchTerm = ''; onSearchChange()" class="clear-btn">
             <ion-icon name="close-circle"></ion-icon>
@@ -115,16 +214,16 @@
     <!-- Loading State -->
     <div *ngIf="isLoading" class="loading-state">
       <ion-spinner name="crescent" color="primary"></ion-spinner>
-      <p>Cargando los mejores productos de belleza...</p>
+      <p>Loading curated beauty products...</p>
     </div>
 
     <!-- Empty Filter Result -->
     <div *ngIf="!isLoading && filteredProducts.length === 0" class="empty-state">
       <ion-icon name="sparkles-outline"></ion-icon>
-      <h3>No encontramos resultados</h3>
-      <p>Intenta con otra palabra clave o selecciona otra categoría.</p>
-      <button class="btn-codepen-primary" (click)="searchTerm = ''; selectCategory('Todos')">
-        Ver Todo el Catálogo
+      <h3>No products found</h3>
+      <p>Try searching with another keyword or selecting a different category.</p>
+      <button class="btn-codepen-primary" (click)="searchTerm = ''; selectCategory('All')">
+        View All Products
       </button>
     </div>
 
@@ -139,7 +238,7 @@
           <img [src]="prod.image_url" [alt]="prod.name" loading="lazy" />
           <span class="category-badge">{{ prod.category }}</span>
           <div class="stock-tag" [class.low-stock]="prod.stock < 15">
-            {{ prod.stock > 0 ? 'Stock: ' + prod.stock : 'Agotado' }}
+            {{ prod.stock > 0 ? 'Stock: ' + prod.stock : 'Out of Stock' }}
           </div>
         </div>
 
@@ -149,7 +248,7 @@
               <ion-icon name="star"></ion-icon>
               <span>{{ prod.rating || 4.8 }}</span>
             </div>
-            <span class="reviews">({{ prod.reviews_count || 32 }} reseñas)</span>
+            <span class="reviews">({{ prod.reviews_count || 32 }} reviews)</span>
           </div>
 
           <h3 class="product-name">{{ prod.name }}</h3>
@@ -167,7 +266,7 @@
               [disabled]="prod.stock <= 0"
             >
               <ion-icon name="cart-outline"></ion-icon>
-              <span>Añadir</span>
+              <span>Add</span>
             </button>
           </div>
         </div>
@@ -198,7 +297,7 @@
               <ion-icon name="star"></ion-icon>
               <ion-icon name="star"></ion-icon>
               <ion-icon name="star-half"></ion-icon>
-              <span class="rating-text">{{ selectedProduct.rating }} ({{ selectedProduct.reviews_count }} opiniones)</span>
+              <span class="rating-text">{{ selectedProduct.rating }} ({{ selectedProduct.reviews_count }} reviews)</span>
             </div>
 
             <div class="modal-price">
@@ -212,16 +311,16 @@
             <div class="beauty-benefits">
               <div class="benefit-item">
                 <ion-icon name="leaf-outline"></ion-icon>
-                <span>Fórmula 100% Vegana</span>
+                <span>100% Vegan Formula</span>
               </div>
               <div class="benefit-item">
                 <ion-icon name="shield-checkmark-outline"></ion-icon>
-                <span>Dermatológicamente Testado</span>
+                <span>Dermatologically Tested</span>
               </div>
             </div>
 
             <div class="quantity-selector-row">
-              <span class="qty-label">Cantidad:</span>
+              <span class="qty-label">Quantity:</span>
               <div class="stepper">
                 <button (click)="decrementModalQty()" [disabled]="modalQuantity <= 1">
                   <ion-icon name="remove-outline"></ion-icon>
@@ -238,7 +337,7 @@
               (click)="addToCart(selectedProduct, $event, modalQuantity)"
             >
               <ion-icon name="bag-add-outline"></ion-icon>
-              Añadir {{ modalQuantity }} al Carrito • ${{ (selectedProduct.price * modalQuantity) | number:'1.2-2' }}
+              Add {{ modalQuantity }} to Bag • ${{ (selectedProduct.price * modalQuantity) | number:'1.2-2' }}
             </button>
           </div>
         </div>

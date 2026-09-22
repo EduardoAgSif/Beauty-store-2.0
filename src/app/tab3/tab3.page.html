@@ -1,6 +1,6 @@
 <ion-header [translucent]="true" class="mobile-only-header">
   <ion-toolbar>
-    <ion-title>Mi Perfil</ion-title>
+    <ion-title>My Account</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -14,9 +14,9 @@
         </div>
       </div>
       <div class="user-header-info">
-        <span class="member-badge">✨ Miembro Glow VIP</span>
-        <h2>{{ user?.name || 'Cliente Glow' }}</h2>
-        <p class="user-email">{{ user?.email || 'cliente@glowbeauty.com' }}</p>
+        <span class="member-badge">✨ Glow VIP Member</span>
+        <h2>{{ user?.name || 'Glow Customer' }}</h2>
+        <p class="user-email">{{ user?.email || 'customer@glowbeauty.com' }}</p>
       </div>
     </div>
 
@@ -24,40 +24,41 @@
     <div class="profile-stats-grid">
       <div class="stat-card">
         <span class="stat-num">3</span>
-        <span class="stat-label">Pedidos</span>
+        <span class="stat-label">Orders</span>
       </div>
-      <div class="stat-card">
-        <span class="stat-num">8</span>
-        <span class="stat-label">Favoritos</span>
+      <div class="stat-card" (click)="openAddressManager()" style="cursor: pointer;">
+        <span class="stat-num">{{ addresses.length }}</span>
+        <span class="stat-label">Addresses</span>
       </div>
       <div class="stat-card">
         <span class="stat-num">1</span>
-        <span class="stat-label">Cupones</span>
+        <span class="stat-label">Coupons</span>
       </div>
     </div>
 
     <!-- Account Options Section -->
     <div class="account-menu-card">
-      <div class="menu-section-header">Mi Cuenta & Pedidos</div>
+      <div class="menu-section-header">My Account & Shopping</div>
 
       <div class="menu-item" routerLink="/tabs/tab2">
         <div class="menu-icon-box">
           <ion-icon name="bag-check-outline"></ion-icon>
         </div>
         <div class="menu-item-text">
-          <h4>Bolsa de Compras Activa</h4>
-          <p>Revisa o completa tus pedidos pendientes</p>
+          <h4>Active Shopping Bag</h4>
+          <p>Review or checkout your selected items</p>
         </div>
         <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
       </div>
 
-      <div class="menu-item">
+      <!-- Shipping Addresses CRUD trigger -->
+      <div class="menu-item" (click)="openAddressManager()">
         <div class="menu-icon-box">
           <ion-icon name="location-outline"></ion-icon>
         </div>
         <div class="menu-item-text">
-          <h4>Direcciones de Envío</h4>
-          <p>Gestiona tus domicilios guardados</p>
+          <h4>Shipping Addresses</h4>
+          <p>Manage your saved delivery addresses ({{ addresses.length }} saved)</p>
         </div>
         <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
       </div>
@@ -67,8 +68,8 @@
           <ion-icon name="card-outline"></ion-icon>
         </div>
         <div class="menu-item-text">
-          <h4>Métodos de Pago</h4>
-          <p>Tarjetas bancarias y facturación</p>
+          <h4>Payment Methods</h4>
+          <p>Saved debit / credit cards & billing</p>
         </div>
         <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
       </div>
@@ -78,8 +79,8 @@
           <ion-icon name="pricetag-outline"></ion-icon>
         </div>
         <div class="menu-item-text">
-          <h4>Mis Cupones de Descuento</h4>
-          <p>Código activo: <strong>GLOW10</strong> (10% OFF)</p>
+          <h4>Exclusive Coupons</h4>
+          <p>Active promo code: <strong>GLOW10</strong> (10% OFF)</p>
         </div>
         <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
       </div>
@@ -87,15 +88,15 @@
 
     <!-- Support and Logout -->
     <div class="account-menu-card">
-      <div class="menu-section-header">Preferencias & Soporte</div>
+      <div class="menu-section-header">Preferences & Support</div>
 
       <div class="menu-item">
         <div class="menu-icon-box">
           <ion-icon name="help-buoy-outline"></ion-icon>
         </div>
         <div class="menu-item-text">
-          <h4>Centro de Ayuda & Preguntas</h4>
-          <p>Envíos, cambios y garantías</p>
+          <h4>Customer Care & FAQ</h4>
+          <p>Shipping, returns, and order guarantees</p>
         </div>
         <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
       </div>
@@ -105,15 +106,234 @@
           <ion-icon name="log-out-outline"></ion-icon>
         </div>
         <div class="menu-item-text">
-          <h4 class="logout-text">Cerrar Sesión</h4>
-          <p>Finalizar sesión en este dispositivo</p>
+          <h4 class="logout-text">Sign Out</h4>
+          <p>Log out of your account on this device</p>
         </div>
         <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
       </div>
     </div>
 
     <div class="app-version-footer">
-      <p>GlowBeauty v1.0 • Hecho con Ionic & Angular</p>
+      <p>GlowBeauty v2.0 • Built with Ionic 9, Angular 22 & Capacitor Preferences</p>
     </div>
   </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 1: SHIPPING ADDRESSES LIST (CONSULTA / READ & ACTIONS) -->
+  <!-- ======================================================== -->
+  <ion-modal [isOpen]="isAddressModalOpen" (didDismiss)="closeAddressManager()" class="address-manager-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Saved Addresses</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeAddressManager()">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="address-modal-content">
+        <div class="address-container">
+          <!-- Top CTA: Alta / Create -->
+          <div class="add-address-header">
+            <div>
+              <h3>Delivery Addresses</h3>
+              <p>Stored persistently via Capacitor Preferences</p>
+            </div>
+            <button class="btn-codepen-primary btn-add-addr" (click)="openNewAddressForm()">
+              <ion-icon name="add-circle-outline"></ion-icon>
+              Add New
+            </button>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="addresses.length === 0" class="empty-address-view">
+            <ion-icon name="location-outline"></ion-icon>
+            <h4>No addresses saved</h4>
+            <p>Add your first delivery address to speed up your checkout.</p>
+            <button class="btn-codepen-primary" (click)="openNewAddressForm()">
+              + Add Address
+            </button>
+          </div>
+
+          <!-- Address Cards (Consulta / Read) -->
+          <div class="address-cards-list" *ngIf="addresses.length > 0">
+            <div
+              *ngFor="let addr of addresses"
+              class="address-card"
+              [class.default-card]="addr.isDefault"
+            >
+              <div class="address-card-header">
+                <div class="address-badges">
+                  <span class="label-badge">{{ addr.label || 'Home' }}</span>
+                  <span class="default-badge" *ngIf="addr.isDefault">
+                    <ion-icon name="checkmark-circle"></ion-icon> Default
+                  </span>
+                </div>
+                <div class="card-actions">
+                  <button class="icon-action-btn edit-btn" (click)="openEditAddressForm(addr)" title="Edit">
+                    <ion-icon name="create-outline"></ion-icon>
+                  </button>
+                  <button class="icon-action-btn delete-btn" (click)="confirmDeleteAddress(addr)" title="Delete">
+                    <ion-icon name="trash-outline"></ion-icon>
+                  </button>
+                </div>
+              </div>
+
+              <div class="address-card-body">
+                <h4 class="recipient-name">{{ addr.fullName }}</h4>
+                <p class="street-line">{{ addr.street }}</p>
+                <p class="city-zip">{{ addr.city }}, {{ addr.state }} {{ addr.postalCode }}</p>
+                <p class="phone-line">
+                  <ion-icon name="call-outline"></ion-icon> {{ addr.phone }}
+                </p>
+              </div>
+
+              <div class="address-card-footer" *ngIf="!addr.isDefault">
+                <button class="btn-set-default" (click)="setDefaultAddress(addr)">
+                  Set as Default
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 2: ADD / EDIT ADDRESS FORM (ALTA / MODIFICACIÓN)    -->
+  <!-- ======================================================== -->
+  <ion-modal [isOpen]="isEditAddressModalOpen" (didDismiss)="closeEditAddressForm()" class="address-form-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ editingAddressId ? 'Edit Address' : 'New Address' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeEditAddressForm()">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="address-form-content">
+        <form (submit)="saveAddress(); $event.preventDefault()" class="address-form-wrapper">
+          <div class="form-group">
+            <label>Recipient Name *</label>
+            <input
+              type="text"
+              [(ngModel)]="addressForm.fullName"
+              name="fullName"
+              placeholder="e.g. Eduardo Aguilar"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Street Address & Number *</label>
+            <input
+              type="text"
+              [(ngModel)]="addressForm.street"
+              name="street"
+              placeholder="e.g. Av. Paseo de las Lomas #450"
+              required
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-half">
+              <label>City *</label>
+              <input
+                type="text"
+                [(ngModel)]="addressForm.city"
+                name="city"
+                placeholder="e.g. Durango"
+                required
+              />
+            </div>
+            <div class="form-group col-half">
+              <label>State</label>
+              <input
+                type="text"
+                [(ngModel)]="addressForm.state"
+                name="state"
+                placeholder="e.g. DGO"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-half">
+              <label>Postal / ZIP Code *</label>
+              <input
+                type="text"
+                [(ngModel)]="addressForm.postalCode"
+                name="postalCode"
+                placeholder="e.g. 34100"
+                required
+              />
+            </div>
+            <div class="form-group col-half">
+              <label>Phone Number *</label>
+              <input
+                type="tel"
+                [(ngModel)]="addressForm.phone"
+                name="phone"
+                placeholder="e.g. +52 618 123 4567"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Address Label</label>
+            <div class="label-chips">
+              <button
+                type="button"
+                class="chip-btn"
+                [class.selected]="addressForm.label === 'Home'"
+                (click)="addressForm.label = 'Home'"
+              >
+                🏠 Home
+              </button>
+              <button
+                type="button"
+                class="chip-btn"
+                [class.selected]="addressForm.label === 'Work'"
+                (click)="addressForm.label = 'Work'"
+              >
+                💼 Work
+              </button>
+              <button
+                type="button"
+                class="chip-btn"
+                [class.selected]="addressForm.label === 'Other'"
+                (click)="addressForm.label = 'Other'"
+              >
+                📍 Other
+              </button>
+            </div>
+          </div>
+
+          <div class="form-toggle-row">
+            <label>Set as default shipping address</label>
+            <ion-toggle [(ngModel)]="addressForm.isDefault" name="isDefault"></ion-toggle>
+          </div>
+
+          <div class="form-actions-bar">
+            <button type="button" class="btn-cancel" (click)="closeEditAddressForm()">
+              Cancel
+            </button>
+            <button type="submit" class="btn-codepen-primary btn-save">
+              <ion-icon name="save-outline"></ion-icon>
+              Save Address
+            </button>
+          </div>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

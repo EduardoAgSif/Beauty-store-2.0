@@ -2,44 +2,49 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Product } from '../models/product.model';
 import { CartItem } from '../models/cart-item.model';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private readonly STORAGE_KEY = 'glow_beauty_cart';
+  private readonly STORAGE_KEY = 'glow_beauty_cart_v2';
   private itemsSubject = new BehaviorSubject<CartItem[]>([]);
   public items$ = this.itemsSubject.asObservable();
 
   private countSubject = new BehaviorSubject<number>(0);
   public count$ = this.countSubject.asObservable();
 
-  constructor() {
+  constructor(private storage: StorageService) {
     this.loadCart();
   }
 
-  private loadCart() {
+  /**
+   * Consulta (Read): Load persisted cart from Capacitor Preferences
+   */
+  public async loadCart(): Promise<CartItem[]> {
     try {
-      const saved = localStorage.getItem(this.STORAGE_KEY);
-      if (saved) {
-        const parsed: CartItem[] = JSON.parse(saved);
-        this.itemsSubject.next(parsed);
-        this.updateCount(parsed);
+      const saved = await this.storage.get<CartItem[]>(this.STORAGE_KEY);
+      if (saved && Array.isArray(saved)) {
+        this.itemsSubject.next(saved);
+        this.updateCount(saved);
+        return saved;
       }
     } catch (e) {
-      console.error('Error loading cart from storage:', e);
-      this.itemsSubject.next([]);
-      this.updateCount([]);
+      console.error('CartService: Error loading cart from persistent storage:', e);
     }
+    this.itemsSubject.next([]);
+    this.updateCount([]);
+    return [];
   }
 
-  private saveCart(items: CartItem[]) {
+  private async saveCart(items: CartItem[]): Promise<void> {
     this.itemsSubject.next(items);
     this.updateCount(items);
     try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(items));
+      await this.storage.set(this.STORAGE_KEY, items);
     } catch (e) {
-      console.error('Error saving cart to storage:', e);
+      console.error('CartService: Error saving cart to persistent storage:', e);
     }
   }
 
@@ -52,6 +57,9 @@ export class CartService {
     return this.itemsSubject.value;
   }
 
+  /**
+   * Alta (Create): Add an item to the shopping cart
+   */
   public addToCart(product: Product, quantity: number = 1): void {
     const current = [...this.itemsSubject.value];
     const index = current.findIndex(item => item.product.id === product.id);
@@ -68,6 +76,9 @@ export class CartService {
     this.saveCart(current);
   }
 
+  /**
+   * Modificación (Update): Update product quantity
+   */
   public updateQuantity(productId: number, quantity: number): void {
     if (quantity <= 0) {
       this.removeFromCart(productId);
@@ -84,11 +95,17 @@ export class CartService {
     this.saveCart(current);
   }
 
+  /**
+   * Eliminación (Delete): Remove single item from cart
+   */
   public removeFromCart(productId: number): void {
     const filtered = this.itemsSubject.value.filter(item => item.product.id !== productId);
     this.saveCart(filtered);
   }
 
+  /**
+   * Eliminación (Delete): Empty entire cart
+   */
   public clearCart(): void {
     this.saveCart([]);
   }

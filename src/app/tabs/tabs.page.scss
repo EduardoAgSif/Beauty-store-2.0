@@ -1,12 +1,12 @@
-// Desktop Navigation Bar - Soft Champagne, Pearl White & Subtle Gold
+// Desktop Navigation Bar - Warm Beige, Soft Sand & Cream
 .desktop-navbar {
   display: none;
   background: #ffffff;
-  box-shadow: 0 4px 20px rgba(138, 127, 118, 0.08);
+  box-shadow: 0 4px 20px rgba(133, 121, 111, 0.08);
   position: sticky;
   top: 0;
   z-index: 999;
-  border-bottom: 1px solid #ede4d8;
+  border-bottom: 1px solid #e8ded2;
 
   @media (min-width: 768px) {
     display: block;
@@ -28,7 +28,7 @@
 
     .logo-icon {
       font-size: 1.8rem;
-      color: #c5a880;
+      color: #be9b7b;
     }
 
     .logo-text {
@@ -38,7 +38,7 @@
       letter-spacing: -0.5px;
 
       span {
-        color: #c5a880;
+        color: #be9b7b;
       }
     }
   }
@@ -46,41 +46,49 @@
   .desktop-nav-links {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 16px;
 
     a {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
       text-decoration: none;
-      color: #6b635b;
-      font-size: 0.98rem;
-      font-weight: 500;
+      color: #5c534a;
+      background: #faf6f0;
+      border: 1px solid #e8ded2;
       position: relative;
-      padding: 8px 4px;
-      transition: color 0.25s ease;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
       ion-icon {
-        font-size: 1.25rem;
+        font-size: 1.4rem;
+        color: #6b635b;
+        transition: color 0.2s ease, transform 0.2s ease;
       }
 
       &:hover {
-        color: #c5a880;
+        background: #f3eae0;
+        border-color: #be9b7b;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(190, 155, 123, 0.25);
+
+        ion-icon {
+          color: #be9b7b;
+          transform: scale(1.1);
+        }
       }
 
       &.active-link {
-        color: #c5a880;
-        font-weight: 600;
+        background: #be9b7b;
+        border-color: #be9b7b;
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(190, 155, 123, 0.35);
 
-        &::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 2.5px;
-          background: #c5a880;
-          border-radius: 2px;
+        ion-icon {
+          color: #ffffff;
         }
       }
     }
@@ -89,32 +97,51 @@
       position: relative;
 
       .desktop-cart-badge {
-        background: #c5a880;
+        position: absolute;
+        top: -4px;
+        right: -6px;
+        background: #be9b7b;
         color: #ffffff;
-        font-size: 0.72rem;
+        font-size: 0.68rem;
         font-weight: 700;
-        min-width: 20px;
-        height: 20px;
-        line-height: 20px;
+        min-width: 19px;
+        height: 19px;
+        line-height: 19px;
         text-align: center;
         border-radius: 10px;
-        padding: 0 5px;
-        margin-left: 4px;
+        padding: 0 4px;
+        border: 2px solid #ffffff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      }
+
+      &.active-link .desktop-cart-badge {
+        background: #2e2926;
+        color: #ffffff;
+        border-color: #ffffff;
       }
     }
   }
 }
 
-// Mobile Tab Bar
+// Mobile Tab Bar - Hidden on browser / desktop screens >= 768px
+@media (min-width: 768px) {
+  ion-tab-bar,
+  .mobile-tab-bar {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+  }
+}
+
 .mobile-tab-bar {
   --background: #ffffff;
-  --border: 1px solid #ede4d8;
-  box-shadow: 0 -4px 16px rgba(138, 127, 118, 0.06);
+  --border: 1px solid #e8ded2;
+  box-shadow: 0 -4px 16px rgba(133, 121, 111, 0.06);
   height: 62px;
 
   ion-tab-button {
     --color: #9c9187;
-    --color-selected: #c5a880;
+    --color-selected: #be9b7b;
     font-weight: 500;
     transition: all 0.2s ease;
 
@@ -150,7 +177,7 @@
       font-size: 0.68rem;
       padding: 2px 6px;
       border-radius: 10px;
-      --background: #c5a880;
+      --background: #be9b7b;
       color: #ffffff;
       font-weight: 700;
       animation: pulse 1.5s infinite;

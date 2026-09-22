@@ -3,6 +3,7 @@ import { NavController, ToastController, AlertController } from '@ionic/angular'
 import { Subscription } from 'rxjs';
 import { CartItem } from '../models/cart-item.model';
 import { CartService } from '../services/cart.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-tab2',
@@ -22,10 +23,11 @@ export class Tab2Page implements OnInit, OnDestroy {
   isCheckoutModalOpen = false;
   orderNumber = '';
   placedOrderTotal = 0;
-  customerName = '';
+  customerName = 'Customer';
 
   constructor(
     private cartService: CartService,
+    private authService: AuthService,
     private navCtrl: NavController,
     private toastCtrl: ToastController,
     private alertCtrl: AlertController
@@ -43,24 +45,31 @@ export class Tab2Page implements OnInit, OnDestroy {
     }
   }
 
-  ionViewWillEnter() {
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-      const user = JSON.parse(savedUser);
-      this.customerName = user.name || 'Cliente';
+  async ionViewWillEnter() {
+    const user = await this.authService.getUser();
+    if (user && user.name) {
+      this.customerName = user.name;
     } else {
-      this.customerName = 'Cliente';
+      this.customerName = 'Customer';
     }
+    // Refresh cart from persistent storage
+    await this.cartService.loadCart();
   }
 
+  /**
+   * Modificación (Update): Increment quantity
+   */
   incrementQty(item: CartItem) {
     if (item.quantity < item.product.stock) {
       this.cartService.updateQuantity(item.product.id, item.quantity + 1);
     } else {
-      this.showToast(`Solo disponemos de ${item.product.stock} unidades en stock.`);
+      this.showToast(`Only ${item.product.stock} units available in stock.`);
     }
   }
 
+  /**
+   * Modificación (Update): Decrement quantity
+   */
   decrementQty(item: CartItem) {
     if (item.quantity > 1) {
       this.cartService.updateQuantity(item.product.id, item.quantity - 1);
@@ -69,18 +78,21 @@ export class Tab2Page implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Eliminación (Delete): Confirm & remove single item
+   */
   async confirmRemove(item: CartItem) {
     const alert = await this.alertCtrl.create({
-      header: '¿Eliminar producto?',
-      message: `¿Deseas quitar "${item.product.name}" de tu carrito?`,
+      header: 'Remove Item?',
+      message: `Remove "${item.product.name}" from your shopping bag?`,
       buttons: [
-        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Cancel', role: 'cancel' },
         {
-          text: 'Eliminar',
+          text: 'Remove',
           role: 'destructive',
           handler: () => {
             this.cartService.removeFromCart(item.product.id);
-            this.showToast('Producto eliminado del carrito.');
+            this.showToast('Item removed from shopping bag.');
           }
         }
       ]
@@ -93,18 +105,18 @@ export class Tab2Page implements OnInit, OnDestroy {
     if (code === 'GLOW10') {
       this.appliedDiscountPercent = 10;
       this.isDiscountApplied = true;
-      this.discountMessage = '¡Cupón GLOW10 aplicado! (10% de descuento)';
-      this.showToast('¡10% de descuento aplicado!');
+      this.discountMessage = 'Coupon GLOW10 applied! (10% OFF)';
+      this.showToast('10% discount applied!');
     } else if (code === 'BEAUTY20') {
       this.appliedDiscountPercent = 20;
       this.isDiscountApplied = true;
-      this.discountMessage = '¡Cupón BEAUTY20 aplicado! (20% de descuento)';
-      this.showToast('¡20% de descuento aplicado!');
+      this.discountMessage = 'Coupon BEAUTY20 applied! (20% OFF)';
+      this.showToast('20% discount applied!');
     } else {
       this.appliedDiscountPercent = 0;
       this.isDiscountApplied = false;
-      this.discountMessage = 'Cupón no válido. Prueba con GLOW10.';
-      this.showToast('Cupón inválido.');
+      this.discountMessage = 'Invalid coupon. Try GLOW10.';
+      this.showToast('Invalid coupon code.');
     }
   }
 

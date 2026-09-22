@@ -7,20 +7,40 @@
     </div>
 
     <nav class="desktop-nav-links">
-      <a routerLink="/tabs/tab1" routerLinkActive="active-link">
-        <ion-icon name="storefront-outline"></ion-icon>
-        Catálogo
+      <a
+        routerLink="/tabs/tab1"
+        routerLinkActive="active-link"
+        (click)="navigateTo('/tabs/tab1')"
+        title="Home"
+        aria-label="Home"
+        class="nav-icon-link"
+      >
+        <ion-icon name="home-outline"></ion-icon>
       </a>
-      <a routerLink="/tabs/tab2" routerLinkActive="active-link" class="cart-link">
+
+      <a
+        routerLink="/tabs/tab2"
+        routerLinkActive="active-link"
+        (click)="navigateTo('/tabs/tab2')"
+        title="Shopping Bag"
+        aria-label="Shopping Bag"
+        class="nav-icon-link cart-link"
+      >
         <ion-icon name="cart-outline"></ion-icon>
-        Carrito
         <span class="desktop-cart-badge" *ngIf="(cartCount$ | async) as count">
           {{ count }}
         </span>
       </a>
-      <a routerLink="/tabs/tab3" routerLinkActive="active-link">
+
+      <a
+        routerLink="/tabs/tab3"
+        routerLinkActive="active-link"
+        (click)="navigateTo('/tabs/tab3')"
+        title="Account"
+        aria-label="Account"
+        class="nav-icon-link"
+      >
         <ion-icon name="person-outline"></ion-icon>
-        Mi Cuenta
       </a>
     </nav>
   </div>
@@ -30,8 +50,8 @@
 <ion-tabs>
   <ion-tab-bar slot="bottom" class="mobile-tab-bar">
     <ion-tab-button tab="tab1" href="/tabs/tab1">
-      <ion-icon aria-hidden="true" name="storefront-outline"></ion-icon>
-      <ion-label>Catálogo</ion-label>
+      <ion-icon aria-hidden="true" name="home-outline"></ion-icon>
+      <ion-label>Home</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="tab2" href="/tabs/tab2">
@@ -41,12 +61,12 @@
           {{ count }}
         </ion-badge>
       </div>
-      <ion-label>Carrito</ion-label>
+      <ion-label>Bag</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="tab3" href="/tabs/tab3">
       <ion-icon aria-hidden="true" name="person-outline"></ion-icon>
-      <ion-label>Perfil</ion-label>
+      <ion-label>Account</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>
