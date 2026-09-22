@@ -312,44 +312,54 @@
 
       .coupon-input-group {
         display: flex;
+        align-items: center;
         gap: 8px;
+        width: 100%;
+        box-sizing: border-box;
 
         input {
-          flex-grow: 1;
+          flex: 1 1 auto;
+          min-width: 0;
+          width: 0;
           border: 1px solid #ede4d8;
           border-radius: 12px;
-          padding: 10px 14px;
+          padding: 10px 12px;
           font-size: 0.85rem;
           outline: none;
           color: #2e2926;
+          box-sizing: border-box;
 
           &:focus {
-            border-color: #c5a880;
+            border-color: #be9b7b;
           }
         }
 
         .apply-coupon-btn {
-          background: #c5a880;
+          flex-shrink: 0;
+          white-space: nowrap;
+          background: #be9b7b;
           color: #ffffff;
           border: none;
           border-radius: 12px;
-          padding: 0 16px;
+          padding: 10px 16px;
           font-weight: 600;
           font-size: 0.85rem;
           cursor: pointer;
-          transition: background 0.2s;
+          transition: background 0.2s ease, transform 0.2s ease;
 
           &:hover {
-            background: #a68353;
+            background: #a88363;
           }
         }
 
         .remove-coupon-btn {
+          flex-shrink: 0;
+          white-space: nowrap;
           background: #faf8f5;
           color: #b33939;
           border: 1px solid #ede4d8;
           border-radius: 12px;
-          padding: 0 16px;
+          padding: 10px 14px;
           font-weight: 600;
           font-size: 0.85rem;
           cursor: pointer;

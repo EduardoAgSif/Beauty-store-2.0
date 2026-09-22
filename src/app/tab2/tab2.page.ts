@@ -34,6 +34,7 @@ export class Tab2Page implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.cartItems = this.cartService.getItems();
     this.cartSub = this.cartService.items$.subscribe(items => {
       this.cartItems = items;
     });
@@ -46,14 +47,13 @@ export class Tab2Page implements OnInit, OnDestroy {
   }
 
   async ionViewWillEnter() {
+    this.cartItems = this.cartService.getItems();
     const user = await this.authService.getUser();
     if (user && user.name) {
       this.customerName = user.name;
     } else {
       this.customerName = 'Customer';
     }
-    // Refresh cart from persistent storage
-    await this.cartService.loadCart();
   }
 
   /**

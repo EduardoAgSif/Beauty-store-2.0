@@ -1,4 +1,4 @@
-<ion-header [translucent]="true" class="mobile-only-header">
+<ion-header class="mobile-only-header">
   <ion-toolbar>
     <ion-title>Shopping Bag</ion-title>
     <ion-buttons slot="start">
@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="cart-content">
+<ion-content class="cart-content">
   <div class="ecom-container cart-page-wrapper">
     <!-- Header Title -->
     <div class="cart-header-title">
@@ -56,7 +56,7 @@
         <div class="items-list">
           <div *ngFor="let item of cartItems" class="cart-item-card">
             <div class="item-thumbnail">
-              <img [src]="item.product.image_url" [alt]="item.product.name" />
+              <img [src]="item.product.image_url" [alt]="item.product.name" referrerpolicy="no-referrer-when-downgrade" (error)="$any($event.target).style.background='linear-gradient(135deg,#f5ece2,#e8ded2)'" />
             </div>
 
             <div class="item-details">

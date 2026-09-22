@@ -25,7 +25,7 @@ export class CartService {
   public async loadCart(): Promise<CartItem[]> {
     try {
       const saved = await this.storage.get<CartItem[]>(this.STORAGE_KEY);
-      if (saved && Array.isArray(saved)) {
+      if (saved && Array.isArray(saved) && saved.length > 0) {
         this.itemsSubject.next(saved);
         this.updateCount(saved);
         return saved;
@@ -33,9 +33,12 @@ export class CartService {
     } catch (e) {
       console.error('CartService: Error loading cart from persistent storage:', e);
     }
-    this.itemsSubject.next([]);
-    this.updateCount([]);
-    return [];
+    // Only reset if memory is already empty
+    if (this.itemsSubject.value.length === 0) {
+      this.itemsSubject.next([]);
+      this.updateCount([]);
+    }
+    return this.itemsSubject.value;
   }
 
   private async saveCart(items: CartItem[]): Promise<void> {

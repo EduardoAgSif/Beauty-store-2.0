@@ -1,10 +1,20 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 // Desktop Navigation Bar - Warm Beige, Soft Sand & Cream
 .desktop-navbar {
   display: none;
   background: #ffffff;
-  box-shadow: 0 4px 20px rgba(133, 121, 111, 0.08);
-  position: sticky;
-  top: 0;
+  box-shadow: 0 2px 12px rgba(133, 121, 111, 0.06);
+  position: relative;
+  width: 100%;
+  height: 70px;
+  flex-shrink: 0;
   z-index: 999;
   border-bottom: 1px solid #e8ded2;
 
@@ -16,7 +26,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 72px;
+    height: 70px;
   }
 
   .brand-logo {
@@ -46,49 +56,60 @@
   .desktop-nav-links {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 24px;
 
     a {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
+      width: 38px;
+      height: 38px;
       text-decoration: none;
-      color: #5c534a;
-      background: #faf6f0;
-      border: 1px solid #e8ded2;
+      background: transparent;
+      border: none;
+      box-shadow: none;
       position: relative;
       cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 0;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 
       ion-icon {
-        font-size: 1.4rem;
+        font-size: 1.65rem;
         color: #6b635b;
         transition: color 0.2s ease, transform 0.2s ease;
       }
 
       &:hover {
-        background: #f3eae0;
-        border-color: #be9b7b;
+        background: transparent;
+        border: none;
+        box-shadow: none;
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(190, 155, 123, 0.25);
 
         ion-icon {
           color: #be9b7b;
-          transform: scale(1.1);
+          transform: scale(1.15);
         }
       }
 
       &.active-link {
-        background: #be9b7b;
-        border-color: #be9b7b;
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(190, 155, 123, 0.35);
+        background: transparent;
+        border: none;
+        box-shadow: none;
 
         ion-icon {
-          color: #ffffff;
+          color: #be9b7b;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #be9b7b;
         }
       }
     }
@@ -98,28 +119,34 @@
 
       .desktop-cart-badge {
         position: absolute;
-        top: -4px;
-        right: -6px;
+        top: -3px;
+        right: -8px;
         background: #be9b7b;
         color: #ffffff;
         font-size: 0.68rem;
         font-weight: 700;
-        min-width: 19px;
-        height: 19px;
-        line-height: 19px;
+        min-width: 18px;
+        height: 18px;
+        line-height: 18px;
         text-align: center;
-        border-radius: 10px;
+        border-radius: 9px;
         padding: 0 4px;
         border: 2px solid #ffffff;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-      }
-
-      &.active-link .desktop-cart-badge {
-        background: #2e2926;
-        color: #ffffff;
-        border-color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
       }
     }
+  }
+}
+
+// Main Tabs Container
+ion-tabs {
+  position: relative;
+  flex: 1 1 auto;
+  height: 100%;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    height: calc(100% - 70px);
   }
 }
 

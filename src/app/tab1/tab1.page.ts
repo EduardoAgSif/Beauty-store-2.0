@@ -206,16 +206,17 @@ export class Tab1Page implements OnInit, OnDestroy {
       event.stopPropagation();
     }
 
+    // Instant synchronous cart update
     this.cartService.addToCart(product, quantity);
 
-    const toast = await this.toastController.create({
+    // Display non-blocking feedback toast
+    this.toastController.create({
       message: `✨ "${product.name}" added to shopping bag!`,
-      duration: 2000,
+      duration: 1800,
       position: 'top',
       color: 'success',
       cssClass: 'glow-toast'
-    });
-    await toast.present();
+    }).then(t => t.present());
 
     if (this.isQuickViewOpen) {
       this.closeQuickView();

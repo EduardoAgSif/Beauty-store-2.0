@@ -167,7 +167,7 @@ export class ProductService {
 
   public async getProducts(): Promise<Product[]> {
     try {
-      const response = await axios.get(this.apiUrl, { timeout: 1800 });
+      const response = await axios.get(this.apiUrl, { timeout: 500 });
       if (
         response.data &&
         response.data.status === 'success' &&
