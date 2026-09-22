@@ -34,9 +34,11 @@ export class Tab2Page implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    // Immediately sync from BehaviorSubject (works even before async storage resolves)
     this.cartItems = this.cartService.getItems();
+    // Subscribe to all future updates
     this.cartSub = this.cartService.items$.subscribe(items => {
-      this.cartItems = items;
+      this.cartItems = [...items];
     });
   }
 
@@ -46,14 +48,12 @@ export class Tab2Page implements OnInit, OnDestroy {
     }
   }
 
-  async ionViewWillEnter() {
-    this.cartItems = this.cartService.getItems();
-    const user = await this.authService.getUser();
-    if (user && user.name) {
-      this.customerName = user.name;
-    } else {
-      this.customerName = 'Customer';
-    }
+  ionViewWillEnter() {
+    // Force a fresh sync from the BehaviorSubject every time the tab is opened
+    this.cartItems = [...this.cartService.getItems()];
+    this.authService.getUser().then(user => {
+      this.customerName = (user && user.name) ? user.name : 'Customer';
+    });
   }
 
   /**

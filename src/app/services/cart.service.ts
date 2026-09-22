@@ -16,6 +16,19 @@ export class CartService {
   public count$ = this.countSubject.asObservable();
 
   constructor(private storage: StorageService) {
+    // Synchronous boot: read cart from localStorage immediately so the
+    // BehaviorSubject has data BEFORE async loadCart() resolves.
+    try {
+      const raw = localStorage.getItem(this.STORAGE_KEY);
+      if (raw) {
+        const cached: CartItem[] = JSON.parse(raw);
+        if (Array.isArray(cached) && cached.length > 0) {
+          this.itemsSubject.next(cached);
+          this.updateCount(cached);
+        }
+      }
+    } catch (_) {}
+    // Also run the full async load to sync native Preferences if needed
     this.loadCart();
   }
 

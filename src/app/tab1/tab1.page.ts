@@ -45,7 +45,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       tag: '✨ #1 Best Seller',
       title: 'L’Élixir Doré Face Oil',
       subtitle: 'Deep botanical nourishment infused with plant squalane and golden pearls.',
-      imageUrl: 'https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?auto=format&fit=crop&w=1000&q=85',
+      imageUrl: 'https://picsum.photos/seed/heroface/1000/700',
       category: 'Skincare'
     },
     {
@@ -54,7 +54,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       tag: '⭐ Signature Fragrance',
       title: 'Rose & Amber Gold Eau de Parfum',
       subtitle: 'Enchanting notes of golden bourbon vanilla, white orchid, and sandalwood.',
-      imageUrl: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=1000&q=85',
+      imageUrl: 'https://picsum.photos/seed/heroperfume/1000/700',
       category: 'Fragrances'
     },
     {
@@ -63,7 +63,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       tag: '💄 Beige & Nude Collection',
       title: 'Velvet Nude Matte Lipstick',
       subtitle: 'Creamy warm nude lipstick enriched with organic jojoba oil and vitamin E.',
-      imageUrl: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=1000&q=85',
+      imageUrl: 'https://picsum.photos/seed/herolipstick/1000/700',
       category: 'Makeup'
     },
     {
@@ -72,7 +72,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       tag: '🎨 Neutral Palette',
       title: 'Warm Taupe & Beige Palette',
       subtitle: 'Curated 9-pan eyeshadow collection in warm neutral, smoky taupe, and champagne shimmer.',
-      imageUrl: 'https://images.unsplash.com/photo-1522337094846-8a818192de1f?auto=format&fit=crop&w=1000&q=85',
+      imageUrl: 'https://picsum.photos/seed/heropalette/1000/700',
       category: 'Makeup'
     }
   ];

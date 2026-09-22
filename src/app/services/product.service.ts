@@ -18,7 +18,7 @@ export class ProductService {
       price: 640.00,
       stock: 24,
       category: 'Skincare',
-      image_url: 'https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?auto=format&fit=crop&w=600&q=80',
+      image_url: 'https://picsum.photos/seed/faceoil/600/600',
       rating: 4.9,
       reviews_count: 142,
       is_featured: true
@@ -30,7 +30,7 @@ export class ProductService {
       price: 520.00,
       stock: 32,
       category: 'Skincare',
-      image_url: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80',
+      image_url: 'https://picsum.photos/seed/creamsilk/600/600',
       rating: 4.8,
       reviews_count: 98,
       is_featured: true
@@ -42,7 +42,7 @@ export class ProductService {
       price: 290.00,
       stock: 45,
       category: 'Makeup',
-      image_url: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80',
+      image_url: 'https://picsum.photos/seed/lipstick/600/600',
       rating: 4.9,
       reviews_count: 112,
       is_featured: true
@@ -54,7 +54,7 @@ export class ProductService {
       price: 380.00,
       stock: 18,
       category: 'Makeup',
-      image_url: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80',
+      image_url: 'https://picsum.photos/seed/illuminator/600/600',
       rating: 4.7,
       reviews_count: 67,
       is_featured: false
@@ -66,7 +66,7 @@ export class ProductService {
       price: 980.00,
       stock: 15,
       category: 'Fragrances',
-      image_url: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80',
+      image_url: 'https://picsum.photos/seed/perfume/600/600',
       rating: 5.0,
       reviews_count: 89,
       is_featured: true
@@ -78,7 +78,7 @@ export class ProductService {
       price: 450.00,
       stock: 20,
       category: 'Hair Care',
-      image_url: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80',
+      image_url: 'https://picsum.photos/seed/hairserum/600/600',
       rating: 4.9,
       reviews_count: 76,
       is_featured: false
@@ -90,7 +90,7 @@ export class ProductService {
       price: 320.00,
       stock: 35,
       category: 'Skincare',
-      image_url: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80',
+      image_url: 'https://picsum.photos/seed/cleanser/600/600',
       rating: 4.7,
       reviews_count: 54,
       is_featured: false
@@ -102,7 +102,7 @@ export class ProductService {
       price: 560.00,
       stock: 28,
       category: 'Makeup',
-      image_url: 'https://images.unsplash.com/photo-1522337094846-8a818192de1f?auto=format&fit=crop&w=600&q=80',
+      image_url: 'https://picsum.photos/seed/eyeshadow/600/600',
       rating: 4.8,
       reviews_count: 93,
       is_featured: true
@@ -114,7 +114,7 @@ export class ProductService {
       price: 410.00,
       stock: 22,
       category: 'Fragrances',
-      image_url: 'https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=600&q=80',
+      image_url: 'https://picsum.photos/seed/bodymist/600/600',
       rating: 4.6,
       reviews_count: 41,
       is_featured: false
@@ -126,7 +126,7 @@ export class ProductService {
       price: 220.00,
       stock: 50,
       category: 'Makeup',
-      image_url: 'https://images.unsplash.com/photo-1631730486784-5456119f69ae?auto=format&fit=crop&w=600&q=80',
+      image_url: 'https://picsum.photos/seed/lipbalm/600/600',
       rating: 4.8,
       reviews_count: 82,
       is_featured: false
@@ -138,7 +138,7 @@ export class ProductService {
       price: 490.00,
       stock: 16,
       category: 'Hair Care',
-      image_url: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80',
+      image_url: 'https://picsum.photos/seed/hairmask/600/600',
       rating: 4.9,
       reviews_count: 65,
       is_featured: false
@@ -150,7 +150,7 @@ export class ProductService {
       price: 590.00,
       stock: 25,
       category: 'Skincare',
-      image_url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80',
+      image_url: 'https://picsum.photos/seed/eyecream/600/600',
       rating: 4.9,
       reviews_count: 104,
       is_featured: true
