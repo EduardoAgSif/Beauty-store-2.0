@@ -35,6 +35,40 @@ CREATE TABLE IF NOT EXISTS products (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Migrate an existing products table created by an earlier schema version.
+-- CREATE TABLE IF NOT EXISTS does not add columns to an existing table.
+SET @has_products_category = (
+    SELECT COUNT(*)
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'products'
+      AND COLUMN_NAME = 'category'
+);
+SET @add_products_category = IF(
+    @has_products_category = 0,
+    'ALTER TABLE products ADD COLUMN category VARCHAR(50) DEFAULT ''Skincare'' AFTER stock',
+    'SELECT 1'
+);
+PREPARE add_products_category_stmt FROM @add_products_category;
+EXECUTE add_products_category_stmt;
+DEALLOCATE PREPARE add_products_category_stmt;
+
+SET @has_products_image_url = (
+    SELECT COUNT(*)
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'products'
+      AND COLUMN_NAME = 'image_url'
+);
+SET @add_products_image_url = IF(
+    @has_products_image_url = 0,
+    'ALTER TABLE products ADD COLUMN image_url TEXT AFTER category',
+    'SELECT 1'
+);
+PREPARE add_products_image_url_stmt FROM @add_products_image_url;
+EXECUTE add_products_image_url_stmt;
+DEALLOCATE PREPARE add_products_image_url_stmt;
+
 -- Seed 12 Luxury Beauty Products Collection
 INSERT INTO products (id, name, description, price, stock, category, image_url)
 VALUES 
@@ -51,9 +85,4 @@ VALUES
 (11, 'Nourishing Cashmere Hair Mask', 'Tratamiento acondicionador profundo formulado con proteínas de cachemira y manteca de murumuru para cabello suave y disciplinado.', 490.00, 16, 'Cuidado Capilar', 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80'),
 (12, 'Pure Gold Eye Contour Cream', 'Crema para el contorno de ojos con cafeína pura y péptidos tensores que atenúan ojeras y líneas de expresión.', 590.00, 25, 'Skincare', 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80')
 ON DUPLICATE KEY UPDATE 
-    name=VALUES(name), 
-    description=VALUES(description), 
-    price=VALUES(price), 
-    stock=VALUES(stock), 
-    category=VALUES(category), 
-    image_url=VALUES(image_url);
+    id=products.id;

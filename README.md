@@ -77,7 +77,7 @@ BeautyStore_2.0/
    -- Import the file: backend/schema.sql
    ```
 
-   This creates the `app_db` database with `users` and `products` tables, along with 12 seeded luxury beauty products.
+   This creates the `app_db` database with `users` and `products` tables, along with 12 seeded luxury beauty products. If `products` already exists from an older version, the script also adds the missing `category` and `image_url` columns without deleting existing rows. Re-import the updated file if phpMyAdmin reports `Unknown column 'category'`.
 
 3. **Deploy the API** — copy the `backend/` folder into your XAMPP `htdocs` directory:
 
