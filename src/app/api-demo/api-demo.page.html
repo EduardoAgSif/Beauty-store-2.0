@@ -1,0 +1,128 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Prueba de API REST</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="loadProducts()" [disabled]="isBusy || isLoading" aria-label="Actualizar productos">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding api-demo-page">
+  <main class="demo-container">
+    <section class="intro-card">
+      <p class="eyebrow">Integración Ionic + Angular + PHP</p>
+      <h1>Operaciones sobre productos</h1>
+      <p>Las operaciones se envían a <code>api.php</code> y se guardan en la base de datos configurada.</p>
+      <div class="method-list" aria-label="Métodos HTTP disponibles">
+        <span class="method get">GET</span>
+        <span class="method post">POST</span>
+        <span class="method put">PUT</span>
+        <span class="method patch">PATCH</span>
+        <span class="method delete">DELETE</span>
+      </div>
+    </section>
+
+    <ion-card class="form-card">
+      <ion-card-header>
+        <ion-card-title>{{ editingId === null ? 'POST · Crear producto' : 'PUT / PATCH · Editar producto' }}</ion-card-title>
+        @if (editingId !== null) {
+          <ion-card-subtitle>Producto seleccionado: #{{ editingId }}</ion-card-subtitle>
+        }
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Nombre</ion-label>
+          <ion-input [(ngModel)]="form.name" name="productName" maxlength="150" placeholder="Nombre del producto" [disabled]="isBusy"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Descripción</ion-label>
+          <ion-textarea [(ngModel)]="form.description" name="productDescription" autoGrow="true" placeholder="Descripción" [disabled]="isBusy"></ion-textarea>
+        </ion-item>
+        <div class="form-row">
+          <ion-item>
+            <ion-label position="stacked">Precio</ion-label>
+            <ion-input [(ngModel)]="form.price" name="productPrice" type="number" min="0" step="0.01" [disabled]="isBusy"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Stock</ion-label>
+            <ion-input [(ngModel)]="form.stock" name="productStock" type="number" min="0" step="1" [disabled]="isBusy"></ion-input>
+          </ion-item>
+        </div>
+
+        @if (editingId !== null) {
+          <p class="patch-note">PATCH modifica únicamente el campo stock; PUT reemplaza nombre, descripción, precio y stock.</p>
+        }
+        <div class="form-actions">
+          @if (editingId === null) {
+            <ion-button (click)="createProduct()" [disabled]="isBusy">Crear con POST</ion-button>
+          }
+          @if (editingId !== null) {
+            <ion-button (click)="replaceProduct()" [disabled]="isBusy">Guardar con PUT</ion-button>
+            <ion-button fill="outline" (click)="patchStock()" [disabled]="isBusy">Actualizar stock con PATCH</ion-button>
+            <ion-button fill="clear" color="medium" (click)="cancelEditing()" [disabled]="isBusy">Cancelar</ion-button>
+          }
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <section class="products-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">GET · Lectura de la API</p>
+          <h2>Productos en el servidor</h2>
+        </div>
+        <ion-button fill="outline" size="small" (click)="loadProducts()" [disabled]="isBusy || isLoading">Consultar GET</ion-button>
+      </div>
+
+      @if (isLoading) {
+        <div class="loading-state"><ion-spinner name="crescent"></ion-spinner><span>Consultando productos…</span></div>
+      }
+      @if (!isLoading && products.length === 0) {
+        <div class="empty-state">No hay productos disponibles. Comprueba el host, la API y la base de datos.</div>
+      }
+      @if (!isLoading && products.length > 0) {
+        <div class="product-list">
+          @for (product of products; track product.id) {
+            <ion-card class="product-card">
+              <ion-card-content>
+                <div class="product-info">
+                  <h3>{{ product.name }}</h3>
+                  <p>ID #{{ product.id }} · ${{ product.price }} · Stock: {{ product.stock }}</p>
+                </div>
+                <div class="product-actions">
+                  <ion-button size="small" fill="outline" (click)="startEditing(product)" [disabled]="isBusy">Editar</ion-button>
+                  <ion-button size="small" fill="clear" color="danger" (click)="confirmDelete(product)" [disabled]="isBusy">DELETE</ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          }
+        </div>
+      }
+    </section>
+
+    @if (successMessage || errorMessage || lastRequest) {
+      <ion-card class="feedback-card">
+        <ion-card-header><ion-card-title>Resultado de la solicitud</ion-card-title></ion-card-header>
+        <ion-card-content>
+          @if (successMessage) {
+            <p class="success-message">{{ successMessage }}</p>
+          }
+          @if (errorMessage) {
+            <p class="error-message" role="alert">{{ errorMessage }}</p>
+          }
+          @if (lastRequest) {
+            <div class="request-result">
+              <p><strong>{{ lastRequest.method }}</strong> · HTTP {{ lastRequest.status }}</p>
+              <pre>{{ lastRequest.response | json }}</pre>
+            </div>
+          }
+        </ion-card-content>
+      </ion-card>
+    }
+  </main>
+</ion-content>

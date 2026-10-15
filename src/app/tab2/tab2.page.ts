@@ -56,6 +56,10 @@ export class Tab2Page implements OnInit, OnDestroy {
     });
   }
 
+  get totalItems(): number {
+    return this.cartItems.reduce((total, item) => total + item.quantity, 0);
+  }
+
   /**
    * Modificación (Update): Increment quantity
    */

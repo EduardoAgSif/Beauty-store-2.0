@@ -110,6 +110,11 @@
             <div class="input-field">
               <input type="password" placeholder="Password" [(ngModel)]="signInData.password" name="signInPassword" required [disabled]="isLoading" />
             </div>
+            <button type="button" class="diagnostics-link" (click)="openDiagnostics()">Ver diagnóstico completo de la última solicitud</button>
+            <details class="inline-diagnostics" *ngIf="lastDiagnostics">
+              <summary>Registro de errores / solicitud</summary>
+              <pre>{{ lastDiagnostics | json }}</pre>
+            </details>
 
             <a href="javascript:void(0)" class="forgot-link">Forgot password?</a>
 
@@ -117,6 +122,7 @@
               <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
               <span *ngIf="!isLoading">SIGN IN</span>
             </button>
+            <a routerLink="/data-source" class="diagnostics-link">Configurar origen de datos</a>
           </form>
         </div>
 
@@ -124,4 +130,5 @@
 
     </div>
   </div>
+  <app-request-diagnostics [visible]="showDiagnostics" [details]="lastDiagnostics" title="Diagnóstico de inicio de sesión" (closed)="showDiagnostics = false"></app-request-diagnostics>
 </ion-content>

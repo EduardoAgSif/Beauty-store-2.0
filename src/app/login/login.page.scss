@@ -347,3 +347,9 @@
     font-size: 1.85rem;
   }
 }
+
+.diagnostics-link { display: block; margin: 8px 0 12px; border: 0; padding: 0; background: transparent; color: #8b6d4e; text-decoration: underline; font-size: .82rem; cursor: pointer; text-align: left; }
+
+.inline-diagnostics { margin: 6px 0 12px; padding: 10px; border: 1px solid #e7ddd2; border-radius: 10px; background: #fbf8f4; color: #59483a; font-size: .8rem; }
+.inline-diagnostics summary { cursor: pointer; font-weight: 600; }
+.inline-diagnostics pre { max-height: 220px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .72rem; }

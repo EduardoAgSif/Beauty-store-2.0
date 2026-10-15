@@ -21,4 +21,12 @@ describe('Tab2Page', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should count quantities instead of distinct cart rows', () => {
+    component.cartItems = [
+      { product: { id: 1, name: 'Face Oil', description: '', price: 100, stock: 10 }, quantity: 3 }
+    ];
+
+    expect(component.totalItems).toBe(3);
+  });
 });

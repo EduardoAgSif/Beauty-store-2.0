@@ -1,0 +1,19 @@
+<ion-header><ion-toolbar><ion-buttons slot="start"><ion-back-button defaultHref="/login"></ion-back-button></ion-buttons><ion-title>Origen de datos</ion-title></ion-toolbar></ion-header>
+<ion-content class="ion-padding data-source-page">
+  <div class="config-card">
+    <h1>Origen de datos</h1>
+    <p>Configura el endpoint de la API. El puerto de base de datos es informativo: la aplicación debe comunicarse con el backend, no conectarse directamente a MySQL.</p>
+    <ion-item><ion-label position="stacked">Entorno</ion-label><ion-input [(ngModel)]="config.environment" name="environment" placeholder="development"></ion-input></ion-item>
+    <ion-item><ion-label position="stacked">Protocolo</ion-label><ion-select [(ngModel)]="config.protocol" name="protocol"><ion-select-option value="http">HTTP</ion-select-option><ion-select-option value="https">HTTPS</ion-select-option></ion-select></ion-item>
+    <ion-item><ion-label position="stacked">Host / IP del servidor</ion-label><ion-input [(ngModel)]="config.host" name="host" placeholder="192.168.1.100"></ion-input></ion-item>
+    <ion-item><ion-label position="stacked">Puerto de API</ion-label><ion-input type="number" [(ngModel)]="config.apiPort" name="apiPort"></ion-input></ion-item>
+    <ion-item><ion-label position="stacked">Ruta base de API</ion-label><ion-input [(ngModel)]="config.apiBasePath" name="apiBasePath" placeholder="/backend"></ion-input></ion-item>
+    <ion-item><ion-label position="stacked">Motor de base de datos (informativo)</ion-label><ion-select [(ngModel)]="config.dbEngine" name="dbEngine"><ion-select-option value="mysql">MySQL</ion-select-option><ion-select-option value="mariadb">MariaDB</ion-select-option><ion-select-option value="postgresql">PostgreSQL</ion-select-option></ion-select></ion-item>
+    <ion-item><ion-label position="stacked">Puerto de base de datos (informativo)</ion-label><ion-input type="number" [(ngModel)]="config.dbPort" name="dbPort"></ion-input></ion-item>
+    <ion-item><ion-label position="stacked">Timeout de API (ms)</ion-label><ion-input type="number" [(ngModel)]="config.timeoutMs" name="timeoutMs"></ion-input></ion-item>
+    <div class="config-preview"><h3>Configuración JSON</h3><p>También puedes editar el objeto JSON directamente. Los cambios se aplican al formulario; pulsa Guardar para conservarlos.</p><ion-textarea [(ngModel)]="rawJson" name="rawJson" [autoGrow]="true" rows="8"></ion-textarea><ion-button fill="outline" size="small" (click)="applyJson()">Aplicar JSON al formulario</ion-button><p class="json-error" *ngIf="jsonError">{{ jsonError }}</p><pre>{{ configJson }}</pre></div>
+    <p class="status-message" *ngIf="message">{{ message }}</p>
+    <div class="actions"><ion-button fill="outline" (click)="save()">Guardar configuración</ion-button><ion-button [disabled]="busy" (click)="saveAndTest()">{{ busy ? 'Probando…' : 'Guardar y probar conexión' }}</ion-button><ion-button fill="clear" (click)="testConnection()" [disabled]="busy">Solo probar</ion-button></div>
+  </div>
+  <app-request-diagnostics [visible]="showDiagnostics" [details]="diagnostics" title="Diagnóstico de conexión" (closed)="showDiagnostics = false"></app-request-diagnostics>
+</ion-content>

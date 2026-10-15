@@ -13,7 +13,7 @@
 }
 
 .profile-content {
-  --background: #faf8f5;
+  --background: transparent;
 }
 
 .profile-wrapper {
@@ -27,14 +27,18 @@
 
 // User Header Card
 .user-card-header {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(24px) saturate(170%);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 10px 36px rgba(100, 90, 80, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.70);
   border-radius: 24px;
   padding: 24px;
   display: flex;
   align-items: center;
   gap: 20px;
-  box-shadow: 0 8px 24px rgba(138, 127, 118, 0.08);
-  border: 1px solid #ede4d8;
   margin-bottom: 20px;
 
   .avatar-ring {
@@ -104,12 +108,16 @@
   margin-bottom: 24px;
 
   .stat-card {
-    background: #ffffff;
-    border: 1px solid #ede4d8;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.48);
+    box-shadow:
+      0 4px 20px rgba(100, 90, 80, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.60);
     border-radius: 16px;
     padding: 16px;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(138, 127, 118, 0.04);
 
     .stat-num {
       display: block;
@@ -128,10 +136,14 @@
 
 // Account Menu Card
 .account-menu-card {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  box-shadow:
+    0 6px 24px rgba(100, 90, 80, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
   border-radius: 20px;
-  border: 1px solid #ede4d8;
-  box-shadow: 0 6px 18px rgba(138, 127, 118, 0.04);
   margin-bottom: 20px;
   overflow: hidden;
 
@@ -311,16 +323,22 @@
 }
 
 .address-card {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  box-shadow:
+    0 4px 20px rgba(100, 90, 80, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
   border-radius: 18px;
-  border: 1px solid #ede4d8;
   padding: 18px 20px;
-  box-shadow: 0 4px 14px rgba(138, 127, 118, 0.05);
   transition: all 0.2s ease;
 
   &.default-card {
-    border-color: #c5a880;
-    box-shadow: 0 4px 18px rgba(197, 168, 128, 0.15);
+    border-color: rgba(197, 168, 128, 0.55);
+    box-shadow:
+      0 6px 24px rgba(197, 168, 128, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.65);
   }
 
   .address-card-header {

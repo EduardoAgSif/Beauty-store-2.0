@@ -15,7 +15,7 @@
     <div class="cart-header-title">
       <h1>Your Shopping Bag</h1>
       <p *ngIf="cartItems.length > 0">
-        You have <strong>{{ cartItems.length }}</strong> {{ cartItems.length === 1 ? 'item' : 'items' }} in your bag.
+        You have <strong>{{ totalItems }}</strong> {{ totalItems === 1 ? 'item' : 'items' }} in your bag.
       </p>
     </div>
 

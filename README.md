@@ -42,6 +42,7 @@ BeautyStore_2.0/
 ├── src/
 │   └── app/
 │       ├── guards/       # Route guards (auth)
+│       ├── api-demo/     # CRUD demo for the REST API
 │       ├── login/        # Login page module
 │       ├── models/       # Data models
 │       ├── services/     # API services
@@ -109,6 +110,22 @@ BeautyStore_2.0/
    ```
 
    The app will open at `http://localhost:8100`.
+
+---
+
+## REST API CRUD Demo
+
+Open **API CRUD** from the navigation (or visit `http://localhost:8100/api-demo`) to exercise the product API:
+
+1. Set the API host and base path in **Origen de datos**. For XAMPP on the same computer use `localhost`; Android emulators and physical devices need a host reachable from that device (for example, `10.0.2.2` for the Android Studio emulator).
+2. Use **Consultar GET** to list the products stored by the server.
+3. Enter a name, description, price, and stock, then use **Crear con POST**.
+4. Select **Editar** on a server product. Use **Guardar con PUT** to replace its editable fields or **Actualizar stock con PATCH** to change only its stock.
+5. Use **DELETE** on a product and confirm the deletion.
+
+Requests show an Ionic loading overlay. The result panel displays the method, actual HTTP status, and response; API errors are shown on screen and in the request diagnostics. The storefront keeps its local catalog fallback, while this demo reports API failures without substituting local data.
+
+For delivery evidence, start the PHP/MySQL backend, run the flow above, and record the screen with a system screenshot or screen recorder. Capture the GET list and the POST, PUT/PATCH, and DELETE results so the HTTP methods and response status are visible.
 
 ---
 

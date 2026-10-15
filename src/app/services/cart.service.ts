@@ -14,6 +14,7 @@ export class CartService {
 
   private countSubject = new BehaviorSubject<number>(0);
   public count$ = this.countSubject.asObservable();
+  private persistTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(private storage: StorageService) {
     // Synchronous boot: read cart from localStorage immediately so the
@@ -57,6 +58,16 @@ export class CartService {
   private async saveCart(items: CartItem[]): Promise<void> {
     this.itemsSubject.next(items);
     this.updateCount(items);
+    if (this.persistTimer) {
+      clearTimeout(this.persistTimer);
+    }
+    this.persistTimer = setTimeout(() => {
+      this.persistTimer = null;
+      void this.persistCart(items);
+    }, 0);
+  }
+
+  private async persistCart(items: CartItem[]): Promise<void> {
     try {
       await this.storage.set(this.STORAGE_KEY, items);
     } catch (e) {

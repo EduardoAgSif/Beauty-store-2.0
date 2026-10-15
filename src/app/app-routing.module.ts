@@ -13,6 +13,14 @@ const routes: Routes = [
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
   },
   {
+    path: 'data-source',
+    loadChildren: () => import('./data-source/data-source.module').then(m => m.DataSourcePageModule)
+  },
+  {
+    path: 'api-demo',
+    loadChildren: () => import('./api-demo/api-demo.module').then(m => m.ApiDemoPageModule)
+  },
+  {
     path: 'tabs',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
     canActivate: [authGuard]

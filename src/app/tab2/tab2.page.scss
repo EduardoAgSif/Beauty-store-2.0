@@ -17,7 +17,7 @@
 }
 
 .cart-content {
-  --background: #faf8f5;
+  --background: transparent;
 }
 
 .cart-page-wrapper {
@@ -57,10 +57,14 @@
 .empty-cart-view {
   text-align: center;
   padding: 60px 20px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.50);
+  box-shadow:
+    0 8px 32px rgba(100, 90, 80, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
   border-radius: 24px;
-  box-shadow: 0 6px 20px rgba(138, 127, 118, 0.06);
-  border: 1px solid #ede4d8;
   max-width: 540px;
   margin: 30px auto;
 
@@ -109,12 +113,16 @@
 
 // Free Shipping Threshold
 .shipping-threshold-banner {
-  background: #ffffff;
-  border: 1px solid #ede4d8;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 4px 18px rgba(100, 90, 80, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
   border-radius: 16px;
   padding: 14px 18px;
   margin-bottom: 18px;
-  box-shadow: 0 4px 12px rgba(138, 127, 118, 0.06);
 
   .threshold-text {
     display: flex;
@@ -156,17 +164,23 @@
   gap: 14px;
 
   .cart-item-card {
-    background: #ffffff;
-    border: 1px solid #ede4d8;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.48);
+    box-shadow:
+      0 4px 20px rgba(100, 90, 80, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.55);
     border-radius: 18px;
     padding: 14px;
     display: flex;
     gap: 16px;
-    box-shadow: 0 4px 14px rgba(138, 127, 118, 0.04);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
-      box-shadow: 0 8px 20px rgba(197, 168, 128, 0.15);
+      box-shadow:
+        0 10px 28px rgba(100, 90, 80, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.65);
     }
 
     .item-thumbnail {
@@ -284,11 +298,15 @@
 // Right Summary Card
 .cart-summary-column {
   .summary-card {
-    background: #ffffff;
-    border: 1px solid #ede4d8;
+    background: rgba(255, 255, 255, 0.32);
+    backdrop-filter: blur(24px) saturate(170%);
+    -webkit-backdrop-filter: blur(24px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow:
+      0 12px 40px rgba(100, 90, 80, 0.10),
+      inset 0 1px 0 rgba(255, 255, 255, 0.70);
     border-radius: 20px;
     padding: 24px;
-    box-shadow: 0 8px 24px rgba(138, 127, 118, 0.08);
 
     h2 {
       font-size: 1.3rem;

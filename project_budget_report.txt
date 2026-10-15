@@ -1,0 +1,79 @@
+BEAUTYSTORE PROJECT BUDGET REPORT
+Planning estimates for a Dubai customer
+Prepared: 2026-10-02
+
+SUMMARY
+
+AED 10,000 is not enough for the mature scope. It could fund discovery or a limited proof of concept, but not a dependable shop with real payments, delivery updates, and a maintained product-trend system. For a friend, a phased first release around AED 28,000-45,000 may be a reasonable target with a narrow, written scope. These are planning ranges, not a Dubai market survey or supplier quote.
+
+ONE-TIME BUILD BUDGET
+
+Requirements, delivery/payment provider selection, and checking which trend sources can be used: AED 2,000-4,000.
+
+Production commerce (secure accounts, orders, stock, server-validated totals, one payment provider, basic admin): AED 12,000-20,000.
+
+One courier integration, order statuses, and customer notifications: AED 4,000-8,000.
+
+Trend-data pipeline and internal dashboard, limited to an agreed set of sources and refresh schedule: AED 8,000-15,000.
+
+Testing, deployment, handover, backups, and monitoring setup: AED 4,000-7,000.
+
+Build subtotal: AED 30,000-54,000.
+
+Independent security review before handling live customer/payment traffic: add AED 3,000-8,000.
+
+A customer-facing AI recommendation feature is separate: budget roughly AED 5,000-12,000 extra for a basic catalog-based assistant. Medical-style skin analysis or diagnosis is not included.
+
+For a discounted friend project, AED 28,000-45,000 can be a reasonable target if the release is limited to one payment provider, one courier, and a small set of approved trend sources. Set aside time or money for an experienced developer to review the payment and security work. A paid discovery milestone followed by payments against working staging features and agreed acceptance tests is safer than one large upfront commitment. New features and additional sources should be outside the fixed price.
+
+ONGOING COSTS
+
+AWS hosting, database, backups, logs, and monitoring: AED 300-1,200/month for a modest setup; more for high availability or growing traffic.
+
+Scraping service: about AED 70/month to start for some entry plans; budget AED 70-500+/month for a small pilot. Proxies or heavier browsing can cost more.
+
+AI API for summaries or recommendations: start with a capped AED 50-500/month allowance, then measure actual usage.
+
+Email, SMS, and WhatsApp notifications: potentially low initially, but costs vary by provider and message volume.
+
+Maintenance and incident support: AED 1,500-4,000/month for a limited, clearly capped support agreement. New features cost extra.
+
+Domain and DNS: registrar-dependent annual cost; verify the exact .com or .ae price before quoting.
+
+App distribution: Apple Developer Program is US$99/year. Google Play Console registration fees are shown during signup.
+
+Payment processing: variable per successful transaction, not a fixed monthly hosting cost. For a UAE-specific example, Stripe's UAE pricing page lists domestic card processing at 2.9% + AED 1 per successful transaction, with additional charges for international cards and currency conversion. Confirm provider availability and final pricing for the client's business account before committing.
+
+Useful references:
+Apple Developer Program: https://developer.apple.com/programs/whats-included/
+Google Play Console registration: https://support.google.com/googleplay/android-developer/answer/6112435?hl=en
+Stripe UAE pricing: https://stripe.com/ae/pricing
+AWS Pricing Calculator: https://calculator.aws/#/
+
+DATA-SCRAPING COSTS AND LIMITATIONS
+
+Scraping platforms sell infrastructure and usage; they do not automatically grant permission to collect or commercially reuse every website's content. Apify lists a US$19 Starter plan with usage-based charges, while ScrapingBee lists a US$19 entry plan. Treat these as starting points, not a complete data-licensing budget. A publisher or retailer may require permission or a separate commercial data agreement, and its price cannot be estimated until sources are selected.
+
+References:
+Apify pricing: https://apify.com/pricing
+ScrapingBee pricing: https://www.scrapingbee.com/pricing/
+
+Keep the first version narrow: approved APIs, feeds, or public sources; a small source list; summaries with links and timestamps; and a human approving product decisions. Do not promise that the system will objectively identify "the trendiest products on the web." Source coverage and reliability are part of the product. Confirm terms for each source, and do not bypass access controls or rate limits.
+
+OTHER COSTS AND RISKS TO INCLUDE
+
+The estimates above are for software operations, not the customer's UAE business licence, product/import approvals, accounting, legal advice, or product inventory. Those costs depend on the business structure, products, and licence issuer. The customer should confirm them with the relevant UAE authorities and an accountant.
+
+The existing project is Android-focused. If the client expects iOS too, include additional build and device testing in scope.
+
+Agree whether "delivery updates" means status updates from a courier integration or live driver GPS; they are very different features.
+
+Confirm AED pricing, delivery zones, returns, refunds, cash-on-delivery requirements, and who manages products and orders.
+
+If the recommendation feature collects menopause details, health concerns, or skin photos, minimize what it collects and get UAE privacy/legal advice. Keep recommendations cosmetic and non-diagnostic unless the client obtains appropriate specialist guidance.
+
+Put cloud, domain, app-store, AI, courier, and data-source accounts in the client's name and bill subscriptions directly to them. Use spending caps and alerts.
+
+FIRST-YEAR PLANNING TOTAL
+
+At these planning ranges, build plus independent security review plus 12 months of hosting, tools, and maintenance is roughly AED 57,000-140,000 for year one. This excludes transaction fees, business/product licensing, and any paid data-source agreements. The wide range mainly reflects ongoing support level and infrastructure choices; narrow it after discovery.

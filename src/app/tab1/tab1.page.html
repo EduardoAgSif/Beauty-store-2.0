@@ -15,7 +15,7 @@
     </ion-refresher-content>
   </ion-refresher>
 
-  <!-- Hero Banner with Large Interactive Carousel -->
+  <!-- Hero Banner -->
   <section class="hero-section">
     <div class="ecom-container hero-container">
       <div class="hero-text-content">
@@ -36,56 +36,23 @@
         </div>
       </div>
 
-      <!-- Large Interactive Product Carousel -->
-      <div
-        class="hero-carousel-wrapper"
-        (mouseenter)="stopAutoSlide()"
-        (mouseleave)="startAutoSlide()"
-      >
-        <div class="carousel-track">
-          <div
-            *ngFor="let slide of heroSlides; let i = index"
-            class="carousel-slide"
-            [class.active]="i === currentSlide"
-            (click)="onSlideClick(slide)"
-          >
-            <img [src]="slide.imageUrl" [alt]="slide.title" class="slide-image" referrerpolicy="no-referrer-when-downgrade" (error)="$any($event.target).style.background='linear-gradient(135deg,#f5ece2,#e8ded2)'" />
-            <div class="slide-badge-overlay">
-              <span class="slide-tag">{{ slide.tag }}</span>
-              <div class="slide-info-pill">
-                <h4>{{ slide.title }}</h4>
-                <p>{{ slide.subtitle }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Carousel Navigation Arrows -->
+      <div class="hero-product-gallery">
         <button
-          class="carousel-arrow prev"
-          (click)="prevSlide(); $event.stopPropagation()"
-          aria-label="Previous Slide"
+          *ngFor="let slide of heroSlides"
+          class="hero-product-tile"
+          type="button"
+          (click)="onSlideClick(slide)"
+          [attr.aria-label]="'View ' + slide.title"
         >
-          <ion-icon name="chevron-back-outline"></ion-icon>
+          <img
+            [src]="getSlideImage(slide)"
+            [alt]="slide.title"
+            loading="eager"
+            referrerpolicy="no-referrer-when-downgrade"
+            (error)="$any($event.target).style.visibility='hidden'"
+          />
+          <span class="hero-product-label">{{ slide.title }}</span>
         </button>
-        <button
-          class="carousel-arrow next"
-          (click)="nextSlide(); $event.stopPropagation()"
-          aria-label="Next Slide"
-        >
-          <ion-icon name="chevron-forward-outline"></ion-icon>
-        </button>
-
-        <!-- Carousel Dot Indicators -->
-        <div class="carousel-dots">
-          <button
-            *ngFor="let slide of heroSlides; let idx = index"
-            class="dot"
-            [class.active]="idx === currentSlide"
-            (click)="goToSlide(idx); $event.stopPropagation()"
-            [attr.aria-label]="'Slide ' + (idx + 1)"
-          ></button>
-        </div>
       </div>
     </div>
   </section>
@@ -149,7 +116,7 @@
     <!-- Highlighted Categories -->
     <section class="category-cards-section">
       <div class="category-card" (click)="selectCategory('Skincare')">
-        <img src="https://picsum.photos/seed/skincare/500/300" alt="Skincare" referrerpolicy="no-referrer-when-downgrade" />
+        <img src="assets/products/Gentle-clenser.jpg" alt="Skincare" />
         <div class="card-overlay">
           <h3>Skincare</h3>
           <p>Serums & Deep Hydration</p>
@@ -158,7 +125,7 @@
       </div>
 
       <div class="category-card" (click)="selectCategory('Makeup')">
-        <img src="https://picsum.photos/seed/makeup/500/300" alt="Makeup" referrerpolicy="no-referrer-when-downgrade" />
+        <img src="assets/products/Eyeshadow-palette.jpg" alt="Makeup" />
         <div class="card-overlay">
           <h3>Makeup</h3>
           <p>Lipsticks & Warm Palettes</p>
@@ -167,7 +134,7 @@
       </div>
 
       <div class="category-card" (click)="selectCategory('Fragrances')">
-        <img src="https://picsum.photos/seed/fragrance/500/300" alt="Fragrances" referrerpolicy="no-referrer-when-downgrade" />
+        <img src="assets/products/rose-parfume.jpg" alt="Fragrances" />
         <div class="card-overlay">
           <h3>Fragrances</h3>
           <p>Fine Perfumes & Vanilla</p>

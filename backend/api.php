@@ -1,17 +1,5 @@
 <?php
-// Configuración de encabezados CORS y JSON
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-header("Content-Type: application/json; charset=UTF-8");
-
-// Manejo del método OPTIONS para solicitudes preflight de los navegadores (CORS)
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
-// Conexión a la base de datos
+// CORS, JSON response headers and preflight handling are shared by all PHP endpoints.
 require_once 'db_config.php';
 
 // Obtener el método de la petición HTTP
@@ -57,16 +45,26 @@ try {
         // 2. POST: Crear un nuevo registro
         // -------------------------------------------------------------
         case 'POST':
-            if (empty($inputData['name']) || !isset($inputData['price'])) {
+            if (empty($inputData['name']) || !isset($inputData['price']) || !is_numeric($inputData['price']) || floatval($inputData['price']) < 0) {
                 http_response_code(400);
-                echo json_encode(["status" => "error", "message" => "Los campos 'name' y 'price' son obligatorios."]);
+                echo json_encode(["status" => "error", "message" => "Los campos 'name' y 'price' son obligatorios y el precio debe ser un número no negativo."]);
                 exit();
             }
 
             $name = trim($inputData['name']);
+            if ($name === '') {
+                http_response_code(400);
+                echo json_encode(["status" => "error", "message" => "El nombre del producto no puede estar vacío."]);
+                exit();
+            }
             $description = isset($inputData['description']) ? trim($inputData['description']) : '';
             $price = floatval($inputData['price']);
             $stock = isset($inputData['stock']) ? intval($inputData['stock']) : 0;
+            if (isset($inputData['stock']) && (filter_var($inputData['stock'], FILTER_VALIDATE_INT) === false || intval($inputData['stock']) < 0)) {
+                http_response_code(400);
+                echo json_encode(["status" => "error", "message" => "El stock debe ser un entero no negativo."]);
+                exit();
+            }
 
             $stmt = $conn->prepare("INSERT INTO products (name, description, price, stock) VALUES (:name, :description, :price, :stock)");
             $stmt->bindParam(':name', $name);
@@ -98,16 +96,35 @@ try {
                 exit();
             }
 
-            if (empty($inputData['name']) || !isset($inputData['price'])) {
+            if (empty($inputData['name']) || !isset($inputData['price']) || !is_numeric($inputData['price']) || floatval($inputData['price']) < 0) {
                 http_response_code(400);
-                echo json_encode(["status" => "error", "message" => "Se requieren todos los campos obligatorios ('name' y 'price') para PUT."]);
+                echo json_encode(["status" => "error", "message" => "Se requieren 'name' y 'price' válidos para PUT; el precio debe ser un número no negativo."]);
                 exit();
             }
 
             $name = trim($inputData['name']);
+            if ($name === '') {
+                http_response_code(400);
+                echo json_encode(["status" => "error", "message" => "El nombre del producto no puede estar vacío."]);
+                exit();
+            }
             $description = isset($inputData['description']) ? trim($inputData['description']) : '';
             $price = floatval($inputData['price']);
             $stock = isset($inputData['stock']) ? intval($inputData['stock']) : 0;
+            if (isset($inputData['stock']) && (filter_var($inputData['stock'], FILTER_VALIDATE_INT) === false || intval($inputData['stock']) < 0)) {
+                http_response_code(400);
+                echo json_encode(["status" => "error", "message" => "El stock debe ser un entero no negativo."]);
+                exit();
+            }
+
+            $exists = $conn->prepare("SELECT 1 FROM products WHERE id = :id LIMIT 1");
+            $exists->bindParam(':id', $id, PDO::PARAM_INT);
+            $exists->execute();
+            if (!$exists->fetchColumn()) {
+                http_response_code(404);
+                echo json_encode(["status" => "error", "message" => "No se encontró el producto a actualizar."]);
+                exit();
+            }
 
             $stmt = $conn->prepare("UPDATE products SET name = :name, description = :description, price = :price, stock = :stock WHERE id = :id");
             $stmt->bindParam(':name', $name);
@@ -139,6 +156,11 @@ try {
             $params = [':id' => $id];
 
             if (isset($inputData['name'])) {
+                if (trim($inputData['name']) === '') {
+                    http_response_code(400);
+                    echo json_encode(["status" => "error", "message" => "El nombre del producto no puede estar vacío."]);
+                    exit();
+                }
                 $fieldsToUpdate[] = "name = :name";
                 $params[':name'] = trim($inputData['name']);
             }
@@ -147,10 +169,20 @@ try {
                 $params[':description'] = trim($inputData['description']);
             }
             if (isset($inputData['price'])) {
+                if (!is_numeric($inputData['price']) || floatval($inputData['price']) < 0) {
+                    http_response_code(400);
+                    echo json_encode(["status" => "error", "message" => "El precio debe ser un número no negativo."]);
+                    exit();
+                }
                 $fieldsToUpdate[] = "price = :price";
                 $params[':price'] = floatval($inputData['price']);
             }
             if (isset($inputData['stock'])) {
+                if (filter_var($inputData['stock'], FILTER_VALIDATE_INT) === false || intval($inputData['stock']) < 0) {
+                    http_response_code(400);
+                    echo json_encode(["status" => "error", "message" => "El stock debe ser un entero no negativo."]);
+                    exit();
+                }
                 $fieldsToUpdate[] = "stock = :stock";
                 $params[':stock'] = intval($inputData['stock']);
             }
@@ -158,6 +190,15 @@ try {
             if (empty($fieldsToUpdate)) {
                 http_response_code(400);
                 echo json_encode(["status" => "error", "message" => "No se enviaron campos válidos para actualizar."]);
+                exit();
+            }
+
+            $exists = $conn->prepare("SELECT 1 FROM products WHERE id = :id LIMIT 1");
+            $exists->bindParam(':id', $id, PDO::PARAM_INT);
+            $exists->execute();
+            if (!$exists->fetchColumn()) {
+                http_response_code(404);
+                echo json_encode(["status" => "error", "message" => "No se encontró el producto a actualizar."]);
                 exit();
             }
 

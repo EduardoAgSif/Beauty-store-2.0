@@ -1,227 +1,220 @@
-# Academic Technical Report: Application Programming Interfaces (APIs) & Service Architecture in GlowBeauty 2.0
+# Arquitectura Cliente–API–Base de datos
 
-**Course:** Programación de Móviles II  
-**Project:** GlowBeauty — Cross-Platform E-Commerce Application  
-**Framework:** Ionic 9.x / Angular 22.x / Capacitor 8.x  
-**Document Type:** Technical & Architectural Systems Report  
+**Proyecto:** GlowBeauty / BeautyStore 2.0
+**Curso:** Programación de Móviles II
+**Tecnologías:** Ionic, Angular, Capacitor, PHP, PDO y MySQL
+**Estado del documento:** análisis de la implementación actual; no describe funcionalidades futuras como si ya existieran.
 
----
-
-## 1. Executive Summary
-
-This report presents a rigorous examination of all Application Programming Interfaces (APIs), software communication protocols, hardware abstraction layers, and architectural interfaces implemented within the **GlowBeauty 2.0** application. 
-
-In modern cross-platform software engineering, the term **API** encompasses both:
-1. **External / Network APIs:** Remote web services accessed via HTTP/HTTPS request-response cycles.
-2. **Platform & Device APIs:** Native bridge abstractions providing programmatic access to hardware sensors, operating system storage, and device lifecycle states.
-3. **Application & Library APIs:** Programmatic contracts provided by frameworks (Angular, Ionic, RxJS) that facilitate reactive state propagation, navigation, and view rendering.
-
----
-
-## 2. Global Architecture & API Topology
+## 1. Diagrama de arquitectura
 
 ```mermaid
-graph TD
-    subgraph Client Layer: Angular / Ionic UI
-        UI[Tab 1 / Tab 2 / Tab 3 Components]
-        Router[Angular Router API]
-        Rx[RxJS Reactive Streams API]
+flowchart LR
+    subgraph Cliente["Cliente móvil/web — Ionic + Angular"]
+        UI["Pantallas: catálogo e inicio de sesión"]
+        Product["ProductService"]
+        Login["LoginPage"]
+        Config["DataSourceConfigService<br/>URL, timeout, HTTP y diagnóstico"]
+        Local["StorageService / Capacitor Preferences<br/>carrito, direcciones y sesión local"]
+        UI --> Product
+        UI --> Login
+        Product --> Config
+        Login --> Config
+        UI --> Local
     end
 
-    subgraph Service Layer: Business Logic
-        ProdSvc[ProductService]
-        CartSvc[CartService]
-        AddrSvc[AddressService]
-        AuthSvc[AuthService]
-        StorSvc[StorageService]
+    subgraph Servidor["Servidor — Apache + PHP"]
+        Products["backend/api.php<br/>CRUD de productos"]
+        SignUp["backend/signup.php"]
+        SignIn["backend/login.php"]
     end
 
-    subgraph Native & Platform APIs
-        CapPref[Capacitor Preferences API]
-        PlatformAPI[Ionic Platform API]
-        LocalStor[Web Storage API localStorage]
-        IonicCtrl[Ionic Controller APIs: Toast, Alert]
+    subgraph Persistencia["Persistencia — MySQL"]
+        Users[("users")]
+        Catalog[("products")]
     end
 
-    subgraph Remote Network Services
-        RestAPI[PHP REST Backend API: api.php]
-        UnsplashCDN[Unsplash Image CDN REST API]
-    end
-
-    UI --> Router
-    UI --> Rx
-    UI --> IonicCtrl
-    UI --> ProdSvc
-    UI --> CartSvc
-    UI --> AddrSvc
-    UI --> AuthSvc
-
-    ProdSvc --> PlatformAPI
-    ProdSvc -->|Axios HTTP| RestAPI
-    ProdSvc -.->|Image URLs| UnsplashCDN
-    
-    CartSvc --> StorSvc
-    AddrSvc --> StorSvc
-    AuthSvc --> StorSvc
-    AuthSvc --> LocalStor
-    StorSvc --> CapPref
+    Config -->|"HTTP + JSON"| Products
+    Config -->|"HTTP + JSON"| SignUp
+    Config -->|"HTTP + JSON"| SignIn
+    Products -->|"PDO / SQL"| Catalog
+    SignUp -->|"PDO / SQL"| Users
+    SignIn -->|"PDO / SQL"| Users
 ```
 
----
+**Flujo:** la interfaz solicita operaciones a servicios Angular; estos construyen la URL desde la configuración del origen de datos y realizan solicitudes HTTP con JSON. Los scripts PHP validan la solicitud, acceden a MySQL mediante PDO y devuelven un código HTTP y un cuerpo JSON. El cliente muestra los resultados y, para productos, conserva un catálogo local de respaldo si la API no está disponible.
 
-## 3. Comprehensive Inventory of APIs & Implementations
+## 2. Endpoints y métodos HTTP implementados
 
-### 3.1 Custom RESTful Backend API (PHP / MySQL / Apache)
-* **API Category:** Remote Web Service (HTTP REST API)
-* **Endpoint URL:** 
-  * Browser / Web Environment: `http://localhost/backend/api.php`
-  * Android Emulator Environment: `http://10.0.2.2/backend/api.php`
-* **Transport Protocol:** HTTP/1.1 via TCP
-* **Data Interchange Format:** JSON (`application/json`)
-* **HTTP Method:** `GET`
-* **Purpose:** Acts as the primary backend data provider for catalog products, fetching price, inventory, category, and metadata from the server-side database.
-* **Location in Project Codebase:**
-  * File: [`src/app/services/product.service.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/services/product.service.ts#L10)
-  * Lines: 10, 160–177
-* **Code Reference:**
-  ```typescript
-  // Dynamic host determination based on runtime platform
-  if (this.platform.is('android')) {
-    this.apiUrl = 'http://10.0.2.2/backend/api.php';
-  } else {
-    this.apiUrl = 'http://localhost/backend/api.php';
-  }
+La URL base se forma con `protocol`, `host`, `apiPort` y `apiBasePath`, configurables en la aplicación. El valor inicial es `http://localhost:80/backend`. En un emulador Android normalmente se configura el host accesible desde el emulador (por ejemplo, `10.0.2.2` para el servidor local del equipo); en un teléfono físico se requiere la dirección de red del servidor.
 
-  // Network call with timeout fallback
-  const response = await axios.get(this.apiUrl, { timeout: 1800 });
-  ```
-
----
-
-### 3.2 Axios HTTP Client Library API
-* **API Category:** Client-Side Network Protocol API
-* **Package:** `axios` (v1.20.0 or higher)
-* **Purpose:** Provides a Promise-based HTTP interface for issuing asynchronous requests with configurable timeouts, request interception, and automatic JSON response serialization.
-* **Location in Project Codebase:**
-  * File: [`src/app/services/product.service.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/services/product.service.ts#L3)
-  * Lines: 3, 170
-
----
-
-### 3.3 Capacitor Preferences Plugin API
-* **API Category:** Native Device Storage Abstraction Layer API
-* **Package:** `@capacitor/preferences` (v8.0.1)
-* **Native Operating System Mappings:**
-  * **Android:** `SharedPreferences` (XML-based native key-value storage)
-  * **iOS:** `NSUserDefaults`
-  * **Web / Progressive Web App (PWA):** `IndexedDB` or `localStorage`
-* **Purpose:** Provides persistent, asynchronous, native-level storage for user authentication tokens, persisted cart state, and custom delivery addresses across application restarts.
-* **Core API Methods Used:**
-  * `Preferences.set({ key, value })`
-  * `Preferences.get({ key })`
-  * `Preferences.remove({ key })`
-  * `Preferences.clear()`
-* **Location in Project Codebase:**
-  * Primary Abstraction Service: [`src/app/services/storage.service.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/services/storage.service.ts#L2)
-  * Consumers:
-    * [`src/app/services/cart.service.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/services/cart.service.ts)
-    * [`src/app/services/address.service.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/services/address.service.ts)
-    * [`src/app/services/auth.service.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/services/auth.service.ts)
-
----
-
-### 3.4 Ionic Platform Hardware & Runtime API
-* **API Category:** Device Environment & Target Platform Inspection API
-* **Package:** `@ionic/angular` / `@ionic/core`
-* **Purpose:** Programmatically queries device attributes, viewport characteristics, operating system families (`android`, `ios`, `desktop`, `mobile`), and platform-specific capabilities at runtime.
-* **Key Use Case in Code:** Inspecting whether the application is running inside the Android Dalvik/ART virtual machine or a desktop WebKit/Blink browser engine, redirecting network loops accordingly (`10.0.2.2` vs `localhost`).
-* **Location in Project Codebase:**
-  * File: [`src/app/services/product.service.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/services/product.service.ts#L2)
-  * Lines: 2, 160–166
-
----
-
-### 3.5 HTML5 Web Storage API (`window.localStorage`)
-* **API Category:** W3C Standard Browser Storage API
-* **Purpose:** Synchronous browser key-value store utilized as an immediate local session fallback for user credentials and auth tokens prior to native preference synchronization.
-* **Location in Project Codebase:**
-  * File: [`src/app/services/auth.service.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/services/auth.service.ts#L14)
-  * Lines: 14, 28, 41, 56
-
----
-
-### 3.6 Reactive Extensions for JavaScript (RxJS) API
-* **API Category:** Asynchronous Reactive Dataflow & Event Processing API
-* **Package:** `rxjs` (v7.x)
-* **Core Primitives Utilized:**
-  * `BehaviorSubject<T>`: Holds current state value and emits updates to current and future subscribers.
-  * `Observable<T>`: Read-only stream piped to Angular's `AsyncPipe` in HTML templates.
-  * `Subscription`: Lifecycle management interface to prevent memory leaks during component destruction.
-* **Purpose:** Powers the global reactive state machine across all tabs, ensuring that cart counters, shopping bag subtotals, and address lists update in real-time across disconnected views without manual component re-rendering.
-* **Location in Project Codebase:**
-  * [`src/app/services/cart.service.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/services/cart.service.ts#L4) (`items$`, `count$`, `total$`)
-  * [`src/app/services/address.service.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/services/address.service.ts#L4) (`addresses$`)
-  * [`src/app/services/auth.service.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/services/auth.service.ts#L4) (`currentUser$`)
-  * [`src/app/tabs/tabs.page.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/tabs/tabs.page.ts#L4) (`cartCount$`)
-
----
-
-### 3.7 Angular Router & Navigation API
-* **API Category:** Client-Side Single Page Application (SPA) Routing & Guard API
-* **Package:** `@angular/router`
-* **Core Constructs:** `RouterModule`, `Routes`, `Router`, `NavController`, `routerLink`, `CanActivateFn`
-* **Purpose:** Manages URL state, dynamic lazy-loading of feature modules (`loadChildren`), hierarchical nested route outlets (`ion-tabs` child routes), and route authorization guards.
-* **Location in Project Codebase:**
-  * Root Routing: [`src/app/app-routing.module.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/app-routing.module.ts)
-  * Tabs Sub-Routing: [`src/app/tabs/tabs-routing.module.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/tabs/tabs-routing.module.ts)
-  * Route Guard: [`src/app/guards/auth.guard.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/guards/auth.guard.ts)
-  * Navigation Controllers: [`src/app/tabs/tabs.page.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/tabs/tabs.page.ts#L2)
-
----
-
-### 3.8 Ionic UI Controller Overlay APIs
-* **API Category:** Programmatic User Interface & Notification Service APIs
-* **Package:** `@ionic/angular`
-* **Constructs:** `ToastController`, `AlertController`, `ModalController`
-* **Purpose:** Programmatically generates modal dialogs, native confirmation sheets (e.g., confirming item removal from shopping bag), and non-intrusive HUD toast feedback overlays.
-* **Location in Project Codebase:**
-  * [`src/app/tab1/tab1.page.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/tab1/tab1.page.ts#L2) (Toast notifications upon cart addition)
-  * [`src/app/tab2/tab2.page.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/tab2/tab2.page.ts#L2) (Alert dialogs for cart deletion & coupon feedback)
-  * [`src/app/tab3/tab3.page.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/tab3/tab3.page.ts#L2) (Address CRUD confirmation prompts)
-
----
-
-### 3.9 Unsplash Dynamic Image Delivery & Transformation API (CDN)
-* **API Category:** Cloud Media Content Delivery Network (CDN) API
-* **Base URL:** `https://images.unsplash.com/photo-...`
-* **Query Parameters Used:**
-  * `auto=format`: Automatically serves WebP or AVIF based on browser `Accept` headers.
-  * `fit=crop`: Crops images with smart focal point preservation.
-  * `w=600` / `w=1000`: Dynamic image resizing to conserve mobile cellular bandwidth.
-  * `q=80` / `q=85`: Lossy compression optimization.
-* **Purpose:** Supplies responsive, high-fidelity luxury cosmetic product photography.
-* **Location in Project Codebase:**
-  * Default Product Catalog: [`src/app/services/product.service.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/services/product.service.ts#L21)
-  * Interactive Hero Carousel: [`src/app/tab1/tab1.page.ts`](file:///c:/Users/eduar/Documents/ISW/Cuatri%209/3-%20Programacion%20de%20moviles%20II/ProjectMobileII/BeautyStore_2.0/src/app/tab1/tab1.page.ts#L48)
-
----
-
-## 4. Summary Matrix of APIs
-
-| # | API Name | Category | Scope / Target | Location in Codebase |
+| Recurso | Endpoint | Método | Entrada / comportamiento | Respuestas principales |
 |---|---|---|---|---|
-| **1** | Custom PHP REST API | Web Service / REST | Catalog Data Provider | `src/app/services/product.service.ts` |
-| **2** | Axios HTTP Client | Library API | HTTP Networking & Promises | `src/app/services/product.service.ts` |
-| **3** | Capacitor Preferences API | Native Bridge Plugin | Device Persistent Key-Value Storage | `src/app/services/storage.service.ts` |
-| **4** | Ionic Platform API | Hybrid Runtime API | Android / Web Runtime Detection | `src/app/services/product.service.ts` |
-| **5** | HTML5 localStorage API | Standard Web API | Browser Session Fallback Storage | `src/app/services/auth.service.ts` |
-| **6** | RxJS Reactive Streams | Library API | Asynchronous Cross-Component State | `src/app/services/*.service.ts` |
-| **7** | Angular Router API | Framework API | SPA Navigation & Guards | `src/app/app-routing.module.ts`, `tabs-routing.module.ts` |
-| **8** | Ionic UI Controllers | Framework API | Toasts, Confirmations & Modals | `src/app/tab1/`, `src/app/tab2/`, `src/app/tab3/` |
-| **9** | Unsplash CDN REST API | Remote Media Service | Optimized WebP/JPEG Image CDN | `product.service.ts`, `tab1.page.ts` |
+| Colección de productos | `/api.php` | `GET` | Sin parámetros: lista productos ordenados por ID descendente. | `200`, `data` es una lista y `total` indica su cantidad. |
+| Producto | `/api.php?id={id}` | `GET` | Consulta un producto por ID en query string. | `200` con un objeto en `data`; `404` si no existe. |
+| Crear producto | `/api.php` | `POST` | JSON: `name` y `price` obligatorios; `description` y `stock` opcionales. | `201` con el ID creado; `400` si faltan campos. |
+| Reemplazar producto | `/api.php?id={id}` | `PUT` | JSON: `name` y `price` obligatorios; permite establecer `description` y `stock`. | `200` al ejecutar la actualización; `400` si falta el ID o los campos requeridos. |
+| Actualizar producto | `/api.php?id={id}` | `PATCH` | JSON con uno o más de estos campos: `name`, `description`, `price`, `stock`. | `200` al ejecutar la actualización; `400` si falta ID o no hay campos válidos. |
+| Eliminar producto | `/api.php?id={id}` | `DELETE` | ID en query string; el código también acepta ID en el cuerpo JSON. | `200` si elimina; `404` si no encuentra el registro. |
+| Registrar usuario | `/signup.php` | `POST` | JSON: `name`, `email`, `password`. | `201`; `400` por datos inválidos; `409` por correo ya registrado. |
+| Iniciar sesión | `/login.php` | `POST` | JSON: `email`, `password`. | `200` con usuario; `401` si las credenciales no coinciden; `400` por campos faltantes. |
 
----
+`api.php` permite además `OPTIONS` para solicitudes preflight CORS. Los scripts de autenticación aceptan `POST` y responden `405` para otros métodos. En errores de servidor puede responder `500`. La pantalla **API CRUD** consume desde `ProductService` las operaciones `GET`, `POST`, `PUT`, `PATCH` y `DELETE`; cada solicitud muestra su método, estado HTTP y respuesta, y las llamadas usan una capa Ionic de carga.
 
-## 5. Conclusion
+No existe actualmente un endpoint de pedidos, pagos, inventario de carrito ni direcciones. El carrito, las direcciones guardadas y la sesión de usuario se mantienen en almacenamiento local del dispositivo mediante servicios Angular/Capacitor.
 
-The architecture of **GlowBeauty 2.0** reflects a modern, decoupled, multi-tiered mobile architecture. By abstracting native storage behind `StorageService` via Capacitor Preferences, delegating network operations to `ProductService` via Axios and the PHP REST backend, and driving view synchronization through RxJS BehaviorSubjects, the system achieves complete platform agnosticism between mobile native runtimes (Android/iOS) and desktop web browsers.
+## 3. Modelos JSON de intercambio
+
+Las solicitudes y respuestas de la API usan `Content-Type: application/json`; los consumidores envían `Accept: application/json`.
+
+### Consulta del catálogo
+
+`GET /api.php`
+
+```json
+{
+  "status": "success",
+  "total": 1,
+  "data": [
+    {
+      "id": 1,
+      "name": "L’Élixir Doré Glow Face Oil",
+      "description": "Aceite facial nutritivo.",
+      "price": "640.00",
+      "stock": 24,
+      "category": "Skincare",
+      "image_url": "https://example.com/product.jpg",
+      "created_at": "2026-10-10 12:00:00"
+    }
+  ]
+}
+```
+
+Los productos se obtienen de MySQL; según la serialización de PDO/MySQL, `price` puede llegar como cadena decimal. `ProductService` convierte precio e ID a número antes de exponer sus objetos al resto de la interfaz. Los campos opcionales de presentación `rating`, `reviews_count` e `is_featured` se asignan localmente y no son columnas de la tabla `products`.
+
+`GET /api.php?id=1` usa la misma envoltura de estado, pero `data` es un producto individual:
+
+```json
+{
+  "status": "success",
+  "data": {
+    "id": 1,
+    "name": "L’Élixir Doré Glow Face Oil",
+    "description": "Aceite facial nutritivo.",
+    "price": "640.00",
+    "stock": 24,
+    "category": "Skincare",
+    "image_url": "https://example.com/product.jpg"
+  }
+}
+```
+
+### Crear producto
+
+`POST /api.php`
+
+```json
+{
+  "name": "Crema hidratante",
+  "price": 520.00,
+  "description": "Crema facial.",
+  "stock": 12
+}
+```
+
+Respuesta `201`:
+
+```json
+{
+  "status": "success",
+  "message": "Registro creado exitosamente.",
+  "id": "13"
+}
+```
+
+### Registro e inicio de sesión
+
+`POST /signup.php` recibe:
+
+```json
+{
+  "name": "Ana Pérez",
+  "email": "ana@example.com",
+  "password": "una-contraseña"
+}
+```
+
+`POST /login.php` recibe:
+
+```json
+{
+  "email": "ana@example.com",
+  "password": "una-contraseña"
+}
+```
+
+Ambas operaciones exitosas devuelven una estructura como esta (el ID del registro puede venir serializado como cadena):
+
+```json
+{
+  "status": "success",
+  "message": "Operación exitosa.",
+  "user": {
+    "id": "13",
+    "name": "Ana Pérez",
+    "email": "ana@example.com"
+  }
+}
+```
+
+Los errores mantienen una forma común, aunque el texto depende del endpoint:
+
+```json
+{
+  "status": "error",
+  "message": "Descripción del error."
+}
+```
+
+## 4. Servicio Angular para consumir la API
+
+La aplicación **ya cuenta con un cliente de API Angular reutilizable y en uso**, basado en servicios inyectables:
+
+- `DataSourceConfigService` centraliza la URL base configurable, el timeout, el envío de solicitudes HTTP mediante Axios, el manejo del JSON y el diagnóstico de respuestas/errores.
+- `ProductService` expone `listApiProducts()`, `createProduct()`, `replaceProduct()`, `patchProduct()` y `deleteProduct()` para el CRUD. `getProducts()` también consume `GET /api.php`, adapta los datos al modelo `Product` y conserva el catálogo local de respaldo para la tienda si falla la conexión.
+- La ruta `/api-demo` permite ejecutar las cinco operaciones desde Ionic; muestra carga durante solicitudes, respuesta HTTP y errores de API en la interfaz.
+- `LoginPage` utiliza el mismo servicio para `POST /login.php` y `POST /signup.php`.
+- `StorageService` guarda localmente el estado de la aplicación; no es un cliente de la API ni sincroniza por sí solo carrito o direcciones con el backend.
+
+La abstracción está preparada para consumir los endpoints descritos y puede probar la conexión desde la configuración de origen de datos. La implementación HTTP usa **Axios**, no `HttpClient` de Angular; sigue siendo una integración desde servicios Angular, pero conviene nombrar con precisión la biblioteca utilizada. El host inicial `localhost` es de desarrollo y debe cambiarse por uno alcanzable desde el dispositivo objetivo.
+
+## 5. Explicación y evaluación de la arquitectura
+
+La separación en cliente, servidor y persistencia evita que la interfaz consulte la base de datos directamente. Angular mantiene la presentación y el estado local; PHP ofrece recursos HTTP; PDO ejecuta consultas preparadas contra MySQL. Los endpoints de productos comparten un recurso y utilizan los verbos HTTP para expresar lectura, creación, actualización completa/parcial y eliminación. Autenticación se implementa mediante scripts POST dedicados.
+
+**Estado respecto a los requisitos del curso**
+
+| Requisito | Estado | Evidencia |
+|---|---|---|
+| Diagrama Cliente → API → Base de datos | Cumple | Diagrama Mermaid de este documento. |
+| Lista de endpoints | Cumple | Tabla de endpoints con rutas y finalidad. |
+| Métodos HTTP utilizados | Cumple | `GET`, `POST`, `PUT`, `PATCH`, `DELETE` y `OPTIONS` documentados, distinguiendo los que consume la app de los disponibles en backend. |
+| Modelo JSON | Cumple | Ejemplos de productos, registro, login y error. |
+| Servicios Angular para CRUD | Cumple | `DataSourceConfigService` centraliza el transporte y diagnósticos; `ProductService` implementa GET, POST, PUT, PATCH y DELETE. El transporte usa Axios. |
+| Carga, respuestas y errores | Cumple | La pantalla `/api-demo` muestra loading, método y estado HTTP, JSON de respuesta y errores. |
+| Evidencia de funcionamiento | Pendiente de captura en el entorno con backend | Instrucciones de captura en README; debe ejecutarse contra la instancia de Apache/MySQL del equipo. |
+| Explicación de arquitectura | Cumple | Flujo, responsabilidades y límites descritos en este reporte. |
+| Evidencia de análisis/mejora con IA | Cumple como evidencia documental de esta revisión | Ver sección siguiente; identifica el análisis, hallazgos y correcciones documentales sin atribuir a la app funcionalidades inexistentes. |
+
+**Límites y recomendaciones para una siguiente iteración:** implementar y conectar endpoints de pedidos/carrito si el alcance requiere persistencia en servidor; considerar autenticación basada en sesión o token si se protegen operaciones; validar y autorizar operaciones de administración de productos; desplegar con HTTPS y restringir CORS a los orígenes autorizados. El estado actual de autenticación solo verifica credenciales y devuelve un usuario; la app almacena ese perfil localmente y no recibe un token de autenticación. No desplegar las credenciales de desarrollo de MySQL en producción.
+
+## 6. Evidencia de uso de IA
+
+**Actividad registrada:** revisión asistida por IA del diagrama, endpoints, métodos HTTP, contratos JSON y consumo Angular solicitados para esta entrega. La evidencia corresponde a esta revisión y a las correcciones incorporadas en este documento; no afirma que se haya utilizado IA en cambios anteriores del proyecto.
+
+**Solicitud analizada:** “Diagrama Cliente → API → Base de datos. Lista de endpoints requeridos. Métodos HTTP utilizados. Modelo JSON de intercambio de información. Servicio Angular preparado para consumir la API. Explicación de la arquitectura propuesta. Evidencia de uso de IA para analizar o mejorar la arquitectura.”
+
+**Hallazgos de la revisión:** el reporte anterior describía una selección de host por plataforma y una llamada directa desde `ProductService` que no coincidían con el código vigente; omitía los endpoints separados de autenticación; no diferenciaba el CRUD disponible en backend de las operaciones efectivamente llamadas por la app; y no aclaraba que carrito y direcciones se almacenan localmente ni que no existe endpoint de pedidos.
+
+**Mejoras reflejadas:** se actualizó el diagrama con las capas reales; se documentaron las rutas PHP y sus métodos/códigos de respuesta; se añadieron ejemplos JSON; se identificaron los servicios Angular y el uso real de Axios; y se registraron los límites actuales junto con recomendaciones. El CRUD de productos ahora se puede ejecutar desde la pantalla `/api-demo`; la evidencia visual requiere conectar el backend local.
+
+**Verificación humana del análisis:** los nombres de rutas y métodos se contrastaron con `backend/api.php`, `backend/login.php`, `backend/signup.php`; el esquema de datos con `backend/schema.sql`; y el consumo cliente con `src/app/services/data-source-config.service.ts`, `src/app/services/product.service.ts` y `src/app/login/login.page.ts`. La revisión documental no equivale a una auditoría de seguridad ni a una prueba de despliegue contra una instancia MySQL activa.

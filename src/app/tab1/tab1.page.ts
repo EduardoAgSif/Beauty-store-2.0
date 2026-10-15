@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { Product } from '../models/product.model';
 import { ProductService } from '../services/product.service';
@@ -20,7 +20,7 @@ export interface HeroSlide {
   styleUrls: ['tab1.page.scss'],
   standalone: false,
 })
-export class Tab1Page implements OnInit, OnDestroy {
+export class Tab1Page implements OnInit {
   products: Product[] = [];
   filteredProducts: Product[] = [];
   bestSellers: Product[] = [];
@@ -34,18 +34,14 @@ export class Tab1Page implements OnInit, OnDestroy {
   isQuickViewOpen = false;
   modalQuantity = 1;
 
-  // Hero Carousel State & Slides
-  currentSlide = 0;
-  private autoSlideInterval: any = null;
-
   heroSlides: HeroSlide[] = [
     {
       id: 1,
       productId: 1,
       tag: '✨ #1 Best Seller',
-      title: 'L’Élixir Doré Face Oil',
+      title: 'L\u2019Élixir Doré Face Oil',
       subtitle: 'Deep botanical nourishment infused with plant squalane and golden pearls.',
-      imageUrl: 'https://picsum.photos/seed/heroface/1000/700',
+      imageUrl: '',
       category: 'Skincare'
     },
     {
@@ -54,7 +50,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       tag: '⭐ Signature Fragrance',
       title: 'Rose & Amber Gold Eau de Parfum',
       subtitle: 'Enchanting notes of golden bourbon vanilla, white orchid, and sandalwood.',
-      imageUrl: 'https://picsum.photos/seed/heroperfume/1000/700',
+      imageUrl: '',
       category: 'Fragrances'
     },
     {
@@ -63,7 +59,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       tag: '💄 Beige & Nude Collection',
       title: 'Velvet Nude Matte Lipstick',
       subtitle: 'Creamy warm nude lipstick enriched with organic jojoba oil and vitamin E.',
-      imageUrl: 'https://picsum.photos/seed/herolipstick/1000/700',
+      imageUrl: '',
       category: 'Makeup'
     },
     {
@@ -72,7 +68,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       tag: '🎨 Neutral Palette',
       title: 'Warm Taupe & Beige Palette',
       subtitle: 'Curated 9-pan eyeshadow collection in warm neutral, smoky taupe, and champagne shimmer.',
-      imageUrl: 'https://picsum.photos/seed/heropalette/1000/700',
+      imageUrl: '',
       category: 'Makeup'
     }
   ];
@@ -86,44 +82,12 @@ export class Tab1Page implements OnInit, OnDestroy {
   ngOnInit() {
     // Instant fallback loading for smooth experience
     this.products = this.productService.getFallbackProducts();
+    this.syncSlideImages();   // pre-resolve gallery images from fallback
     this.updateBestSellers();
     this.applyFilters();
     this.isLoading = false;
 
     this.loadProducts();
-    this.startAutoSlide();
-  }
-
-  ngOnDestroy() {
-    this.stopAutoSlide();
-  }
-
-  startAutoSlide() {
-    this.stopAutoSlide();
-    this.autoSlideInterval = setInterval(() => {
-      this.nextSlide();
-    }, 4500);
-  }
-
-  stopAutoSlide() {
-    if (this.autoSlideInterval) {
-      clearInterval(this.autoSlideInterval);
-      this.autoSlideInterval = null;
-    }
-  }
-
-  nextSlide() {
-    this.currentSlide = (this.currentSlide + 1) % this.heroSlides.length;
-  }
-
-  prevSlide() {
-    this.currentSlide =
-      this.currentSlide === 0 ? this.heroSlides.length - 1 : this.currentSlide - 1;
-  }
-
-  goToSlide(index: number) {
-    this.currentSlide = index;
-    this.startAutoSlide();
   }
 
   onSlideClick(slide: HeroSlide) {
@@ -147,6 +111,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       const serverProducts = await this.productService.getProducts();
       if (serverProducts && serverProducts.length > 0) {
         this.products = serverProducts;
+        this.syncSlideImages();  // keep gallery in sync when server products arrive
         this.updateBestSellers();
         this.applyFilters();
       }
@@ -258,5 +223,25 @@ export class Tab1Page implements OnInit, OnDestroy {
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
+  }
+
+  /**
+   * Pre-resolves each hero slide's imageUrl from the loaded products array.
+   * Falls back to the product service's own fallback list if the live products
+   * don't include the required productId (e.g. server has fewer items).
+   */
+  syncSlideImages() {
+    const fallback = this.productService.getFallbackProducts();
+    this.heroSlides = this.heroSlides.map(slide => {
+      const product =
+        this.products.find(p => p.id === slide.productId) ||
+        fallback.find(p => p.id === slide.productId);
+      return { ...slide, imageUrl: product?.image_url ?? '' };
+    });
+  }
+
+  /** Use the current product image, falling back to the last resolved slide URL. */
+  getSlideImage(slide: HeroSlide): string {
+    return this.products.find(product => product.id === slide.productId)?.image_url || slide.imageUrl;
   }
 }

@@ -7,6 +7,8 @@
     </div>
 
     <nav class="desktop-nav-links">
+      <a routerLink="/api-demo" title="Prueba de API REST" aria-label="Prueba de API REST" class="nav-icon-link"><ion-icon name="code-slash-outline"></ion-icon></a>
+      <a routerLink="/data-source" title="Origen de datos" aria-label="Origen de datos" class="nav-icon-link"><ion-icon name="server-outline"></ion-icon></a>
       <a
         routerLink="/tabs/tab1"
         routerLinkActive="active-link"
@@ -49,6 +51,8 @@
 <!-- Main Tabs Structure -->
 <ion-tabs>
   <ion-tab-bar slot="bottom" class="mobile-tab-bar">
+    <ion-tab-button tab="api-demo" href="/api-demo"><ion-icon aria-hidden="true" name="code-slash-outline"></ion-icon><ion-label>API CRUD</ion-label></ion-tab-button>
+    <ion-tab-button tab="data-source" href="/data-source"><ion-icon aria-hidden="true" name="server-outline"></ion-icon><ion-label>Data source</ion-label></ion-tab-button>
     <ion-tab-button tab="tab1" href="/tabs/tab1">
       <ion-icon aria-hidden="true" name="home-outline"></ion-icon>
       <ion-label>Home</ion-label>
