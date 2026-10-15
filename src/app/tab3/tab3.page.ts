@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { NavController, AlertController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AuthService, UserSession } from '../services/auth.service';
@@ -12,6 +12,12 @@ import { Address } from '../models/address.model';
   standalone: false,
 })
 export class Tab3Page implements OnInit, OnDestroy {
+  private navCtrl = inject(NavController);
+  private alertCtrl = inject(AlertController);
+  private toastCtrl = inject(ToastController);
+  private authService = inject(AuthService);
+  private addressService = inject(AddressService);
+
   user: UserSession | null = null;
   addresses: Address[] = [];
   private addressSub!: Subscription;
@@ -32,14 +38,6 @@ export class Tab3Page implements OnInit, OnDestroy {
     label: 'Home' as 'Home' | 'Work' | 'Other',
     isDefault: false
   };
-
-  constructor(
-    private navCtrl: NavController,
-    private alertCtrl: AlertController,
-    private toastCtrl: ToastController,
-    private authService: AuthService,
-    private addressService: AddressService
-  ) {}
 
   ngOnInit() {
     this.userSub = this.authService.user$.subscribe(u => {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { Product } from '../models/product.model';
 import { ProductService } from '../services/product.service';
@@ -21,6 +21,10 @@ export interface HeroSlide {
   standalone: false,
 })
 export class Tab1Page implements OnInit {
+  private productService = inject(ProductService);
+  private cartService = inject(CartService);
+  private toastController = inject(ToastController);
+
   products: Product[] = [];
   filteredProducts: Product[] = [];
   bestSellers: Product[] = [];
@@ -72,12 +76,6 @@ export class Tab1Page implements OnInit {
       category: 'Makeup'
     }
   ];
-
-  constructor(
-    private productService: ProductService,
-    private cartService: CartService,
-    private toastController: ToastController
-  ) {}
 
   ngOnInit() {
     // Instant fallback loading for smooth experience

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Address } from '../models/address.model';
 import { StorageService } from './storage.service';
@@ -7,12 +7,14 @@ import { StorageService } from './storage.service';
   providedIn: 'root'
 })
 export class AddressService {
+  private storage = inject(StorageService);
+
   private readonly STORAGE_KEY = 'glow_beauty_addresses';
   private addressesSubject = new BehaviorSubject<Address[]>([]);
   public addresses$: Observable<Address[]> = this.addressesSubject.asObservable();
   private isLoaded = false;
 
-  constructor(private storage: StorageService) {
+  constructor() {
     this.loadAddresses();
   }
 

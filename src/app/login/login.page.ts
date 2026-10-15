@@ -1,10 +1,16 @@
-import { Component, NgZone, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, NgZone, ChangeDetectorRef, inject } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 import { DataSourceConfigService, RequestDiagnostics } from '../services/data-source-config.service';
 
 @Component({ selector: 'app-login', templateUrl: './login.page.html', styleUrls: ['./login.page.scss'], standalone: false })
-export class LoginPage implements OnInit {
+export class LoginPage {
+  private navCtrl = inject(NavController);
+  private authService = inject(AuthService);
+  private configService = inject(DataSourceConfigService);
+  private ngZone = inject(NgZone);
+  private cdr = inject(ChangeDetectorRef);
+
   isSignUpMode = false;
   isLoading = false;
   errorMessage = '';
@@ -13,16 +19,6 @@ export class LoginPage implements OnInit {
   showDiagnostics = false;
   signInData = { email: 'test@gmail.com', password: 'admin1234' };
   signUpData = { name: '', email: '', password: '' };
-
-  constructor(
-    private navCtrl: NavController,
-    private authService: AuthService,
-    private configService: DataSourceConfigService,
-    private ngZone: NgZone,
-    private cdr: ChangeDetectorRef
-  ) {}
-
-  ngOnInit(): void {}
 
   async ionViewWillEnter(): Promise<void> {
     this.isLoading = false; this.errorMessage = ''; this.successMessage = '';
@@ -132,4 +128,3 @@ export class LoginPage implements OnInit {
   }
 
 }
-

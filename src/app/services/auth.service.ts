@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { StorageService } from './storage.service';
 
@@ -12,11 +12,13 @@ export interface UserSession {
   providedIn: 'root'
 })
 export class AuthService {
+  private storage = inject(StorageService);
+
   private readonly USER_KEY = 'currentUser';
   private userSubject = new BehaviorSubject<UserSession | null>(null);
   public user$: Observable<UserSession | null> = this.userSubject.asObservable();
 
-  constructor(private storage: StorageService) {
+  constructor() {
     this.initUser();
   }
 

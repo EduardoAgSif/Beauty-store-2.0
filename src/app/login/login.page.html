@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true" class="auth-page-content">
   <div class="auth-wrapper">
     <div class="auth-container" [class.sign-in-mode]="!isSignUpMode">
-      
+
       <!-- Panel Left: Welcome / Overlay Info Panel -->
       <div class="auth-panel panel-left">
         <div class="panel-background-waves">
@@ -10,121 +10,131 @@
           <div class="wave wave3"></div>
         </div>
 
-        <div class="panel-content" *ngIf="isSignUpMode">
-          <div class="auth-brand-badge">
-            <ion-icon name="sparkles"></ion-icon>
-            <span>Glow<strong>Beauty</strong></span>
+        @if (isSignUpMode) {
+          <div class="panel-content">
+            <div class="auth-brand-badge">
+              <ion-icon name="sparkles"></ion-icon>
+              <span>Glow<strong>Beauty</strong></span>
+            </div>
+            <h1 class="panel-title">Welcome Back!</h1>
+            <p class="panel-subtitle">To stay connected with our luxury collection, please sign in with your account</p>
+            <button type="button" class="pill-btn pill-btn-action" (click)="toggleMode(false)">
+              SIGN IN
+            </button>
           </div>
-          <h1 class="panel-title">Welcome Back!</h1>
-          <p class="panel-subtitle">To stay connected with our luxury collection, please sign in with your account</p>
-          <button type="button" class="pill-btn pill-btn-action" (click)="toggleMode(false)">
-            SIGN IN
-          </button>
-        </div>
+        }
 
-        <div class="panel-content" *ngIf="!isSignUpMode">
-          <div class="auth-brand-badge">
-            <ion-icon name="sparkles"></ion-icon>
-            <span>Glow<strong>Beauty</strong></span>
+        @if (!isSignUpMode) {
+          <div class="panel-content">
+            <div class="auth-brand-badge">
+              <ion-icon name="sparkles"></ion-icon>
+              <span>Glow<strong>Beauty</strong></span>
+            </div>
+            <h1 class="panel-title">Hello, Gorgeous!</h1>
+            <p class="panel-subtitle">Access your account and discover our curated luxury skincare, fragrances, and makeup</p>
+            <button type="button" class="pill-btn pill-btn-action" (click)="toggleMode(true)">
+              SIGN UP
+            </button>
           </div>
-          <h1 class="panel-title">Hello, Gorgeous!</h1>
-          <p class="panel-subtitle">Access your account and discover our curated luxury skincare, fragrances, and makeup</p>
-          <button type="button" class="pill-btn pill-btn-action" (click)="toggleMode(true)">
-            SIGN UP
-          </button>
-        </div>
+        }
       </div>
 
       <!-- Panel Right: Form Panel (Create Account / Sign In) -->
       <div class="auth-panel panel-right">
-        
+
         <!-- Error / Status Message Alert -->
-        <div class="alert-message alert alert-danger" *ngIf="errorMessage">
-          <ion-icon name="alert-circle-outline"></ion-icon> {{ errorMessage }}
-        </div>
-        <div class="alert-message alert alert-success" *ngIf="successMessage">
-          <ion-icon name="checkmark-circle-outline"></ion-icon> {{ successMessage }}
-        </div>
+        @if (errorMessage) {
+          <div class="alert-message alert alert-danger">
+            <ion-icon name="alert-circle-outline"></ion-icon> {{ errorMessage }}
+          </div>
+        }
+        @if (successMessage) {
+          <div class="alert-message alert alert-success">
+            <ion-icon name="checkmark-circle-outline"></ion-icon> {{ successMessage }}
+          </div>
+        }
 
         <!-- Create Account View -->
-        <div class="form-container" *ngIf="isSignUpMode">
-          <h1 class="form-title">Create Account</h1>
-          
-          <div class="social-container">
-            <a href="javascript:void(0)" class="social-icon">
-              <ion-icon name="logo-facebook"></ion-icon>
-            </a>
-            <a href="javascript:void(0)" class="social-icon">
-              <ion-icon name="logo-google"></ion-icon>
-            </a>
-            <a href="javascript:void(0)" class="social-icon">
-              <ion-icon name="logo-twitter"></ion-icon>
-            </a>
+        @if (isSignUpMode) {
+          <div class="form-container">
+            <h1 class="form-title">Create Account</h1>
+            <div class="social-container">
+              <a href="javascript:void(0)" class="social-icon">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+              <a href="javascript:void(0)" class="social-icon">
+                <ion-icon name="logo-google"></ion-icon>
+              </a>
+              <a href="javascript:void(0)" class="social-icon">
+                <ion-icon name="logo-twitter"></ion-icon>
+              </a>
+            </div>
+            <span class="form-divider">or use your email for registration</span>
+            <form (submit)="onSignUp(); $event.preventDefault()" class="auth-form">
+              <div class="input-field">
+                <input type="text" placeholder="Full name" [(ngModel)]="signUpData.name" name="name" required [disabled]="isLoading" />
+              </div>
+              <div class="input-field">
+                <input type="email" placeholder="Email address" [(ngModel)]="signUpData.email" name="email" required [disabled]="isLoading" />
+              </div>
+              <div class="input-field">
+                <input type="password" placeholder="Password" [(ngModel)]="signUpData.password" name="password" required [disabled]="isLoading" />
+              </div>
+              <button type="submit" class="pill-btn pill-btn-primary" [disabled]="isLoading">
+                @if (isLoading) {
+                  <ion-spinner name="crescent"></ion-spinner>
+                }
+                @if (!isLoading) {
+                  <span>CREATE ACCOUNT</span>
+                }
+              </button>
+            </form>
           </div>
-
-          <span class="form-divider">or use your email for registration</span>
-
-          <form (submit)="onSignUp(); $event.preventDefault()" class="auth-form">
-            <div class="input-field">
-              <input type="text" placeholder="Full name" [(ngModel)]="signUpData.name" name="name" required [disabled]="isLoading" />
-            </div>
-
-            <div class="input-field">
-              <input type="email" placeholder="Email address" [(ngModel)]="signUpData.email" name="email" required [disabled]="isLoading" />
-            </div>
-
-            <div class="input-field">
-              <input type="password" placeholder="Password" [(ngModel)]="signUpData.password" name="password" required [disabled]="isLoading" />
-            </div>
-
-            <button type="submit" class="pill-btn pill-btn-primary" [disabled]="isLoading">
-              <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
-              <span *ngIf="!isLoading">CREATE ACCOUNT</span>
-            </button>
-          </form>
-        </div>
+        }
 
         <!-- Sign In View -->
-        <div class="form-container" *ngIf="!isSignUpMode">
-          <h1 class="form-title">Sign In</h1>
-          
-          <div class="social-container">
-            <a href="javascript:void(0)" class="social-icon">
-              <ion-icon name="logo-facebook"></ion-icon>
-            </a>
-            <a href="javascript:void(0)" class="social-icon">
-              <ion-icon name="logo-google"></ion-icon>
-            </a>
-            <a href="javascript:void(0)" class="social-icon">
-              <ion-icon name="logo-twitter"></ion-icon>
-            </a>
+        @if (!isSignUpMode) {
+          <div class="form-container">
+            <h1 class="form-title">Sign In</h1>
+            <div class="social-container">
+              <a href="javascript:void(0)" class="social-icon">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+              <a href="javascript:void(0)" class="social-icon">
+                <ion-icon name="logo-google"></ion-icon>
+              </a>
+              <a href="javascript:void(0)" class="social-icon">
+                <ion-icon name="logo-twitter"></ion-icon>
+              </a>
+            </div>
+            <span class="form-divider">or use your email account</span>
+            <form (submit)="onSignIn(); $event.preventDefault()" class="auth-form">
+              <div class="input-field">
+                <input type="email" placeholder="Email address" [(ngModel)]="signInData.email" name="signInEmail" required [disabled]="isLoading" />
+              </div>
+              <div class="input-field">
+                <input type="password" placeholder="Password" [(ngModel)]="signInData.password" name="signInPassword" required [disabled]="isLoading" />
+              </div>
+              <button type="button" class="diagnostics-link" (click)="openDiagnostics()">Ver diagnóstico completo de la última solicitud</button>
+              @if (lastDiagnostics) {
+                <details class="inline-diagnostics">
+                  <summary>Registro de errores / solicitud</summary>
+                  <pre>{{ lastDiagnostics | json }}</pre>
+                </details>
+              }
+              <a href="javascript:void(0)" class="forgot-link">Forgot password?</a>
+              <button type="submit" class="pill-btn pill-btn-primary" [disabled]="isLoading">
+                @if (isLoading) {
+                  <ion-spinner name="crescent"></ion-spinner>
+                }
+                @if (!isLoading) {
+                  <span>SIGN IN</span>
+                }
+              </button>
+              <a routerLink="/data-source" class="diagnostics-link">Configurar origen de datos</a>
+            </form>
           </div>
-
-          <span class="form-divider">or use your email account</span>
-
-          <form (submit)="onSignIn(); $event.preventDefault()" class="auth-form">
-            <div class="input-field">
-              <input type="email" placeholder="Email address" [(ngModel)]="signInData.email" name="signInEmail" required [disabled]="isLoading" />
-            </div>
-
-            <div class="input-field">
-              <input type="password" placeholder="Password" [(ngModel)]="signInData.password" name="signInPassword" required [disabled]="isLoading" />
-            </div>
-            <button type="button" class="diagnostics-link" (click)="openDiagnostics()">Ver diagnóstico completo de la última solicitud</button>
-            <details class="inline-diagnostics" *ngIf="lastDiagnostics">
-              <summary>Registro de errores / solicitud</summary>
-              <pre>{{ lastDiagnostics | json }}</pre>
-            </details>
-
-            <a href="javascript:void(0)" class="forgot-link">Forgot password?</a>
-
-            <button type="submit" class="pill-btn pill-btn-primary" [disabled]="isLoading">
-              <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
-              <span *ngIf="!isLoading">SIGN IN</span>
-            </button>
-            <a routerLink="/data-source" class="diagnostics-link">Configurar origen de datos</a>
-          </form>
-        </div>
+        }
 
       </div>
 

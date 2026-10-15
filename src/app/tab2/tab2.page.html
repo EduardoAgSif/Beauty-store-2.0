@@ -14,203 +14,210 @@
     <!-- Header Title -->
     <div class="cart-header-title">
       <h1>Your Shopping Bag</h1>
-      <p *ngIf="cartItems.length > 0">
-        You have <strong>{{ totalItems }}</strong> {{ totalItems === 1 ? 'item' : 'items' }} in your bag.
-      </p>
+      @if (cartItems.length > 0) {
+        <p>
+          You have <strong>{{ totalItems }}</strong> {{ totalItems === 1 ? 'item' : 'items' }} in your bag.
+        </p>
+      }
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="cartItems.length === 0" class="empty-cart-view">
-      <div class="empty-illustration">
-        <ion-icon name="bag-handle-outline"></ion-icon>
-      </div>
-      <h2>Your bag is empty</h2>
-      <p>You haven't added any products to your bag yet. Discover our skincare, cosmetics, and fragrance collections.</p>
-      <button class="btn-codepen-primary" (click)="goToShop()">
-        <ion-icon name="home-outline"></ion-icon>
-        Explore Products
-      </button>
-    </div>
-
-    <!-- Cart Layout with Items & Summary -->
-    <div *ngIf="cartItems.length > 0" class="cart-layout-grid">
-      <!-- Left Column: Items List -->
-      <div class="cart-items-column">
-        <!-- Free Shipping Banner -->
-        <div class="shipping-threshold-banner">
-          <div class="threshold-text">
-            <ion-icon name="airplane-outline"></ion-icon>
-            <span *ngIf="getSubtotal() >= 500">
-              Congratulations! You unlocked <strong>FREE Standard Shipping</strong>.
-            </span>
-            <span *ngIf="getSubtotal() < 500">
-              Add <strong>${{ (500 - getSubtotal()) | number:'1.2-2' }}</strong> more to get <strong>FREE Shipping</strong>.
-            </span>
-          </div>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" [style.width.%]="getFreeShippingProgress()"></div>
-          </div>
+    @if (cartItems.length === 0) {
+      <div class="empty-cart-view">
+        <div class="empty-illustration">
+          <ion-icon name="bag-handle-outline"></ion-icon>
         </div>
-
-        <!-- Items Card List -->
-        <div class="items-list">
-          <div *ngFor="let item of cartItems" class="cart-item-card">
-            <div class="item-thumbnail">
-              <img [src]="item.product.image_url" [alt]="item.product.name" referrerpolicy="no-referrer-when-downgrade" (error)="$any($event.target).style.background='linear-gradient(135deg,#f5ece2,#e8ded2)'" />
-            </div>
-
-            <div class="item-details">
-              <div class="item-header-row">
-                <span class="item-category">{{ item.product.category }}</span>
-                <button class="remove-btn" (click)="confirmRemove(item)" title="Remove">
-                  <ion-icon name="trash-outline"></ion-icon>
-                </button>
-              </div>
-
-              <h3 class="item-title">{{ item.product.name }}</h3>
-
-              <div class="item-unit-price">
-                ${{ item.product.price | number:'1.2-2' }} each
-              </div>
-
-              <div class="item-actions-row">
-                <div class="stepper-box">
-                  <button (click)="decrementQty(item)" class="step-btn">
-                    <ion-icon name="remove-outline"></ion-icon>
-                  </button>
-                  <span class="step-value">{{ item.quantity }}</span>
-                  <button (click)="incrementQty(item)" class="step-btn">
-                    <ion-icon name="add-outline"></ion-icon>
-                  </button>
-                </div>
-
-                <div class="item-subtotal">
-                  ${{ (item.product.price * item.quantity) | number:'1.2-2' }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Column: Order Summary & Checkout -->
-      <div class="cart-summary-column">
-        <div class="summary-card">
-          <h2>Order Summary</h2>
-
-          <!-- Promo Code Form -->
-          <div class="coupon-section">
-            <label>Do you have a discount code?</label>
-            <div class="coupon-input-group">
-              <input
-                type="text"
-                [(ngModel)]="promoCode"
-                placeholder="e.g. GLOW10"
-                [disabled]="isDiscountApplied"
-              />
-              <button
-                *ngIf="!isDiscountApplied"
-                class="apply-coupon-btn"
-                (click)="applyPromoCode()"
-              >
-                Apply
-              </button>
-              <button
-                *ngIf="isDiscountApplied"
-                class="remove-coupon-btn"
-                (click)="removeCoupon()"
-              >
-                Remove
-              </button>
-            </div>
-            <p *ngIf="discountMessage" class="coupon-msg" [class.success]="isDiscountApplied">
-              {{ discountMessage }}
-            </p>
-          </div>
-
-          <!-- Cost Breakdown -->
-          <div class="breakdown-lines">
-            <div class="line-row">
-              <span>Subtotal:</span>
-              <span>${{ getSubtotal() | number:'1.2-2' }}</span>
-            </div>
-
-            <div class="line-row discount-row" *ngIf="isDiscountApplied">
-              <span>Discount ({{ appliedDiscountPercent }}%):</span>
-              <span>-${{ getDiscountAmount() | number:'1.2-2' }}</span>
-            </div>
-
-            <div class="line-row">
-              <span>Shipping:</span>
-              <span *ngIf="getShipping() === 0" class="free-badge">FREE</span>
-              <span *ngIf="getShipping() > 0">${{ getShipping() | number:'1.2-2' }}</span>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="line-row total-row">
-              <span>Estimated Total:</span>
-              <span class="total-amount">${{ getTotal() | number:'1.2-2' }} MXN</span>
-            </div>
-          </div>
-
-          <!-- Checkout Button -->
-          <button class="btn-codepen-primary checkout-btn" (click)="processCheckout()">
-            <ion-icon name="lock-closed-outline"></ion-icon>
-            Checkout & Pay
-          </button>
-
-          <!-- Security Badges -->
-          <div class="security-guarantees">
-            <div class="guarantee-item">
-              <ion-icon name="shield-checkmark-outline"></ion-icon>
-              <span>100% Secure & Encrypted Payment</span>
-            </div>
-            <div class="guarantee-item">
-              <ion-icon name="sync-outline"></ion-icon>
-              <span>Free returns within 30 days</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Order Placed Success Modal -->
-  <ion-modal [isOpen]="isCheckoutModalOpen" (didDismiss)="finishOrder()" class="checkout-success-modal">
-    <ng-template>
-      <div class="success-modal-content">
-        <div class="success-icon-circle">
-          <ion-icon name="checkmark-circle"></ion-icon>
-        </div>
-
-        <h2>Thank you for your order, {{ customerName }}!</h2>
-        <p class="order-id-label">Your order number is: <strong>{{ orderNumber }}</strong></p>
-
-        <div class="order-receipt-box">
-          <div class="receipt-row">
-            <span>Total Paid:</span>
-            <strong>${{ placedOrderTotal | number:'1.2-2' }} MXN</strong>
-          </div>
-          <div class="receipt-row">
-            <span>Payment Method:</span>
-            <span>Credit / Debit Card</span>
-          </div>
-          <div class="receipt-row">
-            <span>Estimated Delivery:</span>
-            <span>3 to 5 business days</span>
-          </div>
-        </div>
-
-        <p class="order-dispatch-note">
-          We have sent an order confirmation and tracking details to your registered email address.
-        </p>
-
-        <button class="btn-codepen-primary finish-btn" (click)="finishOrder()">
+        <h2>Your bag is empty</h2>
+        <p>You haven't added any products to your bag yet. Discover our skincare, cosmetics, and fragrance collections.</p>
+        <button class="btn-codepen-primary" (click)="goToShop()">
           <ion-icon name="home-outline"></ion-icon>
-          Continue Shopping
+          Explore Products
         </button>
       </div>
-    </ng-template>
-  </ion-modal>
-</ion-content>
+    }
+
+    <!-- Cart Layout with Items & Summary -->
+    @if (cartItems.length > 0) {
+      <div class="cart-layout-grid">
+        <!-- Left Column: Items List -->
+        <div class="cart-items-column">
+          <!-- Free Shipping Banner -->
+          <div class="shipping-threshold-banner">
+            <div class="threshold-text">
+              <ion-icon name="airplane-outline"></ion-icon>
+              @if (getSubtotal() >= 500) {
+                <span>
+                  Congratulations! You unlocked <strong>FREE Standard Shipping</strong>.
+                </span>
+              }
+              @if (getSubtotal() < 500) {
+                <span>
+                  Add <strong>${{ (500 - getSubtotal()) | number:'1.2-2' }}</strong> more to get <strong>FREE Shipping</strong>.
+                </span>
+              }
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" [style.width.%]="getFreeShippingProgress()"></div>
+            </div>
+          </div>
+          <!-- Items Card List -->
+          <div class="items-list">
+            @for (item of cartItems; track item) {
+              <div class="cart-item-card">
+                <div class="item-thumbnail">
+                  <img [src]="item.product.image_url" [alt]="item.product.name" referrerpolicy="no-referrer-when-downgrade" (error)="$any($event.target).style.background='linear-gradient(135deg,#f5ece2,#e8ded2)'" />
+                </div>
+                <div class="item-details">
+                  <div class="item-header-row">
+                    <span class="item-category">{{ item.product.category }}</span>
+                    <button class="remove-btn" (click)="confirmRemove(item)" title="Remove">
+                      <ion-icon name="trash-outline"></ion-icon>
+                    </button>
+                  </div>
+                  <h3 class="item-title">{{ item.product.name }}</h3>
+                  <div class="item-unit-price">
+                    ${{ item.product.price | number:'1.2-2' }} each
+                  </div>
+                  <div class="item-actions-row">
+                    <div class="stepper-box">
+                      <button (click)="decrementQty(item)" class="step-btn">
+                        <ion-icon name="remove-outline"></ion-icon>
+                      </button>
+                      <span class="step-value">{{ item.quantity }}</span>
+                      <button (click)="incrementQty(item)" class="step-btn">
+                        <ion-icon name="add-outline"></ion-icon>
+                      </button>
+                    </div>
+                    <div class="item-subtotal">
+                      ${{ (item.product.price * item.quantity) | number:'1.2-2' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+        <!-- Right Column: Order Summary & Checkout -->
+        <div class="cart-summary-column">
+          <div class="summary-card">
+            <h2>Order Summary</h2>
+            <!-- Promo Code Form -->
+            <div class="coupon-section">
+              <label>Do you have a discount code?</label>
+              <div class="coupon-input-group">
+                <input
+                  type="text"
+                  [(ngModel)]="promoCode"
+                  placeholder="e.g. GLOW10"
+                  [disabled]="isDiscountApplied"
+                  />
+                  @if (!isDiscountApplied) {
+                    <button
+                      class="apply-coupon-btn"
+                      (click)="applyPromoCode()"
+                      >
+                      Apply
+                    </button>
+                  }
+                  @if (isDiscountApplied) {
+                    <button
+                      class="remove-coupon-btn"
+                      (click)="removeCoupon()"
+                      >
+                      Remove
+                    </button>
+                  }
+                </div>
+                @if (discountMessage) {
+                  <p class="coupon-msg" [class.success]="isDiscountApplied">
+                    {{ discountMessage }}
+                  </p>
+                }
+              </div>
+              <!-- Cost Breakdown -->
+              <div class="breakdown-lines">
+                <div class="line-row">
+                  <span>Subtotal:</span>
+                  <span>${{ getSubtotal() | number:'1.2-2' }}</span>
+                </div>
+                @if (isDiscountApplied) {
+                  <div class="line-row discount-row">
+                    <span>Discount ({{ appliedDiscountPercent }}%):</span>
+                    <span>-${{ getDiscountAmount() | number:'1.2-2' }}</span>
+                  </div>
+                }
+                <div class="line-row">
+                  <span>Shipping:</span>
+                  @if (getShipping() === 0) {
+                    <span class="free-badge">FREE</span>
+                  }
+                  @if (getShipping() > 0) {
+                    <span>${{ getShipping() | number:'1.2-2' }}</span>
+                  }
+                </div>
+                <div class="divider"></div>
+                <div class="line-row total-row">
+                  <span>Estimated Total:</span>
+                  <span class="total-amount">${{ getTotal() | number:'1.2-2' }} MXN</span>
+                </div>
+              </div>
+              <!-- Checkout Button -->
+              <button class="btn-codepen-primary checkout-btn" (click)="processCheckout()">
+                <ion-icon name="lock-closed-outline"></ion-icon>
+                Checkout & Pay
+              </button>
+              <!-- Security Badges -->
+              <div class="security-guarantees">
+                <div class="guarantee-item">
+                  <ion-icon name="shield-checkmark-outline"></ion-icon>
+                  <span>100% Secure & Encrypted Payment</span>
+                </div>
+                <div class="guarantee-item">
+                  <ion-icon name="sync-outline"></ion-icon>
+                  <span>Free returns within 30 days</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Order Placed Success Modal -->
+    <ion-modal [isOpen]="isCheckoutModalOpen" (didDismiss)="finishOrder()" class="checkout-success-modal">
+      <ng-template>
+        <div class="success-modal-content">
+          <div class="success-icon-circle">
+            <ion-icon name="checkmark-circle"></ion-icon>
+          </div>
+
+          <h2>Thank you for your order, {{ customerName }}!</h2>
+          <p class="order-id-label">Your order number is: <strong>{{ orderNumber }}</strong></p>
+
+          <div class="order-receipt-box">
+            <div class="receipt-row">
+              <span>Total Paid:</span>
+              <strong>${{ placedOrderTotal | number:'1.2-2' }} MXN</strong>
+            </div>
+            <div class="receipt-row">
+              <span>Payment Method:</span>
+              <span>Credit / Debit Card</span>
+            </div>
+            <div class="receipt-row">
+              <span>Estimated Delivery:</span>
+              <span>3 to 5 business days</span>
+            </div>
+          </div>
+
+          <p class="order-dispatch-note">
+            We have sent an order confirmation and tracking details to your registered email address.
+          </p>
+
+          <button class="btn-codepen-primary finish-btn" (click)="finishOrder()">
+            <ion-icon name="home-outline"></ion-icon>
+            Continue Shopping
+          </button>
+        </div>
+      </ng-template>
+    </ion-modal>
+  </ion-content>

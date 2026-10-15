@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { NavController, ToastController, AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { CartItem } from '../models/cart-item.model';
@@ -12,6 +12,12 @@ import { AuthService } from '../services/auth.service';
   standalone: false,
 })
 export class Tab2Page implements OnInit, OnDestroy {
+  private cartService = inject(CartService);
+  private authService = inject(AuthService);
+  private navCtrl = inject(NavController);
+  private toastCtrl = inject(ToastController);
+  private alertCtrl = inject(AlertController);
+
   cartItems: CartItem[] = [];
   private cartSub!: Subscription;
 
@@ -24,14 +30,6 @@ export class Tab2Page implements OnInit, OnDestroy {
   orderNumber = '';
   placedOrderTotal = 0;
   customerName = 'Customer';
-
-  constructor(
-    private cartService: CartService,
-    private authService: AuthService,
-    private navCtrl: NavController,
-    private toastCtrl: ToastController,
-    private alertCtrl: AlertController
-  ) {}
 
   ngOnInit() {
     // Immediately sync from BehaviorSubject (works even before async storage resolves)

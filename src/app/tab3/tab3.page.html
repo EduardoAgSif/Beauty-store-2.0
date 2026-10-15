@@ -149,55 +149,62 @@
           </div>
 
           <!-- Empty State -->
-          <div *ngIf="addresses.length === 0" class="empty-address-view">
-            <ion-icon name="location-outline"></ion-icon>
-            <h4>No addresses saved</h4>
-            <p>Add your first delivery address to speed up your checkout.</p>
-            <button class="btn-codepen-primary" (click)="openNewAddressForm()">
-              + Add Address
-            </button>
-          </div>
+          @if (addresses.length === 0) {
+            <div class="empty-address-view">
+              <ion-icon name="location-outline"></ion-icon>
+              <h4>No addresses saved</h4>
+              <p>Add your first delivery address to speed up your checkout.</p>
+              <button class="btn-codepen-primary" (click)="openNewAddressForm()">
+                + Add Address
+              </button>
+            </div>
+          }
 
           <!-- Address Cards (Consulta / Read) -->
-          <div class="address-cards-list" *ngIf="addresses.length > 0">
-            <div
-              *ngFor="let addr of addresses"
-              class="address-card"
-              [class.default-card]="addr.isDefault"
-            >
-              <div class="address-card-header">
-                <div class="address-badges">
-                  <span class="label-badge">{{ addr.label || 'Home' }}</span>
-                  <span class="default-badge" *ngIf="addr.isDefault">
-                    <ion-icon name="checkmark-circle"></ion-icon> Default
-                  </span>
+          @if (addresses.length > 0) {
+            <div class="address-cards-list">
+              @for (addr of addresses; track addr) {
+                <div
+                  class="address-card"
+                  [class.default-card]="addr.isDefault"
+                  >
+                  <div class="address-card-header">
+                    <div class="address-badges">
+                      <span class="label-badge">{{ addr.label || 'Home' }}</span>
+                      @if (addr.isDefault) {
+                        <span class="default-badge">
+                          <ion-icon name="checkmark-circle"></ion-icon> Default
+                        </span>
+                      }
+                    </div>
+                    <div class="card-actions">
+                      <button class="icon-action-btn edit-btn" (click)="openEditAddressForm(addr)" title="Edit">
+                        <ion-icon name="create-outline"></ion-icon>
+                      </button>
+                      <button class="icon-action-btn delete-btn" (click)="confirmDeleteAddress(addr)" title="Delete">
+                        <ion-icon name="trash-outline"></ion-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="address-card-body">
+                    <h4 class="recipient-name">{{ addr.fullName }}</h4>
+                    <p class="street-line">{{ addr.street }}</p>
+                    <p class="city-zip">{{ addr.city }}, {{ addr.state }} {{ addr.postalCode }}</p>
+                    <p class="phone-line">
+                      <ion-icon name="call-outline"></ion-icon> {{ addr.phone }}
+                    </p>
+                  </div>
+                  @if (!addr.isDefault) {
+                    <div class="address-card-footer">
+                      <button class="btn-set-default" (click)="setDefaultAddress(addr)">
+                        Set as Default
+                      </button>
+                    </div>
+                  }
                 </div>
-                <div class="card-actions">
-                  <button class="icon-action-btn edit-btn" (click)="openEditAddressForm(addr)" title="Edit">
-                    <ion-icon name="create-outline"></ion-icon>
-                  </button>
-                  <button class="icon-action-btn delete-btn" (click)="confirmDeleteAddress(addr)" title="Delete">
-                    <ion-icon name="trash-outline"></ion-icon>
-                  </button>
-                </div>
-              </div>
-
-              <div class="address-card-body">
-                <h4 class="recipient-name">{{ addr.fullName }}</h4>
-                <p class="street-line">{{ addr.street }}</p>
-                <p class="city-zip">{{ addr.city }}, {{ addr.state }} {{ addr.postalCode }}</p>
-                <p class="phone-line">
-                  <ion-icon name="call-outline"></ion-icon> {{ addr.phone }}
-                </p>
-              </div>
-
-              <div class="address-card-footer" *ngIf="!addr.isDefault">
-                <button class="btn-set-default" (click)="setDefaultAddress(addr)">
-                  Set as Default
-                </button>
-              </div>
+              }
             </div>
-          </div>
+          }
         </div>
       </ion-content>
     </ng-template>
@@ -229,111 +236,111 @@
               name="fullName"
               placeholder="e.g. Eduardo Aguilar"
               required
-            />
-          </div>
+              />
+            </div>
 
-          <div class="form-group">
-            <label>Street Address & Number *</label>
-            <input
-              type="text"
-              [(ngModel)]="addressForm.street"
-              name="street"
-              placeholder="e.g. Av. Paseo de las Lomas #450"
-              required
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="form-group col-half">
-              <label>City *</label>
+            <div class="form-group">
+              <label>Street Address & Number *</label>
               <input
                 type="text"
-                [(ngModel)]="addressForm.city"
-                name="city"
-                placeholder="e.g. Durango"
+                [(ngModel)]="addressForm.street"
+                name="street"
+                placeholder="e.g. Av. Paseo de las Lomas #450"
                 required
-              />
-            </div>
-            <div class="form-group col-half">
-              <label>State</label>
-              <input
-                type="text"
-                [(ngModel)]="addressForm.state"
-                name="state"
-                placeholder="e.g. DGO"
-              />
-            </div>
-          </div>
+                />
+              </div>
 
-          <div class="form-row">
-            <div class="form-group col-half">
-              <label>Postal / ZIP Code *</label>
-              <input
-                type="text"
-                [(ngModel)]="addressForm.postalCode"
-                name="postalCode"
-                placeholder="e.g. 34100"
-                required
-              />
-            </div>
-            <div class="form-group col-half">
-              <label>Phone Number *</label>
-              <input
-                type="tel"
-                [(ngModel)]="addressForm.phone"
-                name="phone"
-                placeholder="e.g. +52 618 123 4567"
-                required
-              />
-            </div>
-          </div>
+              <div class="form-row">
+                <div class="form-group col-half">
+                  <label>City *</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="addressForm.city"
+                    name="city"
+                    placeholder="e.g. Durango"
+                    required
+                    />
+                  </div>
+                  <div class="form-group col-half">
+                    <label>State</label>
+                    <input
+                      type="text"
+                      [(ngModel)]="addressForm.state"
+                      name="state"
+                      placeholder="e.g. DGO"
+                      />
+                    </div>
+                  </div>
 
-          <div class="form-group">
-            <label>Address Label</label>
-            <div class="label-chips">
-              <button
-                type="button"
-                class="chip-btn"
-                [class.selected]="addressForm.label === 'Home'"
-                (click)="addressForm.label = 'Home'"
-              >
-                🏠 Home
-              </button>
-              <button
-                type="button"
-                class="chip-btn"
-                [class.selected]="addressForm.label === 'Work'"
-                (click)="addressForm.label = 'Work'"
-              >
-                💼 Work
-              </button>
-              <button
-                type="button"
-                class="chip-btn"
-                [class.selected]="addressForm.label === 'Other'"
-                (click)="addressForm.label = 'Other'"
-              >
-                📍 Other
-              </button>
-            </div>
-          </div>
+                  <div class="form-row">
+                    <div class="form-group col-half">
+                      <label>Postal / ZIP Code *</label>
+                      <input
+                        type="text"
+                        [(ngModel)]="addressForm.postalCode"
+                        name="postalCode"
+                        placeholder="e.g. 34100"
+                        required
+                        />
+                      </div>
+                      <div class="form-group col-half">
+                        <label>Phone Number *</label>
+                        <input
+                          type="tel"
+                          [(ngModel)]="addressForm.phone"
+                          name="phone"
+                          placeholder="e.g. +52 618 123 4567"
+                          required
+                          />
+                        </div>
+                      </div>
 
-          <div class="form-toggle-row">
-            <label>Set as default shipping address</label>
-            <ion-toggle [(ngModel)]="addressForm.isDefault" name="isDefault"></ion-toggle>
-          </div>
+                      <div class="form-group">
+                        <label>Address Label</label>
+                        <div class="label-chips">
+                          <button
+                            type="button"
+                            class="chip-btn"
+                            [class.selected]="addressForm.label === 'Home'"
+                            (click)="addressForm.label = 'Home'"
+                            >
+                            🏠 Home
+                          </button>
+                          <button
+                            type="button"
+                            class="chip-btn"
+                            [class.selected]="addressForm.label === 'Work'"
+                            (click)="addressForm.label = 'Work'"
+                            >
+                            💼 Work
+                          </button>
+                          <button
+                            type="button"
+                            class="chip-btn"
+                            [class.selected]="addressForm.label === 'Other'"
+                            (click)="addressForm.label = 'Other'"
+                            >
+                            📍 Other
+                          </button>
+                        </div>
+                      </div>
 
-          <div class="form-actions-bar">
-            <button type="button" class="btn-cancel" (click)="closeEditAddressForm()">
-              Cancel
-            </button>
-            <button type="submit" class="btn-codepen-primary btn-save">
-              <ion-icon name="save-outline"></ion-icon>
-              Save Address
-            </button>
-          </div>
-        </form>
-      </ion-content>
-    </ng-template>
-  </ion-modal>
-</ion-content>
+                      <div class="form-toggle-row">
+                        <label>Set as default shipping address</label>
+                        <ion-toggle [(ngModel)]="addressForm.isDefault" name="isDefault"></ion-toggle>
+                      </div>
+
+                      <div class="form-actions-bar">
+                        <button type="button" class="btn-cancel" (click)="closeEditAddressForm()">
+                          Cancel
+                        </button>
+                        <button type="submit" class="btn-codepen-primary btn-save">
+                          <ion-icon name="save-outline"></ion-icon>
+                          Save Address
+                        </button>
+                      </div>
+                    </form>
+                  </ion-content>
+                </ng-template>
+              </ion-modal>
+            </ion-content>

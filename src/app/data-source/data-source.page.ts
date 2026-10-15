@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { DataSourceConfig, DataSourceConfigService, RequestDiagnostics } from '../services/data-source-config.service';
 
 @Component({ selector: 'app-data-source', templateUrl: './data-source.page.html', styleUrls: ['./data-source.page.scss'], standalone: false })
 export class DataSourcePage implements OnInit {
+  private configService = inject(DataSourceConfigService);
+  private location = inject(Location);
+
   config: DataSourceConfig = { environment: 'development', protocol: 'http', host: 'localhost', apiPort: 80, apiBasePath: '/backend', dbEngine: 'mysql', dbPort: 3306, timeoutMs: 5000 };
   busy = false;
   message = '';
@@ -11,7 +14,6 @@ export class DataSourcePage implements OnInit {
   showDiagnostics = false;
   rawJson = '';
   jsonError = '';
-  constructor(private configService: DataSourceConfigService, private location: Location) {}
   async ngOnInit(): Promise<void> { this.config = await this.configService.getConfig(); this.rawJson = JSON.stringify(this.config, null, 2); }
   async save(): Promise<void> {
     if (!this.config.host.trim() || !this.config.protocol || Number(this.config.apiPort) < 1 || Number(this.config.apiPort) > 65535) {

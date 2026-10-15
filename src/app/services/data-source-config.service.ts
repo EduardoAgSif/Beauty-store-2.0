@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import axios from 'axios';
 import { StorageService } from './storage.service';
@@ -46,13 +46,13 @@ const DEFAULT_CONFIG: DataSourceConfig = {
 
 @Injectable({ providedIn: 'root' })
 export class DataSourceConfigService {
+  private storage = inject(StorageService);
+
   private readonly diagnosticsSubject = new BehaviorSubject<{ visible: boolean; details: RequestDiagnostics | null }>({ visible: false, details: null });
   readonly diagnostics$ = this.diagnosticsSubject.asObservable();
   private readonly CONFIG_KEY = 'glow_beauty_data_source_config';
   private config: DataSourceConfig = { ...DEFAULT_CONFIG };
   private initialized = false;
-
-  constructor(private storage: StorageService) {}
 
   async getConfig(): Promise<DataSourceConfig> {
     if (!this.initialized) {

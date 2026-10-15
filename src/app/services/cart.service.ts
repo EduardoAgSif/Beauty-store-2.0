@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Product } from '../models/product.model';
 import { CartItem } from '../models/cart-item.model';
@@ -8,6 +8,8 @@ import { StorageService } from './storage.service';
   providedIn: 'root'
 })
 export class CartService {
+  private storage = inject(StorageService);
+
   private readonly STORAGE_KEY = 'glow_beauty_cart_v2';
   private itemsSubject = new BehaviorSubject<CartItem[]>([]);
   public items$ = this.itemsSubject.asObservable();
@@ -16,7 +18,7 @@ export class CartService {
   public count$ = this.countSubject.asObservable();
   private persistTimer: ReturnType<typeof setTimeout> | null = null;
 
-  constructor(private storage: StorageService) {
+  constructor() {
     // Synchronous boot: read cart from localStorage immediately so the
     // BehaviorSubject has data BEFORE async loadCart() resolves.
     try {
