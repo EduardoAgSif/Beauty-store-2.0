@@ -124,3 +124,14 @@ html, body {
     inset 0 1px 0 rgba(255, 255, 255, 0.70);
   border-radius: 20px;
 }
+
+/* Global modal focus and border outline reset */
+ion-modal,
+ion-modal:focus,
+ion-modal:focus-visible,
+ion-modal::part(content),
+ion-modal::part(content):focus,
+ion-modal::part(content):focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}

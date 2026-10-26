@@ -920,6 +920,27 @@
   --max-width: 680px;
   --height: auto;
   --border-radius: 24px;
+  --background: transparent;
+  --box-shadow: none;
+  --border-color: transparent;
+  --border-width: 0;
+  outline: none !important;
+
+  &::part(content) {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    outline: none !important;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &::part(content):focus,
+  &::part(content):focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
 
   .modal-wrapper {
     position: relative;
@@ -932,6 +953,19 @@
       0 16px 48px rgba(100, 90, 80, 0.14),
       inset 0 1px 0 rgba(255, 255, 255, 0.70);
     border-radius: 24px;
+    outline: none !important;
+
+    &:focus,
+    &:focus-visible {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    button:focus,
+    button:focus-visible {
+      outline: none !important;
+      box-shadow: none !important;
+    }
 
     .close-modal-btn {
       position: absolute;

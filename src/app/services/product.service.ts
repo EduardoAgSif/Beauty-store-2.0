@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from '../models/product.model';
 import { DataSourceConfigService, RequestDiagnostics } from './data-source-config.service';
+import { StorageService } from './storage.service';
+import { NetworkService } from './network.service';
+import { SyncService } from './sync.service';
 
 export type ProductPayload = Pick<Product, 'name' | 'description' | 'price' | 'stock'>;
 export type ProductPatch = Partial<ProductPayload>;
@@ -18,12 +22,21 @@ interface ProductApiResponse<T> {
   id?: number | string;
 }
 
+export type ProductDataSource = 'remote' | 'local_cache' | 'fallback';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
   private readonly dataSourceConfig = inject(DataSourceConfigService);
+  private readonly storageService = inject(StorageService, { optional: true });
+  private readonly networkService = inject(NetworkService, { optional: true });
+  private readonly syncService = inject(SyncService, { optional: true });
 
+  private readonly STORAGE_KEY_PRODUCTS = 'beautystore_cached_products';
+
+  private readonly dataSourceSubject = new BehaviorSubject<ProductDataSource>('fallback');
+  public readonly dataSource$: Observable<ProductDataSource> = this.dataSourceSubject.asObservable();
 
   // 12 Curated Luxury Beauty Products with Soft Champagne, Pearl, Warm Beige & Gold Accents
   private defaultBeautyProducts: Product[] = [
@@ -173,14 +186,54 @@ export class ProductService {
     }
   ];
 
-  public async getProducts(): Promise<Product[]> {
-    try {
-      const products = (await this.listApiProducts()).data;
-      return products.length > 0 ? products : this.getFallbackProducts();
-    } catch (e) {
-      console.warn('Product API request failed; detailed request diagnostics were opened.', e);
-      return this.getFallbackProducts();
+  constructor() {
+    if (this.syncService) {
+      this.syncService.registerSyncHandler(async () => {
+        await this.syncRemoteAndQueue();
+      });
     }
+  }
+
+  /**
+   * Main method to obtain products.
+   * Online: attempts remote API, caches in StorageService, updates state.
+   * Offline / Remote Error: retrieves from persistent StorageService; falls back to default list if storage is empty.
+   */
+  public async getProducts(): Promise<Product[]> {
+    const isOffline = this.networkService ? this.networkService.isOffline : false;
+
+    if (!isOffline) {
+      try {
+        const response = await this.listApiProducts();
+        const products = response.data;
+        if (products.length > 0) {
+          // Persist to local storage
+          if (this.storageService) {
+            await this.storageService.set(this.STORAGE_KEY_PRODUCTS, products);
+          }
+          this.dataSourceSubject.next('remote');
+          return products;
+        }
+      } catch (e) {
+        console.warn('ProductService: Remote API request failed; falling back to local storage cache.', e);
+      }
+    }
+
+    // Offline or remote error: check local storage cache
+    if (this.storageService) {
+      const cached = await this.storageService.get<Product[]>(this.STORAGE_KEY_PRODUCTS);
+      if (cached && Array.isArray(cached) && cached.length > 0) {
+        const normalized = cached.map(p => ({
+          ...p,
+          image_url: this.resolveLocalImage(p.id, p.name, p.image_url)
+        }));
+        this.dataSourceSubject.next('local_cache');
+        return normalized;
+      }
+    }
+
+    this.dataSourceSubject.next('fallback');
+    return this.getFallbackProducts();
   }
 
   public async listApiProducts(): Promise<ApiResult<Product[]>> {
@@ -188,8 +241,9 @@ export class ProductService {
     if (!this.isSuccessfulResponse(response.data) || !Array.isArray(response.data.data)) {
       response.diagnostics.error = 'La API respondió, pero no devolvió una lista de productos válida.';
       response.diagnostics.response = this.dataSourceConfig.safeResponse(response.data);
-      this.dataSourceConfig.openDiagnostics(response.diagnostics);
-      throw new Error('La API no devolvió una lista de productos válida.');
+      throw Object.assign(new Error('La API no devolvió una lista de productos válida.'), {
+        requestDiagnostics: response.diagnostics
+      });
     }
     try {
       return {
@@ -200,16 +254,80 @@ export class ProductService {
     } catch (error: unknown) {
       response.diagnostics.error = error instanceof Error ? error.message : 'La API devolvió productos inválidos.';
       response.diagnostics.response = this.dataSourceConfig.safeResponse(response.data);
-      this.dataSourceConfig.openDiagnostics(response.diagnostics);
-      throw error;
+      throw Object.assign(error instanceof Error ? error : new Error(response.diagnostics.error), {
+        requestDiagnostics: response.diagnostics
+      });
     }
   }
 
   public async createProduct(payload: ProductPayload): Promise<ApiResult<{ id: number; message: string }>> {
+    const isOffline = this.networkService ? this.networkService.isOffline : false;
+
+    // If offline, save locally & queue for sync
+    if (isOffline) {
+      const localId = Date.now();
+      const newProduct: Product = {
+        id: localId,
+        name: payload.name,
+        description: payload.description,
+        price: Number(payload.price),
+        stock: Number(payload.stock),
+        category: 'Skincare',
+        image_url: 'assets/products/Face-oil.jpg',
+        rating: 5.0,
+        reviews_count: 1,
+        is_featured: false
+      };
+
+      if (this.storageService) {
+        const cached = (await this.storageService.get<Product[]>(this.STORAGE_KEY_PRODUCTS)) || this.getFallbackProducts();
+        cached.unshift(newProduct);
+        await this.storageService.set(this.STORAGE_KEY_PRODUCTS, cached);
+      }
+
+      if (this.syncService) {
+        await this.syncService.enqueueOfflineAction({
+          type: 'CREATE_PRODUCT',
+          payload
+        });
+      }
+
+      return {
+        httpStatus: 200,
+        data: {
+          id: localId,
+          message: 'Producto guardado en almacenamiento local (se sincronizará al volver en línea).'
+        },
+        diagnostics: {
+          timestamp: new Date().toISOString(),
+          method: 'OFFLINE_PERSIST',
+          url: 'local://storage',
+          protocol: 'local',
+          host: 'device',
+          port: 0,
+          headers: {},
+          payload
+        }
+      };
+    }
+
+    // Online execution
     const response = await this.request<ProductApiResponse<never>>('POST', undefined, payload);
     if (!this.isSuccessfulResponse(response.data) || response.data.id === undefined) {
-      throw new Error(this.getResponseMessage(response.data) || 'La API no confirmó la creación del producto.');
+      throw Object.assign(
+        new Error(this.getResponseMessage(response.data) || 'La API no confirmó la creación del producto.'),
+        { requestDiagnostics: response.diagnostics }
+      );
     }
+
+    // Update local cache with newly created product
+    if (this.storageService) {
+      try {
+        const remote = await this.listApiProducts();
+        await this.storageService.set(this.STORAGE_KEY_PRODUCTS, remote.data);
+      } catch (_) {}
+    }
+
     return {
       httpStatus: response.httpStatus,
       data: { id: Number(response.data.id), message: response.data.message || 'Producto creado.' },
@@ -235,6 +353,43 @@ export class ProductService {
     return this.successResult(response, 'No se pudo eliminar el producto.');
   }
 
+  /**
+   * Syncs queued offline actions to the remote server and refreshes the local cache
+   */
+  public async syncRemoteAndQueue(): Promise<void> {
+    if (!this.syncService || (this.networkService && this.networkService.isOffline)) {
+      return;
+    }
+
+    // 1. Process queued offline mutations
+    const queue = await this.syncService.getQueue();
+    if (queue.length > 0) {
+      for (const item of queue) {
+        if (item.type === 'CREATE_PRODUCT') {
+          try {
+            await this.request<ProductApiResponse<never>>('POST', undefined, item.payload);
+          } catch (err) {
+            console.warn('Error syncing queued product creation:', err);
+          }
+        }
+      }
+      await this.syncService.clearQueue();
+    }
+
+    // 2. Fetch fresh remote data and cache in local storage
+    try {
+      const response = await this.listApiProducts();
+      if (response.data && response.data.length > 0) {
+        if (this.storageService) {
+          await this.storageService.set(this.STORAGE_KEY_PRODUCTS, response.data);
+        }
+        this.dataSourceSubject.next('remote');
+      }
+    } catch (err) {
+      console.warn('Error fetching fresh remote products during sync:', err);
+    }
+  }
+
   private async request<T>(method: string, id?: number, payload?: unknown): Promise<ApiResult<T>> {
     const apiUrl = await this.dataSourceConfig.getEndpoint('api.php');
     const url = id === undefined ? apiUrl : `${apiUrl}?id=${encodeURIComponent(id)}`;
@@ -250,7 +405,10 @@ export class ProductService {
     fallbackMessage: string
   ): ApiResult<{ message: string }> {
     if (!this.isSuccessfulResponse(response.data)) {
-      throw new Error(this.getResponseMessage(response.data) || fallbackMessage);
+      throw Object.assign(
+        new Error(this.getResponseMessage(response.data) || fallbackMessage),
+        { requestDiagnostics: response.diagnostics }
+      );
     }
     return {
       httpStatus: response.httpStatus,
@@ -270,24 +428,55 @@ export class ProductService {
     return undefined;
   }
 
+  public resolveLocalImage(id?: number, name?: string, providedUrl?: string): string {
+    if (providedUrl && providedUrl.startsWith('assets/products/')) {
+      return providedUrl;
+    }
+    const numId = Number(id);
+    const byId = this.defaultBeautyProducts.find(d => d.id === numId);
+    if (byId && byId.image_url) return byId.image_url;
+
+    const lowerName = (name || '').toLowerCase();
+    const byName = this.defaultBeautyProducts.find(d =>
+      lowerName.includes(d.name.toLowerCase()) || d.name.toLowerCase().includes(lowerName)
+    );
+    if (byName && byName.image_url) return byName.image_url;
+
+    if (lowerName.includes('oil') || lowerName.includes('aceite')) return 'assets/products/Face-oil.jpg';
+    if (lowerName.includes('cream') || lowerName.includes('crema') || lowerName.includes('hidrat')) return 'assets/products/silk-hidrating-cream.jpg';
+    if (lowerName.includes('lipstick') || lowerName.includes('labial')) return 'assets/products/velvet-lipstick.jpg';
+    if (lowerName.includes('illuminator') || lowerName.includes('iluminad')) return 'assets/products/liquid-iluminator.jpg';
+    if (lowerName.includes('parfum') || lowerName.includes('perfume') || lowerName.includes('fragran') || lowerName.includes('rose')) return 'assets/products/rose-parfume.jpg';
+    if (lowerName.includes('serum')) return 'assets/products/heair-repair-serum.jpg';
+    if (lowerName.includes('clean') || lowerName.includes('limpia')) return 'assets/products/Gentle-clenser.jpg';
+    if (lowerName.includes('palette') || lowerName.includes('sombra')) return 'assets/products/Eyeshadow-palette.jpg';
+    if (lowerName.includes('mist') || lowerName.includes('bruma')) return 'assets/products/Body-mist.jpg';
+    if (lowerName.includes('balm') || lowerName.includes('balsamo')) return 'assets/products/Lip-balm.jpg';
+    if (lowerName.includes('mask') || lowerName.includes('mascar')) return 'assets/products/Hair-mask.jpg';
+    if (lowerName.includes('eye') || lowerName.includes('ojo') || lowerName.includes('contorno')) return 'assets/products/Eye-contour.jpg';
+
+    return 'assets/products/Face-oil.jpg';
+  }
+
   private mapProducts(products: unknown[]): Product[] {
     return products.map((value, index) => {
       if (!value || typeof value !== 'object') {
         throw new Error('La API devolvió un producto con formato inválido.');
       }
       const product = value as Partial<Product>;
-      const fallback = this.defaultBeautyProducts[index % this.defaultBeautyProducts.length];
+      const numId = Number(product.id);
+      const fallback = this.defaultBeautyProducts.find(d => d.id === numId) || this.defaultBeautyProducts[index % this.defaultBeautyProducts.length];
       return {
-        id: Number(product.id),
+        id: numId || fallback.id,
         name: product.name || fallback.name,
         description: product.description || fallback.description,
         price: Number(product.price ?? fallback.price),
         stock: Number(product.stock ?? fallback.stock),
         category: product.category || fallback.category,
-        image_url: product.image_url || fallback.image_url,
+        image_url: this.resolveLocalImage(numId || fallback.id, product.name || fallback.name, product.image_url),
         rating: fallback.rating,
         reviews_count: fallback.reviews_count,
-        is_featured: index < 4
+        is_featured: fallback.is_featured ?? (index < 4)
       };
     });
   }

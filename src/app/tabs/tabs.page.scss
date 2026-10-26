@@ -161,33 +161,51 @@ ion-tabs {
 }
 
 .mobile-tab-bar {
-  --background: #ffffff;
-  --border: 1px solid #e8ded2;
-  box-shadow: 0 -4px 16px rgba(133, 121, 111, 0.06);
-  height: 62px;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-around !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  height: 58px !important;
+  background: #ffffff !important;
+  --background: #ffffff !important;
+  border-top: 1px solid #e8ded2 !important;
+  box-shadow: 0 -4px 16px rgba(133, 121, 111, 0.08) !important;
+  padding: 0 8px !important;
+  box-sizing: border-box !important;
 
   ion-tab-button {
-    --color: #9c9187;
-    --color-selected: #be9b7b;
-    font-weight: 500;
-    transition: all 0.2s ease;
-
-    &.tab-selected {
-      font-weight: 600;
-
-      ion-icon {
-        transform: scale(1.1);
-      }
-    }
+    flex: 1 1 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    padding: 0 !important;
+    background: transparent !important;
+    --background: transparent !important;
+    --color: #9c9187 !important;
+    --color-selected: #be9b7b !important;
+    color: #9c9187 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
 
     ion-icon {
-      font-size: 1.45rem;
-      transition: transform 0.2s ease;
+      font-size: 1.7rem !important;
+      display: inline-block !important;
+      color: inherit !important;
+      transition: transform 0.2s ease, color 0.2s ease !important;
     }
 
-    ion-label {
-      font-size: 0.78rem;
-      margin-top: 2px;
+    &.tab-selected {
+      color: #be9b7b !important;
+      --color: #be9b7b !important;
+
+      ion-icon {
+        color: #be9b7b !important;
+        transform: scale(1.15) !important;
+      }
     }
   }
 
@@ -205,6 +223,7 @@ ion-tabs {
       padding: 2px 6px;
       border-radius: 10px;
       --background: #be9b7b;
+      background: #be9b7b;
       color: #ffffff;
       font-weight: 700;
       animation: pulse 1.5s infinite;

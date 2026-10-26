@@ -64,6 +64,17 @@ describe('ProductService REST operations', () => {
     });
   });
 
+  it('preserves request details when the API rejects a mutation response', async () => {
+    const { service } = createService({
+      status: 'error',
+      message: 'Invalid product'
+    });
+
+    await expect(
+      service.createProduct({ name: 'Test product', description: '', price: 12.5, stock: 3 })
+    ).rejects.toMatchObject({ requestDiagnostics: diagnostics });
+  });
+
   it('sends full PUT, partial PATCH, and DELETE requests to the selected resource', async () => {
     const { service, request } = createService({ status: 'success', message: 'Updated' });
 

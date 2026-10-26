@@ -10,10 +10,6 @@
 </ion-header>
 
 <ion-content class="storefront-content">
-  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content pullingIcon="chevron-down-circle-outline" refreshingSpinner="crescent">
-    </ion-refresher-content>
-  </ion-refresher>
 
   <!-- Hero Banner -->
   <section class="hero-section">
@@ -211,9 +207,6 @@
                 <div class="card-media">
                   <img [src]="prod.image_url" [alt]="prod.name" loading="lazy" referrerpolicy="no-referrer-when-downgrade" (error)="$any($event.target).style.background='linear-gradient(135deg,#f5ece2,#e8ded2)'" />
                   <span class="category-badge">{{ prod.category }}</span>
-                  <div class="stock-tag" [class.low-stock]="prod.stock < 15">
-                    {{ prod.stock > 0 ? 'Stock: ' + prod.stock : 'Out of Stock' }}
-                  </div>
                 </div>
                 <div class="card-info">
                   <div class="rating-row">
@@ -247,7 +240,7 @@
       </div>
 
       <!-- Quick View Modal -->
-      <ion-modal [isOpen]="isQuickViewOpen" (didDismiss)="closeQuickView()" class="quick-view-modal">
+      <ion-modal [isOpen]="isQuickViewOpen" (didDismiss)="closeQuickView()" class="quick-view-modal" [handle]="false">
         <ng-template>
           @if (selectedProduct) {
             <div class="modal-wrapper">

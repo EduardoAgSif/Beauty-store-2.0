@@ -81,7 +81,7 @@ export class LoginPage {
       }
       this.ngZone.run(() => {
         this.isLoading = false;
-        this.errorMessage = error?.response?.data?.message || 'No se pudo completar la solicitud. Revisa el diagnóstico técnico.';
+        this.errorMessage = error?.response?.data?.message || 'No se pudo conectar con el servidor. Verifica tu conexión.';
         this.cdr.detectChanges();
       });
     }
@@ -109,7 +109,6 @@ export class LoginPage {
           diagnostics.response = this.configService.safeResponse(result.data);
           diagnostics.error = result.data?.message || 'API returned an unsuccessful signup response.';
           this.errorMessage = result.data?.message || 'Error creating account.';
-          this.configService.openDiagnostics(diagnostics);
           this.cdr.detectChanges();
         }
       });
@@ -121,7 +120,7 @@ export class LoginPage {
       }
       this.ngZone.run(() => {
         this.isLoading = false;
-        this.errorMessage = error?.response?.data?.message || 'No se pudo completar la solicitud. Revisa el diagnóstico técnico.';
+        this.errorMessage = error?.response?.data?.message || 'No se pudo conectar con el servidor. Verifica tu conexión.';
         this.cdr.detectChanges();
       });
     }

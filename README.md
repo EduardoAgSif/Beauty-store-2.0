@@ -42,7 +42,6 @@ BeautyStore_2.0/
 ├── src/
 │   └── app/
 │       ├── guards/       # Route guards (auth)
-│       ├── api-demo/     # CRUD demo for the REST API
 │       ├── login/        # Login page module
 │       ├── models/       # Data models
 │       ├── services/     # API services
@@ -113,19 +112,25 @@ BeautyStore_2.0/
 
 ---
 
-## REST API CRUD Demo
+## Probar la API REST con Postman
 
-Open **API CRUD** from the navigation (or visit `http://localhost:8100/api-demo`) to exercise the product API:
+1. Inicia Apache y MySQL desde XAMPP e importa `backend/schema.sql` en phpMyAdmin.
+2. En Postman, crea una variable `baseUrl` con el valor `http://localhost/backend`. Si Apache usa otro puerto, inclúyelo en el host, por ejemplo `http://localhost:8080/backend`.
+3. Para todas las solicitudes usa el endpoint `{{baseUrl}}/api.php`. En **Headers**, agrega `Accept: application/json`. Para solicitudes con cuerpo JSON agrega también `Content-Type: application/json`.
+4. Para POST, PUT y PATCH, selecciona **Body > raw > JSON** y utiliza estos ejemplos:
 
-1. Set the API host and base path in **Origen de datos**. For XAMPP on the same computer use `localhost`; Android emulators and physical devices need a host reachable from that device (for example, `10.0.2.2` for the Android Studio emulator).
-2. Use **Consultar GET** to list the products stored by the server.
-3. Enter a name, description, price, and stock, then use **Crear con POST**.
-4. Select **Editar** on a server product. Use **Guardar con PUT** to replace its editable fields or **Actualizar stock con PATCH** to change only its stock.
-5. Use **DELETE** on a product and confirm the deletion.
+| Operación | Método y URL | Cuerpo JSON |
+|---|---|---|
+| Listar productos | `GET {{baseUrl}}/api.php` | Sin cuerpo |
+| Consultar un producto | `GET {{baseUrl}}/api.php?id=1` | Sin cuerpo |
+| Crear un producto | `POST {{baseUrl}}/api.php` | `{"name":"Producto de prueba","description":"Creado desde Postman","price":125.50,"stock":10}` |
+| Reemplazarlo | `PUT {{baseUrl}}/api.php?id=ID` | `{"name":"Producto actualizado","description":"Actualizado con PUT","price":135.50,"stock":8}` |
+| Actualizar parcialmente | `PATCH {{baseUrl}}/api.php?id=ID` | `{"stock":6}` |
+| Eliminarlo | `DELETE {{baseUrl}}/api.php?id=ID` | Sin cuerpo |
 
-Requests show an Ionic loading overlay. The result panel displays the method, actual HTTP status, and response; API errors are shown on screen and in the request diagnostics. The storefront keeps its local catalog fallback, while this demo reports API failures without substituting local data.
+En POST, copia el `id` de la respuesta y úsalo en las solicitudes PUT, PATCH y DELETE. Usa un producto de prueba para DELETE: la eliminación en la base de datos es permanente. Las respuestas esperadas son `200` para GET, PUT, PATCH y DELETE, y `201` para POST. En Postman, la barra de respuesta muestra el estado HTTP y las pestañas **Body** y **Headers** muestran los detalles para revisar o capturar evidencia.
 
-For delivery evidence, start the PHP/MySQL backend, run the flow above, and record the screen with a system screenshot or screen recorder. Capture the GET list and the POST, PUT/PATCH, and DELETE results so the HTTP methods and response status are visible.
+La URL del backend que consume la aplicación se configura en `DEFAULT_CONFIG` de `src/app/services/data-source-config.service.ts` (`localhost`, puerto `80`, ruta `/backend`). Si el servidor está en otro host, actualiza esa constante y vuelve a compilar la app. Postman instalado en el mismo equipo que XAMPP puede utilizar `localhost`.
 
 ---
 

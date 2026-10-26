@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import axios from 'axios';
-import { StorageService } from './storage.service';
 
 export interface DataSourceConfig {
   environment: string;
@@ -46,27 +45,11 @@ const DEFAULT_CONFIG: DataSourceConfig = {
 
 @Injectable({ providedIn: 'root' })
 export class DataSourceConfigService {
-  private storage = inject(StorageService);
-
   private readonly diagnosticsSubject = new BehaviorSubject<{ visible: boolean; details: RequestDiagnostics | null }>({ visible: false, details: null });
   readonly diagnostics$ = this.diagnosticsSubject.asObservable();
-  private readonly CONFIG_KEY = 'glow_beauty_data_source_config';
-  private config: DataSourceConfig = { ...DEFAULT_CONFIG };
-  private initialized = false;
 
   async getConfig(): Promise<DataSourceConfig> {
-    if (!this.initialized) {
-      const stored = await this.storage.get<DataSourceConfig>(this.CONFIG_KEY);
-      if (stored) this.config = { ...DEFAULT_CONFIG, ...stored };
-      this.initialized = true;
-    }
-    return { ...this.config };
-  }
-
-  async saveConfig(config: DataSourceConfig): Promise<void> {
-    this.config = { ...config, apiBasePath: this.normalizePath(config.apiBasePath) };
-    this.initialized = true;
-    await this.storage.set(this.CONFIG_KEY, this.config);
+    return { ...DEFAULT_CONFIG };
   }
 
   async getApiBaseUrl(): Promise<string> {
@@ -120,7 +103,7 @@ export class DataSourceConfigService {
       details.response = error?.response?.data != null ? this.safeResponse(error.response.data) : null;
       details.responseHeaders = error?.response?.headers ? this.safeHeaders(error.response.headers) : {};
       details.error = error?.message || 'Request failed';
-      this.openDiagnostics(details);
+      // Auto-popup removed to prevent interrupting user browsing
       throw Object.assign(error instanceof Error ? error : new Error(details.error), { requestDiagnostics: details, originalError: error });
     }
   }

@@ -2,6 +2,8 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CartService } from '../services/cart.service';
 import { Observable } from 'rxjs';
+import { addIcons } from 'ionicons';
+import { homeOutline, cartOutline, personOutline, sparkles } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tabs',
@@ -17,6 +19,12 @@ export class TabsPage {
 
   constructor() {
     this.cartCount$ = this.cartService.count$;
+    addIcons({
+      'home-outline': homeOutline,
+      'cart-outline': cartOutline,
+      'person-outline': personOutline,
+      'sparkles': sparkles
+    });
   }
 
   navigateTo(path: string) {

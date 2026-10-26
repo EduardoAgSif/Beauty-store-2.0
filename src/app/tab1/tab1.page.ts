@@ -45,7 +45,7 @@ export class Tab1Page implements OnInit {
       tag: '✨ #1 Best Seller',
       title: 'L\u2019Élixir Doré Face Oil',
       subtitle: 'Deep botanical nourishment infused with plant squalane and golden pearls.',
-      imageUrl: '',
+      imageUrl: 'assets/products/Face-oil.jpg',
       category: 'Skincare'
     },
     {
@@ -54,7 +54,7 @@ export class Tab1Page implements OnInit {
       tag: '⭐ Signature Fragrance',
       title: 'Rose & Amber Gold Eau de Parfum',
       subtitle: 'Enchanting notes of golden bourbon vanilla, white orchid, and sandalwood.',
-      imageUrl: '',
+      imageUrl: 'assets/products/rose-parfume.jpg',
       category: 'Fragrances'
     },
     {
@@ -63,7 +63,7 @@ export class Tab1Page implements OnInit {
       tag: '💄 Beige & Nude Collection',
       title: 'Velvet Nude Matte Lipstick',
       subtitle: 'Creamy warm nude lipstick enriched with organic jojoba oil and vitamin E.',
-      imageUrl: '',
+      imageUrl: 'assets/products/velvet-lipstick.jpg',
       category: 'Makeup'
     },
     {
@@ -72,7 +72,7 @@ export class Tab1Page implements OnInit {
       tag: '🎨 Neutral Palette',
       title: 'Warm Taupe & Beige Palette',
       subtitle: 'Curated 9-pan eyeshadow collection in warm neutral, smoky taupe, and champagne shimmer.',
-      imageUrl: '',
+      imageUrl: 'assets/products/Eyeshadow-palette.jpg',
       category: 'Makeup'
     }
   ];
@@ -187,7 +187,8 @@ export class Tab1Page implements OnInit {
   }
 
   openQuickView(product: Product) {
-    this.selectedProduct = product;
+    const localImg = this.productService.resolveLocalImage(product.id, product.name, product.image_url);
+    this.selectedProduct = { ...product, image_url: localImg };
     this.modalQuantity = 1;
     this.isQuickViewOpen = true;
   }
@@ -240,6 +241,7 @@ export class Tab1Page implements OnInit {
 
   /** Use the current product image, falling back to the last resolved slide URL. */
   getSlideImage(slide: HeroSlide): string {
-    return this.products.find(product => product.id === slide.productId)?.image_url || slide.imageUrl;
+    const current = this.products.find(product => product.id === slide.productId)?.image_url || slide.imageUrl;
+    return this.productService.resolveLocalImage(slide.productId, slide.title, current);
   }
 }
