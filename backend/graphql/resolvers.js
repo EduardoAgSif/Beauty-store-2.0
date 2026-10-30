@@ -1,4 +1,4 @@
-// resolvers.js — Lógica de negocio GraphQL para BeautyStore 2.0
+// resolvers.js — Lógica de negocio GraphQL para Élvi
 
 import bcrypt      from 'bcryptjs';
 import jwt         from 'jsonwebtoken';

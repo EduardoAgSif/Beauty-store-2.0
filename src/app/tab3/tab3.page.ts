@@ -201,7 +201,7 @@ export class Tab3Page implements OnInit, OnDestroy {
   async logout() {
     const alert = await this.alertCtrl.create({
       header: 'Sign Out',
-      message: 'Are you sure you want to sign out of your Glow Beauty account?',
+      message: 'Are you sure you want to sign out of your Élvi account?',
       buttons: [
         { text: 'Cancel', role: 'cancel' },
         {

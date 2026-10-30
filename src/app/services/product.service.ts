@@ -3,8 +3,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from '../models/product.model';
 import { DataSourceConfigService, RequestDiagnostics } from './data-source-config.service';
 import { StorageService } from './storage.service';
-import { NetworkService } from './network.service';
-import { SyncService } from './sync.service';
 
 export type ProductPayload = Pick<Product, 'name' | 'description' | 'price' | 'stock'>;
 export type ProductPatch = Partial<ProductPayload>;
@@ -30,10 +28,8 @@ export type ProductDataSource = 'remote' | 'local_cache' | 'fallback';
 export class ProductService {
   private readonly dataSourceConfig = inject(DataSourceConfigService);
   private readonly storageService = inject(StorageService, { optional: true });
-  private readonly networkService = inject(NetworkService, { optional: true });
-  private readonly syncService = inject(SyncService, { optional: true });
 
-  private readonly STORAGE_KEY_PRODUCTS = 'beautystore_cached_products';
+  private readonly STORAGE_KEY_PRODUCTS = 'elvi_cached_products';
 
   private readonly dataSourceSubject = new BehaviorSubject<ProductDataSource>('fallback');
   public readonly dataSource$: Observable<ProductDataSource> = this.dataSourceSubject.asObservable();
@@ -186,21 +182,13 @@ export class ProductService {
     }
   ];
 
-  constructor() {
-    if (this.syncService) {
-      this.syncService.registerSyncHandler(async () => {
-        await this.syncRemoteAndQueue();
-      });
-    }
-  }
-
   /**
    * Main method to obtain products.
    * Online: attempts remote API, caches in StorageService, updates state.
    * Offline / Remote Error: retrieves from persistent StorageService; falls back to default list if storage is empty.
    */
   public async getProducts(): Promise<Product[]> {
-    const isOffline = this.networkService ? this.networkService.isOffline : false;
+    const isOffline = typeof navigator !== 'undefined' ? !navigator.onLine : false;
 
     if (!isOffline) {
       try {
@@ -261,9 +249,9 @@ export class ProductService {
   }
 
   public async createProduct(payload: ProductPayload): Promise<ApiResult<{ id: number; message: string }>> {
-    const isOffline = this.networkService ? this.networkService.isOffline : false;
+    const isOffline = typeof navigator !== 'undefined' ? !navigator.onLine : false;
 
-    // If offline, save locally & queue for sync
+    // If offline, save locally
     if (isOffline) {
       const localId = Date.now();
       const newProduct: Product = {
@@ -285,18 +273,11 @@ export class ProductService {
         await this.storageService.set(this.STORAGE_KEY_PRODUCTS, cached);
       }
 
-      if (this.syncService) {
-        await this.syncService.enqueueOfflineAction({
-          type: 'CREATE_PRODUCT',
-          payload
-        });
-      }
-
       return {
         httpStatus: 200,
         data: {
           id: localId,
-          message: 'Producto guardado en almacenamiento local (se sincronizará al volver en línea).'
+          message: 'Producto guardado en almacenamiento local.'
         },
         diagnostics: {
           timestamp: new Date().toISOString(),
@@ -354,29 +335,14 @@ export class ProductService {
   }
 
   /**
-   * Syncs queued offline actions to the remote server and refreshes the local cache
+   * Refreshes the local cache from the remote server
    */
   public async syncRemoteAndQueue(): Promise<void> {
-    if (!this.syncService || (this.networkService && this.networkService.isOffline)) {
+    const isOffline = typeof navigator !== 'undefined' ? !navigator.onLine : false;
+    if (isOffline) {
       return;
     }
 
-    // 1. Process queued offline mutations
-    const queue = await this.syncService.getQueue();
-    if (queue.length > 0) {
-      for (const item of queue) {
-        if (item.type === 'CREATE_PRODUCT') {
-          try {
-            await this.request<ProductApiResponse<never>>('POST', undefined, item.payload);
-          } catch (err) {
-            console.warn('Error syncing queued product creation:', err);
-          }
-        }
-      }
-      await this.syncService.clearQueue();
-    }
-
-    // 2. Fetch fresh remote data and cache in local storage
     try {
       const response = await this.listApiProducts();
       if (response.data && response.data.length > 0) {

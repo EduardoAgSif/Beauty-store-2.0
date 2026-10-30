@@ -1,4 +1,4 @@
-// typeDefs.js — Schema GraphQL para BeautyStore 2.0
+// typeDefs.js — Schema GraphQL para Élvi
 
 export const typeDefs = `#graphql
 

@@ -3,7 +3,7 @@
 **SOFTWARE ENGINEERING TECHNICAL REPORT — FORMAL ACADEMIC EDITION**  
 **ACADEMIC PROGRAM:** Software Engineering (ISW) — 9th Quarter  
 **COURSE:** Mobile Devices Programming II  
-**SOFTWARE PROJECT:** *BeautyStore 2.0 (GlowBeauty)*  
+**SOFTWARE PROJECT:** *Élvi (formerly BeautyStore 2.0 / GlowBeauty)*  
 **AUTHOR:** Eduardo Aguilar Sifuentes  
 **AUDIT DATE:** October 2026  
 **RESEARCH AREA:** Secure Software Development Lifecycle (SSDLC) & IT Governance  
@@ -12,7 +12,7 @@
 
 ### Executive Summary
 
-This technical report presents a comprehensive security audit and regulatory traceability assessment for the **BeautyStore 2.0 (GlowBeauty)** mobile e-commerce platform. Employing a systematic verification methodology, a **Bidirectional Correspondence Matrix** is established, correlating international cybersecurity clauses (**ISO/IEC 27001:2022**, **OWASP API Security Top 10 (2023)**, **OWASP Mobile Application Security Verification Standard (MASVS v2.0)**, and **NIST SP 800-53 Rev. 5**) directly with the source code artifacts, architectural components, and relational persistence models deployed across the system. Furthermore, a **Statement of Applicability and Coverage Justification (SoA)** is presented, validating full compliance across critical controls, detailing compensatory measures applied to address laboratory development gaps, and providing technical justifications for excluded domains outside the academic project scope.
+This technical report presents a comprehensive security audit and regulatory traceability assessment for the **Élvi (formerly BeautyStore 2.0)** mobile e-commerce platform. Employing a systematic verification methodology, a **Bidirectional Correspondence Matrix** is established, correlating international cybersecurity clauses (**ISO/IEC 27001:2022**, **OWASP API Security Top 10 (2023)**, **OWASP Mobile Application Security Verification Standard (MASVS v2.0)**, and **NIST SP 800-53 Rev. 5**) directly with the source code artifacts, architectural components, and relational persistence models deployed across the system. Furthermore, a **Statement of Applicability and Coverage Justification (SoA)** is presented, validating full compliance across critical controls, detailing compensatory measures applied to address laboratory development gaps, and providing technical justifications for excluded domains outside the academic project scope.
 
 **Keywords:** Correspondence Matrix, Bidirectional Traceability, ISO/IEC 27001:2022, OWASP MASVS, OWASP API Security, NIST SP 800-53, Secure SDLC, Mobile Security, Statement of Applicability, Ionic, Angular, Capacitor, PHP PDO.
 
@@ -21,7 +21,7 @@ This technical report presents a comprehensive security audit and regulatory tra
 ## 1. Introduction and Contextual Framework
 
 ### 1.1 System Architecture and Context
-**BeautyStore 2.0** is a luxury mobile e-commerce application engineered for catalog browsing, cosmetic inventory management, and user authentication. Its decoupled architecture is organized into three primary layers:
+**Élvi** is a luxury botanical mobile e-commerce application engineered for catalog browsing, cosmetic inventory management, and user authentication. Its decoupled architecture is organized into three primary layers:
 1. **Client Layer (Mobile & Web):** Built on the Ionic Framework (v9) powered by Angular (v22), natively packaged and deployed to Android (API level 34+) via Capacitor (v8).
 2. **Web Services Layer (REST API):** Developed in PHP (v8) running on an Apache HTTP server, serving strictly structured JSON payloads.
 3. **Relational Persistence Layer:** Managed on MariaDB/MySQL through the PHP Data Objects (PDO) database abstraction driver.

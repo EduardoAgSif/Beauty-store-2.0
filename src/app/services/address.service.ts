@@ -9,7 +9,7 @@ import { StorageService } from './storage.service';
 export class AddressService {
   private storage = inject(StorageService);
 
-  private readonly STORAGE_KEY = 'glow_beauty_addresses';
+  private readonly STORAGE_KEY = 'elvi_addresses';
   private addressesSubject = new BehaviorSubject<Address[]>([]);
   public addresses$: Observable<Address[]> = this.addressesSubject.asObservable();
   private isLoaded = false;

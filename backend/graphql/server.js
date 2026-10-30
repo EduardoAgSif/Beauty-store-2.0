@@ -1,5 +1,5 @@
 // server.js — Punto de entrada del servidor GraphQL
-// Apollo Server v5 + Express | BeautyStore 2.0
+// Apollo Server v5 + Express | Élvi
 // Apollo Server v5 docs: https://www.apollographql.com/docs/apollo-server
 
 import 'dotenv/config';
@@ -103,7 +103,7 @@ async function startServer() {
     res.json({
       status:  'ok',
       node:    process.version,
-      service: 'BeautyStore GraphQL API',
+      service: 'Élvi GraphQL API',
       apollo:  '5.x',
       time:    new Date().toISOString(),
     });
@@ -119,7 +119,7 @@ async function startServer() {
   await new Promise(resolve => httpServer.listen({ port: PORT }, resolve));
 
   console.log(`
-🚀  BeautyStore GraphQL API lista
+🚀  Élvi GraphQL API lista
 📡  Endpoint : http://localhost:${PORT}/graphql
 🏥  Health   : http://localhost:${PORT}/health
 🗄️   DB       : ${process.env.DB_HOST || '127.0.0.1'}:${process.env.DB_PORT || 3306}/${process.env.DB_NAME || 'app_db'}

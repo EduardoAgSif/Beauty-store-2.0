@@ -13,11 +13,22 @@
         @if (isSignUpMode) {
           <div class="panel-content">
             <div class="auth-brand-badge">
-              <ion-icon name="sparkles"></ion-icon>
-              <span>Glow<strong>Beauty</strong></span>
+              <svg class="badge-leaf-icon" viewBox="0 0 20 20" fill="none">
+                <path d="M 4 16 C 3 9 11 4 18 3 C 16 10 10 17 4 16 Z" fill="#2d6a4f"/>
+                <path d="M 4.5 15.5 Q 10.5 10.5 17.5 4" stroke="#74c69d" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+              <span class="auth-brand-text">
+                <span class="elvi-e">
+                  E
+                  <svg class="e-leaf-accent" viewBox="0 0 16 14" fill="none">
+                    <path d="M 2 12 C 1 6 8 2 14 1 C 12 7 7 12.5 2 12 Z" fill="#40916c"/>
+                    <path d="M 2.5 11.5 Q 7.5 7.5 13.5 2" stroke="#d8f3dc" stroke-width="0.8" stroke-linecap="round"/>
+                  </svg>
+                </span><span class="elvi-rest">lvi</span>
+              </span>
             </div>
             <h1 class="panel-title">Welcome Back!</h1>
-            <p class="panel-subtitle">To stay connected with our luxury collection, please sign in with your account</p>
+            <p class="panel-subtitle">To stay connected with our botanical luxury collection, please sign in with your account</p>
             <button type="button" class="pill-btn pill-btn-action" (click)="toggleMode(false)">
               SIGN IN
             </button>
@@ -27,11 +38,22 @@
         @if (!isSignUpMode) {
           <div class="panel-content">
             <div class="auth-brand-badge">
-              <ion-icon name="sparkles"></ion-icon>
-              <span>Glow<strong>Beauty</strong></span>
+              <svg class="badge-leaf-icon" viewBox="0 0 20 20" fill="none">
+                <path d="M 4 16 C 3 9 11 4 18 3 C 16 10 10 17 4 16 Z" fill="#2d6a4f"/>
+                <path d="M 4.5 15.5 Q 10.5 10.5 17.5 4" stroke="#74c69d" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+              <span class="auth-brand-text">
+                <span class="elvi-e">
+                  E
+                  <svg class="e-leaf-accent" viewBox="0 0 16 14" fill="none">
+                    <path d="M 2 12 C 1 6 8 2 14 1 C 12 7 7 12.5 2 12 Z" fill="#40916c"/>
+                    <path d="M 2.5 11.5 Q 7.5 7.5 13.5 2" stroke="#d8f3dc" stroke-width="0.8" stroke-linecap="round"/>
+                  </svg>
+                </span><span class="elvi-rest">lvi</span>
+              </span>
             </div>
             <h1 class="panel-title">Hello, Gorgeous!</h1>
-            <p class="panel-subtitle">Access your account and discover our curated luxury skincare, fragrances, and makeup</p>
+            <p class="panel-subtitle">Access your account and discover our curated luxury skincare, fragrances, and botanical beauty</p>
             <button type="button" class="pill-btn pill-btn-action" (click)="toggleMode(true)">
               SIGN UP
             </button>
@@ -139,5 +161,4 @@
 
     </div>
   </div>
-  <app-request-diagnostics [visible]="showDiagnostics" [details]="lastDiagnostics" title="Diagnóstico de inicio de sesión" (closed)="showDiagnostics = false"></app-request-diagnostics>
 </ion-content>

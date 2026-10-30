@@ -1,7 +1,7 @@
 {
-  "name": "beautystore-graphql-api",
+  "name": "elvi-graphql-api",
   "version": "1.0.0",
-  "description": "GraphQL API for BeautyStore 2.0 connected to MySQL/phpMyAdmin",
+  "description": "GraphQL API for Élvi connected to MySQL/phpMyAdmin",
   "type": "module",
   "main": "server.js",
   "scripts": {

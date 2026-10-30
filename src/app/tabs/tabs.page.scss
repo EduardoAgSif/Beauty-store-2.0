@@ -32,23 +32,72 @@
   .brand-logo {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     cursor: pointer;
     user-select: none;
+    transition: transform 0.2s ease;
 
-    .logo-icon {
-      font-size: 1.8rem;
-      color: #be9b7b;
+    &:hover {
+      transform: translateY(-1px);
     }
 
-    .logo-text {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #2e2926;
-      letter-spacing: -0.5px;
+    .elvi-emblem {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 3px 8px rgba(45, 106, 79, 0.22));
 
-      span {
-        color: #be9b7b;
+      .emblem-svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    }
+
+    .brand-text-group {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+
+      .logo-text-wrapper {
+        display: flex;
+        align-items: baseline;
+        font-size: 1.65rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: #1b4332;
+
+        .elvi-e {
+          position: relative;
+          display: inline-block;
+          color: #1b4332;
+
+          .e-leaf-accent {
+            position: absolute;
+            top: -7px;
+            right: -6px;
+            width: 16px;
+            height: 14px;
+            pointer-events: none;
+            filter: drop-shadow(0 1px 2px rgba(45, 106, 79, 0.25));
+          }
+        }
+
+        .elvi-rest {
+          color: #2d6a4f;
+          margin-left: 1px;
+        }
+      }
+
+      .brand-tagline {
+        font-size: 0.58rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        color: #52b788;
+        margin-top: 2px;
+        text-transform: uppercase;
       }
     }
   }
@@ -86,7 +135,7 @@
         transform: translateY(-2px);
 
         ion-icon {
-          color: #be9b7b;
+          color: #2d6a4f;
           transform: scale(1.15);
         }
       }
@@ -97,7 +146,7 @@
         box-shadow: none;
 
         ion-icon {
-          color: #be9b7b;
+          color: #2d6a4f;
         }
 
         &::after {
@@ -109,7 +158,7 @@
           width: 5px;
           height: 5px;
           border-radius: 50%;
-          background: #be9b7b;
+          background: #2d6a4f;
         }
       }
     }
@@ -121,7 +170,7 @@
         position: absolute;
         top: -3px;
         right: -8px;
-        background: #be9b7b;
+        background: #2d6a4f;
         color: #ffffff;
         font-size: 0.68rem;
         font-weight: 700;
@@ -150,89 +199,111 @@ ion-tabs {
   }
 }
 
-// Mobile Tab Bar - Hidden on browser / desktop screens >= 768px
+// Mobile Tab Bar - Only active on mobile viewport (< 768px)
+@media (max-width: 767.98px) {
+  .mobile-tab-bar {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    height: 58px !important;
+    background: #ffffff !important;
+    --background: #ffffff !important;
+    border-top: 1px solid #e8ded2 !important;
+    box-shadow: 0 -4px 16px rgba(133, 121, 111, 0.08) !important;
+    padding: 0 8px !important;
+    box-sizing: border-box !important;
+
+    ion-tab-button {
+      flex: 1 1 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: 100% !important;
+      padding: 0 !important;
+      background: transparent !important;
+      --background: transparent !important;
+      --color: #9c9187 !important;
+      --color-selected: #2d6a4f !important;
+      color: #9c9187 !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+
+      ion-icon {
+        font-size: 1.7rem !important;
+        display: inline-block !important;
+        color: inherit !important;
+        transition: transform 0.2s ease, color 0.2s ease !important;
+      }
+
+      &.tab-selected {
+        color: #2d6a4f !important;
+        --color: #2d6a4f !important;
+
+        ion-icon {
+          color: #2d6a4f !important;
+          transform: scale(1.15) !important;
+        }
+      }
+    }
+
+    .cart-icon-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      .tab-badge {
+        position: absolute;
+        top: -6px;
+        right: -12px;
+        font-size: 0.68rem;
+        padding: 2px 6px;
+        border-radius: 10px;
+        --background: #2d6a4f;
+        background: #2d6a4f;
+        color: #ffffff;
+        font-weight: 700;
+        animation: pulse 1.5s infinite;
+      }
+    }
+  }
+}
+
+// Completely hide tab bar and eliminate any bottom border line in desktop / web view
 @media (min-width: 768px) {
+
   ion-tab-bar,
   .mobile-tab-bar {
     display: none !important;
     visibility: hidden !important;
     height: 0 !important;
-  }
-}
-
-.mobile-tab-bar {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: space-around !important;
-  width: 100% !important;
-  max-width: 100vw !important;
-  height: 58px !important;
-  background: #ffffff !important;
-  --background: #ffffff !important;
-  border-top: 1px solid #e8ded2 !important;
-  box-shadow: 0 -4px 16px rgba(133, 121, 111, 0.08) !important;
-  padding: 0 8px !important;
-  box-sizing: border-box !important;
-
-  ion-tab-button {
-    flex: 1 1 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    pointer-events: none !important;
+    margin: 0 !important;
     padding: 0 !important;
-    background: transparent !important;
-    --background: transparent !important;
-    --color: #9c9187 !important;
-    --color-selected: #be9b7b !important;
-    color: #9c9187 !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-
-    ion-icon {
-      font-size: 1.7rem !important;
-      display: inline-block !important;
-      color: inherit !important;
-      transition: transform 0.2s ease, color 0.2s ease !important;
-    }
-
-    &.tab-selected {
-      color: #be9b7b !important;
-      --color: #be9b7b !important;
-
-      ion-icon {
-        color: #be9b7b !important;
-        transform: scale(1.15) !important;
-      }
-    }
-  }
-
-  .cart-icon-wrapper {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    .tab-badge {
-      position: absolute;
-      top: -6px;
-      right: -12px;
-      font-size: 0.68rem;
-      padding: 2px 6px;
-      border-radius: 10px;
-      --background: #be9b7b;
-      background: #be9b7b;
-      color: #ffffff;
-      font-weight: 700;
-      animation: pulse 1.5s infinite;
-    }
+    opacity: 0 !important;
   }
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.15);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }

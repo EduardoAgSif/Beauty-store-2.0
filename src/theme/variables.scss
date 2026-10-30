@@ -55,6 +55,17 @@
   --palette-pearl: #faf6f0;
   --palette-beige: #eddccb;
 
+  /** Élvi Nature Green Palette Tokens **/
+  --elvi-green-dark: #1b4332;
+  --elvi-green-primary: #2d6a4f;
+  --elvi-green-leaf: #40916c;
+  --elvi-green-light: #52b788;
+  --elvi-green-sage: #74c69d;
+  --elvi-green-dew: #95d5b2;
+  --elvi-green-soft: #e8f5e9;
+  --elvi-green-gradient: linear-gradient(135deg, #1b4332 0%, #2d6a4f 55%, #40916c 100%);
+  --elvi-leaf-gradient: linear-gradient(135deg, #2d6a4f 0%, #52b788 50%, #95d5b2 100%);
+
   /** Gradients & Shadows **/
   --glow-gradient: linear-gradient(135deg, #be9b7b 0%, #9e7d5e 100%);
   --glow-gradient-hover: linear-gradient(135deg, #caa98b 0%, #ab8969 100%);

@@ -109,18 +109,47 @@
 .auth-brand-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid #ede4d8;
-  color: #c5a880;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.85rem;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #d8f3dc;
+  padding: 6px 16px;
+  border-radius: 24px;
+  font-size: 0.95rem;
   margin-bottom: 14px;
-  box-shadow: 0 2px 8px rgba(197, 168, 128, 0.15);
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.12);
 
-  strong {
-    color: #2e2926;
+  .badge-leaf-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .auth-brand-text {
+    display: inline-flex;
+    align-items: baseline;
+    font-weight: 800;
+    line-height: 1;
+
+    .elvi-e {
+      position: relative;
+      display: inline-block;
+      color: #1b4332;
+
+      .e-leaf-accent {
+        position: absolute;
+        top: -6px;
+        right: -5px;
+        width: 12px;
+        height: 11px;
+        pointer-events: none;
+        filter: drop-shadow(0 1px 2px rgba(45, 106, 79, 0.25));
+      }
+    }
+
+    .elvi-rest {
+      color: #2d6a4f;
+      margin-left: 1px;
+    }
   }
 }
 

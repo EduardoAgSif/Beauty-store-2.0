@@ -2,8 +2,37 @@
   <ion-toolbar>
     <ion-title>
       <div class="header-logo">
-        <ion-icon name="sparkles" class="logo-sparkle"></ion-icon>
-        <span>Glow<strong>Beauty</strong></span>
+        <div class="elvi-emblem-mini">
+          <svg viewBox="0 0 32 32" class="emblem-mini-svg">
+            <defs>
+              <linearGradient id="mHeadBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#1B4332"/>
+                <stop offset="60%" stop-color="#2D6A4F"/>
+                <stop offset="100%" stop-color="#40916C"/>
+              </linearGradient>
+              <linearGradient id="mHeadLeafGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#2D6A4F"/>
+                <stop offset="50%" stop-color="#52B788"/>
+                <stop offset="100%" stop-color="#95D5B2"/>
+              </linearGradient>
+            </defs>
+            <rect width="32" height="32" rx="9" fill="url(#mHeadBgGrad)"/>
+            <g transform="translate(6, 5)">
+              <path d="M 3 19 C 2 10 10 4 18 3 C 16 12 9 20 3 19 Z" fill="url(#mHeadLeafGrad)"/>
+              <path d="M 4 18 Q 10 12 17 4" stroke="#D8F3DC" stroke-width="0.9" stroke-linecap="round" fill="none"/>
+              <circle cx="16" cy="5" r="0.8" fill="#FFFFFF" opacity="0.9"/>
+            </g>
+          </svg>
+        </div>
+        <div class="logo-text-wrapper">
+          <span class="elvi-e">
+            E
+            <svg class="e-leaf-accent" viewBox="0 0 16 14" fill="none">
+              <path d="M 2 12 C 1 6 8 2 14 1 C 12 7 7 12.5 2 12 Z" fill="url(#mHeadLeafGrad)"/>
+              <path d="M 2.5 11.5 Q 7.5 7.5 13.5 2" stroke="#D8F3DC" stroke-width="0.8" stroke-linecap="round"/>
+            </svg>
+          </span><span class="elvi-rest">lvi</span>
+        </div>
       </div>
     </ion-title>
   </ion-toolbar>
@@ -15,7 +44,7 @@
   <section class="hero-section">
     <div class="ecom-container hero-container">
       <div class="hero-text-content">
-        <span class="hero-tag">✨ Exclusive Beige Collection 2026</span>
+        <span class="hero-tag">🌿 Élvi Botanical Collection 2026</span>
         <h1 class="hero-title">Enhance Your Natural Beauty</h1>
         <p class="hero-subtitle">
           Botanical cosmetics, clinically proven formulas, and sophisticated warm beige skincare that your skin deserves.

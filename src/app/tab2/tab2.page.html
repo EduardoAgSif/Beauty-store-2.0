@@ -1,11 +1,6 @@
 <ion-header class="mobile-only-header">
   <ion-toolbar>
     <ion-title>Shopping Bag</ion-title>
-    <ion-buttons slot="start">
-      <ion-button (click)="goToShop()">
-        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -108,7 +103,7 @@
                 <input
                   type="text"
                   [(ngModel)]="promoCode"
-                  placeholder="e.g. GLOW10"
+                  placeholder="e.g. ELVI10"
                   [disabled]="isDiscountApplied"
                   />
                   @if (!isDiscountApplied) {

@@ -1,6 +1,6 @@
-#  BeautyStore 2.0
+# 🌿 Élvi 2.0
 
-A luxury beauty e-commerce mobile application built with **Ionic + Angular** and a **PHP** REST API backend. Browse a curated catalog of premium skincare, makeup, fragrances and hair care products.
+A modern natural luxury beauty e-commerce mobile application built with **Ionic + Angular** and a **PHP** REST / **GraphQL** API backend. Browse a curated catalog of premium skincare, makeup, fragrances and botanical hair care products.
 
 ---
 
@@ -31,7 +31,7 @@ A luxury beauty e-commerce mobile application built with **Ionic + Angular** and
 ##  Project Structure
 
 ```
-BeautyStore_2.0/
+BeautyStore_2.0/          # Élvi Mobile Project
 ├── android/              # Capacitor Android project
 ├── backend/              # PHP REST API
 │   ├── api.php           # Product endpoints (CRUD)

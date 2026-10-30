@@ -104,20 +104,20 @@ export class Tab2Page implements OnInit, OnDestroy {
 
   applyPromoCode() {
     const code = this.promoCode.trim().toUpperCase();
-    if (code === 'GLOW10') {
+    if (code === 'ELVI10' || code === 'GLOW10') {
       this.appliedDiscountPercent = 10;
       this.isDiscountApplied = true;
-      this.discountMessage = 'Coupon GLOW10 applied! (10% OFF)';
+      this.discountMessage = 'Coupon ELVI10 applied! (10% OFF)';
       this.showToast('10% discount applied!');
-    } else if (code === 'BEAUTY20') {
+    } else if (code === 'ELVI20' || code === 'BEAUTY20') {
       this.appliedDiscountPercent = 20;
       this.isDiscountApplied = true;
-      this.discountMessage = 'Coupon BEAUTY20 applied! (20% OFF)';
+      this.discountMessage = 'Coupon ELVI20 applied! (20% OFF)';
       this.showToast('20% discount applied!');
     } else {
       this.appliedDiscountPercent = 0;
       this.isDiscountApplied = false;
-      this.discountMessage = 'Invalid coupon. Try GLOW10.';
+      this.discountMessage = 'Invalid coupon. Try ELVI10.';
       this.showToast('Invalid coupon code.');
     }
   }
@@ -158,7 +158,7 @@ export class Tab2Page implements OnInit, OnDestroy {
   processCheckout() {
     if (this.cartItems.length === 0) return;
 
-    this.orderNumber = 'GLOW-' + Math.floor(100000 + Math.random() * 900000);
+    this.orderNumber = 'ELVI-' + Math.floor(100000 + Math.random() * 900000);
     this.placedOrderTotal = this.getTotal();
     this.isCheckoutModalOpen = true;
   }

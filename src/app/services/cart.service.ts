@@ -10,7 +10,7 @@ import { StorageService } from './storage.service';
 export class CartService {
   private storage = inject(StorageService);
 
-  private readonly STORAGE_KEY = 'glow_beauty_cart_v2';
+  private readonly STORAGE_KEY = 'elvi_cart_v2';
   private itemsSubject = new BehaviorSubject<CartItem[]>([]);
   public items$ = this.itemsSubject.asObservable();
 
